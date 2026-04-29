@@ -8,6 +8,7 @@ import type { AiToneId, Step } from './types';
 export function useMobileFlow() {
   const [step, setStep] = useState<Step>('start');
   const [previousStep, setPreviousStep] = useState<Step | null>(null);
+  const [directInputText, setDirectInputText] = useState('');
   const [name, setName] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(DEFAULT_TEMPLATE_ID);
   const [message, setMessage] = useState('');
@@ -30,6 +31,7 @@ export function useMobileFlow() {
 
   function openComposerFromCommand(commandText: string) {
     setPreviousStep(step);
+    setDirectInputText(commandText);
     setName('');
     setSelectedTemplate(AI_TEMPLATE_ID);
     setMessage('');
@@ -87,6 +89,7 @@ export function useMobileFlow() {
 
   function handleRestart() {
     reset();
+    setDirectInputText('');
     setName('');
     setMessage('');
     setAiPrompt('');
@@ -113,6 +116,7 @@ export function useMobileFlow() {
 
   return {
     step,
+    directInputText,
     name,
     selectedTemplate,
     message,
@@ -125,6 +129,7 @@ export function useMobileFlow() {
     setAiTone,
     setAiPrompt,
     setMessage,
+    setDirectInputText,
     setShowDirectInput,
     setShowSettings,
     handleStartListening,

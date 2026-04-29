@@ -9,6 +9,7 @@ import { useMobileFlow } from './useMobileFlow';
 export default function MobilePage() {
   const {
     step,
+    directInputText,
     name,
     selectedTemplate,
     message,
@@ -21,6 +22,7 @@ export default function MobilePage() {
     setAiTone,
     setAiPrompt,
     setMessage,
+    setDirectInputText,
     setShowDirectInput,
     setShowSettings,
     handleStartListening,
@@ -43,8 +45,10 @@ export default function MobilePage() {
       {step === 'start' && (
         <StartScreen
           showDirectInput={showDirectInput}
+          directInputText={directInputText}
           error={error}
           onStartListening={handleStartListening}
+          onDirectInputChange={setDirectInputText}
           onShowDirectInput={() => {
             resetSpeech();
             setShowDirectInput(true);
