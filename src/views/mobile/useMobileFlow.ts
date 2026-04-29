@@ -3,12 +3,21 @@ import { subscribeSession, updateSession, updateTheme } from '../../lib/firebase
 import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
 import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME, THEMES } from './constants';
-import type { AiToneId, CommandInterpretation, Step } from './types';
+import type { AiToneId, CommandInterpretation, ConfirmStage, Step } from './types';
 import type { ThemeId, Session } from '../../types/session';
+
+function getConfirmStages(templateId: TemplateId): ConfirmStage[] {
+  if (templateId === AI_TEMPLATE_ID) {
+    return ['template', 'content', 'tone', 'theme', 'name'];
+  }
+
+  return ['template', 'content', 'theme', 'name'];
+}
 
 export function useMobileFlow() {
   const [step, setStep] = useState<Step>('choose');
   const [previousStep, setPreviousStep] = useState<Step | null>(null);
+  const [confirmStageIndex, setConfirmStageIndex] = useState(0);
   const [directInputText, setDirectInputText] = useState('');
   const [name, setName] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(DEFAULT_TEMPLATE_ID);
@@ -23,6 +32,13 @@ export function useMobileFlow() {
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
+  const confirmStages = getConfirmStages(selectedTemplate);
+  const normalizedConfirmStageIndex = Math.min(confirmStageIndex, confirmStages.length - 1);
+  const confirmStage = confirmStages[normalizedConfirmStageIndex];
+
+  useEffect(() => {
+    setConfirmStageIndex((current) => Math.min(current, confirmStages.length - 1));
+  }, [confirmStages.length]);
 
   function inferTemplateId(visitorName: string, welcomeMessage: string, tone?: string): TemplateId {
     if (tone) return AI_TEMPLATE_ID;
@@ -49,6 +65,7 @@ export function useMobileFlow() {
     const nextName = session.visitorName?.trim() ?? '';
     const nextMessage = session.welcomeMessage?.trim() ?? '';
     const nextTemplate = inferTemplateId(nextName, nextMessage, session.tone);
+    const nextPrompt = session.sourcePrompt?.trim() || nextMessage;
     const nextTone: AiToneId =
       session.tone === 'bright' || session.tone === 'formal' || session.tone === 'playful' || session.tone === 'warm'
         ? session.tone
@@ -57,10 +74,11 @@ export function useMobileFlow() {
     setName(nextName);
     setSelectedTemplate(nextTemplate);
     setMessage(nextTemplate === AI_TEMPLATE_ID ? nextMessage : nextMessage || (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''));
-    setAiPrompt(nextTemplate === AI_TEMPLATE_ID ? nextMessage : '');
+    setAiPrompt(nextTemplate === AI_TEMPLATE_ID ? nextPrompt : '');
     setAiTone(nextTone);
     setDirectInputText('');
     setShowDirectInput(false);
+    setConfirmStageIndex(0);
     setStep('confirm');
   }
 
@@ -122,6 +140,7 @@ export function useMobileFlow() {
       setMessage(
         nextTemplate === AI_TEMPLATE_ID ? '' : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''),
       );
+      setConfirmStageIndex(0);
       setStep('confirm');
     } finally {
       setIsInterpreting(false);
@@ -144,7 +163,11 @@ export function useMobileFlow() {
 
   function handleTemplateChange(id: TemplateId) {
     setSelectedTemplate(id);
-    if (id !== AI_TEMPLATE_ID) {
+    if (id === AI_TEMPLATE_ID) {
+      if (!aiPrompt.trim()) {
+        setAiPrompt(directInputText.trim() || message.trim());
+      }
+    } else {
       setMessage(applyTemplate(name.trim() || FALLBACK_VISITOR_NAME, id) ?? '');
     }
   }
@@ -164,11 +187,17 @@ export function useMobileFlow() {
   async function handleConfirm() {
     setIsSubmitting(true);
     const resolvedName = name.trim() || FALLBACK_VISITOR_NAME;
+    const resolvedAiPrompt =
+      aiPrompt.trim() ||
+      directInputText.trim() ||
+      message.trim() ||
+      `${resolvedName}님을 위한 환영 문구를 만들어줘`;
     if (selectedTemplate === AI_TEMPLATE_ID) {
       await updateSession({
         status: 'generating',
         visitorName: resolvedName,
-        welcomeMessage: aiPrompt.trim(),
+        welcomeMessage: resolvedAiPrompt,
+        sourcePrompt: resolvedAiPrompt,
         tone: aiTone,
         themeId,
       });
@@ -177,12 +206,31 @@ export function useMobileFlow() {
         status: 'displaying',
         visitorName: resolvedName,
         welcomeMessage: message,
+        sourcePrompt: '',
         tone: '',
         themeId,
       });
     }
     setIsSubmitting(false);
     setStep('done');
+  }
+
+  function handleConfirmStageBack() {
+    if (normalizedConfirmStageIndex > 0) {
+      setConfirmStageIndex((current) => Math.max(0, current - 1));
+      return;
+    }
+
+    handleBackToPrevious();
+  }
+
+  async function handleConfirmStageContinue() {
+    if (normalizedConfirmStageIndex < confirmStages.length - 1) {
+      setConfirmStageIndex((current) => Math.min(current + 1, confirmStages.length - 1));
+      return;
+    }
+
+    await handleConfirm();
   }
 
   function startCreateNew() {
@@ -194,6 +242,7 @@ export function useMobileFlow() {
     setAiTone(DEFAULT_AI_TONE);
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+    setConfirmStageIndex(0);
     setPreviousStep('choose');
     setStep('start');
   }
@@ -232,6 +281,7 @@ export function useMobileFlow() {
     setIsInterpreting(false);
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+    setConfirmStageIndex(0);
     setPreviousStep(null);
     setStep('choose');
   }
@@ -259,9 +309,16 @@ export function useMobileFlow() {
   }
 
   const canEditExisting = lastSession?.status === 'displaying' && Boolean(lastSession.welcomeMessage?.trim());
+  const canContinueConfirmStage = confirmStage !== 'content' || selectedTemplate === AI_TEMPLATE_ID || Boolean(message.trim());
+  const isLastConfirmStage = normalizedConfirmStageIndex === confirmStages.length - 1;
 
   return {
     step,
+    confirmStage,
+    confirmStageIndex: normalizedConfirmStageIndex,
+    confirmStageCount: confirmStages.length,
+    canContinueConfirmStage,
+    isLastConfirmStage,
     directInputText,
     name,
     selectedTemplate,
@@ -283,6 +340,8 @@ export function useMobileFlow() {
     handleTemplateChange,
     handleNameChange,
     handleThemeChange,
+    handleConfirmStageBack,
+    handleConfirmStageContinue,
     handleConfirm,
     handleRestart,
     handleBackToPrevious,

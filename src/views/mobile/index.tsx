@@ -8,6 +8,11 @@ import { useMobileFlow } from './useMobileFlow';
 export default function MobilePage() {
   const {
     step,
+    confirmStage,
+    confirmStageIndex,
+    confirmStageCount,
+    canContinueConfirmStage,
+    isLastConfirmStage,
     directInputText,
     name,
     selectedTemplate,
@@ -29,6 +34,8 @@ export default function MobilePage() {
     handleTemplateChange,
     handleNameChange,
     handleThemeChange,
+    handleConfirmStageBack,
+    handleConfirmStageContinue,
     handleConfirm,
     handleRestart,
     handleBackToPrevious,
@@ -92,6 +99,11 @@ export default function MobilePage() {
 
       {step === 'confirm' && (
         <ConfirmScreen
+          confirmStage={confirmStage}
+          confirmStageIndex={confirmStageIndex}
+          confirmStageCount={confirmStageCount}
+          canContinue={canContinueConfirmStage}
+          isLastStage={isLastConfirmStage}
           name={name}
           selectedTemplate={selectedTemplate}
           message={message}
@@ -107,8 +119,8 @@ export default function MobilePage() {
           onThemeChange={handleThemeChange}
           onReenterVoice={handleReenterVoice}
           onReenterDirect={handleReenterDirect}
-          onBack={handleBackToPrevious}
-          onConfirm={handleConfirm}
+          onBack={handleConfirmStageBack}
+          onContinue={handleConfirmStageContinue}
         />
       )}
 
