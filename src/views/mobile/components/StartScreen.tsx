@@ -3,8 +3,10 @@ import DirectInput from './DirectInput';
 
 interface StartScreenProps {
   showDirectInput: boolean;
+  directInputText: string;
   error: string | null;
   onStartListening: () => void;
+  onDirectInputChange: (text: string) => void;
   onShowDirectInput: () => void;
   onDirectSubmit: (command: string) => void;
   onDirectBack: () => void;
@@ -12,8 +14,10 @@ interface StartScreenProps {
 
 export default function StartScreen({
   showDirectInput,
+  directInputText,
   error,
   onStartListening,
+  onDirectInputChange,
   onShowDirectInput,
   onDirectSubmit,
   onDirectBack,
@@ -53,7 +57,12 @@ export default function StartScreen({
       ) : (
         <div className="w-full flex flex-col gap-3">
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-          <DirectInput onSubmit={onDirectSubmit} onBack={onDirectBack} />
+          <DirectInput
+            value={directInputText}
+            onChange={onDirectInputChange}
+            onSubmit={onDirectSubmit}
+            onBack={onDirectBack}
+          />
         </div>
       )}
     </div>
