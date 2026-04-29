@@ -17,7 +17,9 @@ export async function POST(request: Request) {
             '너는 광주소프트웨어마이스터고등학교의 행사 환영 메시지 작성 도우미야. ' +
             '반드시 JSON만 출력해. 형식은 {"resolvedName":"...", "message":"..."} 이다. ' +
             'resolvedName에는 최종적으로 적용한 방문객 이름만 넣어. ' +
-            'message는 한국어 한 문장 환영 문구로 만들고, resolvedName을 자연스럽게 포함해. ' +
+            'message는 데스크탑 화면에서 이름 아래에 이어질 한국어 한 문장 본문이다. ' +
+            'message에는 resolvedName이나 다른 이름 호칭을 절대 넣지 마. ' +
+            '예: "광주SW마이스터고에 방문해 주셔서 반갑습니다!" 같은 형태로 써라. ' +
             '사용자 본문에 이름이 드러나면 그 이름을 우선 사용하고, 없으면 기본 이름을 사용해. ' +
             '학교의 IT/소프트웨어 특성을 살려도 좋다. JSON 외 다른 텍스트는 절대 출력하지 마.',
         },
@@ -35,7 +37,7 @@ export async function POST(request: Request) {
     });
 
     const content = response.choices[0]?.message?.content?.trim();
-    const fallbackMessage = `${name}님, 환영합니다!`;
+    const fallbackMessage = '환영합니다!';
 
     if (!content) {
       return NextResponse.json({ resolvedName: name, message: fallbackMessage });
