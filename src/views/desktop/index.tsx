@@ -1,19 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
+import { findTheme, type ThemePreset } from '../../lib/themes';
 import type { Session, ThemeId } from '../../types/session';
 
 const CHALK_FONT = "'HakgyoansimBunpil', sans-serif";
-const RESET_DELAY = 30 * 60 * 1000; // 30분
+const BOARD_FONT = "'Trebuchet MS', 'Apple SD Gothic Neo', sans-serif";
+const BRUTAL_FONT = "'Arial Black', 'Arial', 'Apple SD Gothic Neo', sans-serif";
+const RESET_DELAY = 30 * 60 * 1000;
 
-const THEMES = [
-  { id: 'green' as ThemeId, name: '녹색 칠판', bg: '#344034', accent: '#6abeff' },
-  { id: 'black' as ThemeId, name: '흑판', bg: '#1e2820', accent: '#a8f0c6' },
-  { id: 'navy' as ThemeId, name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
-  { id: 'warm' as ThemeId, name: '먹판', bg: '#1f1a14', accent: '#ff9fd6' },
-];
-
-function ChalkPink({ style }: { style?: React.CSSProperties }) {
+function ChalkPink({ color, style }: { color: string; style?: React.CSSProperties }) {
   return (
     <svg
       viewBox="0 0 122.296 173.669"
@@ -43,7 +39,7 @@ function ChalkPink({ style }: { style?: React.CSSProperties }) {
       <g filter="url(#chalk-pink-f)">
         <path
           d="M114.296 165.669C114.224 158.749 112.556 141.739 107.403 128.15C99.9471 108.487 78.1235 94.15 69.8477 96.4044C67.9718 96.9154 64.5615 99.1374 63.4701 100.65C58.5845 107.42 59.777 110.288 62.1235 115.15C63.0908 117.154 65.7745 118.753 68.0214 119.34C73.0044 120.642 77.992 119.126 81.3612 117.074C88.3889 112.795 90.1235 93.65 86.4883 81.9492C83.0865 70.9998 75.0849 62.3416 65.675 56.5064C61.2764 53.7788 54.9578 51.8612 48.5367 53.779C44.4097 55.0116 41.6235 58.7752 39.7848 61.6496C38.7193 63.3154 39.3617 67.3693 39.7848 69.2937C40.208 71.2182 41.3303 72.8812 43.3181 73.7789C45.3058 74.6766 48.125 74.7587 50.4365 74.3062C52.748 73.8536 54.4665 72.8641 55.6004 71.1909C62.9572 60.3353 60.1235 38.15 53.0946 27.9719C43.2485 13.7147 23.6235 8.01748 17.379 8.01781C14.8354 8.01794 11.9386 7.72934 8.00084 9.75534"
-          stroke="#E4B8D3"
+          stroke={color}
           strokeWidth="8"
           strokeLinecap="round"
         />
@@ -52,7 +48,7 @@ function ChalkPink({ style }: { style?: React.CSSProperties }) {
   );
 }
 
-function ChalkGreen({ style }: { style?: React.CSSProperties }) {
+function ChalkGreen({ color, style }: { color: string; style?: React.CSSProperties }) {
   return (
     <svg
       viewBox="0 0 73.7964 196.812"
@@ -82,7 +78,7 @@ function ChalkGreen({ style }: { style?: React.CSSProperties }) {
       <g filter="url(#chalk-green-f)">
         <path
           d="M65.7958 188.811C58.311 176.569 41.317 147.862 41.5102 139.84C41.7345 130.522 58.1675 133.564 61.8447 130.634C63.6212 129.218 64.2088 126.874 64.3748 124.884C65.0467 116.826 47.7599 99.8673 22.6349 75.8412C17.4941 70.9252 14.3103 67.5227 13.5828 65.4338C11.4408 59.2833 28.9661 56.6649 35.2783 49.6083C33.9822 42.0999 26.4967 32.0804 18.4607 20.5555C14.9456 15.7863 12.573 13.2085 8.00005 8.00005"
-          stroke="#93B8A6"
+          stroke={color}
           strokeWidth="8"
           strokeLinecap="round"
         />
@@ -92,91 +88,567 @@ function ChalkGreen({ style }: { style?: React.CSSProperties }) {
 }
 
 function WoodFrame() {
-  const FRAME = 'clamp(22px, 3.2vw, 46px)';
+  const frame = 'clamp(22px, 3.2vw, 46px)';
   const wood = `
     repeating-linear-gradient(90deg, transparent 0px, transparent 18px, rgba(0,0,0,0.12) 18px, rgba(0,0,0,0.12) 19px, transparent 19px, transparent 38px, rgba(0,0,0,0.08) 38px, rgba(0,0,0,0.08) 39px),
     repeating-linear-gradient(0deg, transparent 0px, transparent 24px, rgba(255,255,255,0.08) 24px, rgba(255,255,255,0.08) 25px),
     repeating-linear-gradient(112deg, #D4A055 0px, #B8893F 4px, #9B7330 8px, #8B6428 12px, #C4903A 16px, #9B6430 20px, #8B5A2C 24px, #C08040 28px, #8B5A2C 32px, #B07838 36px)
   `;
+
+  return (
+    <>
+      <div className="absolute top-0 left-0 right-0 pointer-events-none z-10" style={{ height: frame, background: wood }} />
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-10" style={{ height: frame, background: wood }} />
+      <div className="absolute top-0 left-0 bottom-0 pointer-events-none z-10" style={{ width: frame, background: wood }} />
+      <div className="absolute top-0 right-0 bottom-0 pointer-events-none z-10" style={{ width: frame, background: wood }} />
+      <div className="absolute inset-0 pointer-events-none z-9" style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.35)' }} />
+      <div className="absolute inset-0 pointer-events-none z-10" style={{ outline: '2px solid #3A2215', outlineOffset: '-1px' }} />
+    </>
+  );
+}
+
+function WhiteboardFrame({ theme }: { theme: ThemePreset }) {
+  const frame = 'clamp(16px, 2.4vw, 28px)';
+
   return (
     <>
       <div
-        className="absolute top-0 left-0 right-0 pointer-events-none z-10"
-        style={{
-          height: FRAME,
-          background: wood,
-          boxShadow:
-            'inset 0 -2px 4px rgba(0,0,0,0.35), inset 0 2px 3px rgba(255,245,205,0.25), inset 0 -8px 16px rgba(0,0,0,0.3)',
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none z-10"
-        style={{
-          height: FRAME,
-          background: wood,
-          boxShadow:
-            'inset 0 2px 4px rgba(0,0,0,0.35), inset 0 -2px 3px rgba(255,245,205,0.25), inset 0 8px 16px rgba(0,0,0,0.3)',
-        }}
-      />
-      <div
-        className="absolute top-0 left-0 bottom-0 pointer-events-none z-10"
-        style={{
-          width: FRAME,
-          background: wood,
-          boxShadow:
-            'inset -2px 0 4px rgba(0,0,0,0.35), inset 2px 0 3px rgba(255,245,205,0.25), inset -8px 0 16px rgba(0,0,0,0.3)',
-        }}
-      />
-      <div
-        className="absolute top-0 right-0 bottom-0 pointer-events-none z-10"
-        style={{
-          width: FRAME,
-          background: wood,
-          boxShadow:
-            'inset 2px 0 4px rgba(0,0,0,0.35), inset -2px 0 3px rgba(255,245,205,0.25), inset 8px 0 16px rgba(0,0,0,0.3)',
-        }}
-      />
-      {(['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'] as const).map((pos) => (
-        <div
-          key={pos}
-          className={`absolute ${pos} pointer-events-none z-10`}
-          style={{
-            width: FRAME,
-            height: FRAME,
-            background: wood,
-            boxShadow: 'inset -2px -2px 6px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,245,205,0.2)',
-          }}
-        />
-      ))}
-      <div
-        className="absolute inset-0 pointer-events-none z-9"
-        style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.2)' }}
-      />
-      <div
         className="absolute inset-0 pointer-events-none z-10"
-        style={{ outline: '2px solid #3A2215', outlineOffset: '-1px' }}
+        style={{
+          border: `${frame} solid #d8e3ee`,
+          boxShadow: 'inset 0 0 0 2px #f8fbff, inset 0 0 26px rgba(72,100,140,0.12), 0 20px 60px rgba(0,0,0,0.15)',
+        }}
+      />
+      <div
+        className="absolute inset-[clamp(16px,2.4vw,28px)] pointer-events-none z-10"
+        style={{ border: `2px solid ${theme.border}` }}
       />
     </>
   );
 }
 
+function BlackboardFrame({ theme }: { theme: ThemePreset }) {
+  const frame = 'clamp(18px, 2.6vw, 30px)';
+
+  return (
+    <>
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{
+          border: `${frame} solid #0c1014`,
+          boxShadow: 'inset 0 0 0 2px rgba(255,255,255,0.04), inset 0 0 40px rgba(0,0,0,0.45)',
+        }}
+      />
+      <div
+        className="absolute pointer-events-none z-10 rounded-full"
+        style={{
+          left: 'clamp(60px, 8vw, 120px)',
+          right: 'clamp(60px, 8vw, 120px)',
+          bottom: 'clamp(18px, 2vw, 30px)',
+          height: 'clamp(12px, 1.5vw, 18px)',
+          background: '#1f252b',
+          boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.08)',
+        }}
+      />
+      <div className="absolute inset-0 pointer-events-none z-9" style={{ boxShadow: 'inset 0 0 90px rgba(0,0,0,0.48)' }} />
+      <div className="absolute inset-0 pointer-events-none z-10" style={{ outline: `1px solid ${theme.border}`, outlineOffset: '-10px' }} />
+    </>
+  );
+}
+
+function BrutalFrame({ theme }: { theme: ThemePreset }) {
+  return (
+    <>
+      <div className="absolute inset-0 pointer-events-none z-10" style={{ border: '8px solid #111' }} />
+      <div
+        className="absolute pointer-events-none z-10"
+        style={{
+          top: 'clamp(26px, 3vw, 40px)',
+          left: 'clamp(26px, 3vw, 40px)',
+          width: 'clamp(70px, 9vw, 130px)',
+          height: 'clamp(18px, 2vw, 28px)',
+          background: theme.accent,
+          border: '4px solid #111',
+        }}
+      />
+      <div
+        className="absolute pointer-events-none z-10"
+        style={{
+          right: 'clamp(30px, 3.2vw, 48px)',
+          bottom: 'clamp(30px, 3.2vw, 48px)',
+          width: 'clamp(120px, 14vw, 220px)',
+          height: 'clamp(28px, 3vh, 44px)',
+          background: theme.secondary,
+          border: '4px solid #111',
+          transform: 'rotate(-3deg)',
+        }}
+      />
+    </>
+  );
+}
+
+function ThemeTexture({ theme }: { theme: ThemePreset }) {
+  if (theme.family === 'chalk') {
+    return (
+      <>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.025) 3px, rgba(255,255,255,0.025) 6px)',
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 18% 16%, rgba(255,255,255,0.05), transparent 24%), radial-gradient(circle at 76% 70%, rgba(255,255,255,0.03), transparent 24%)',
+          }}
+        />
+      </>
+    );
+  }
+
+  if (theme.family === 'whiteboard') {
+    return (
+      <>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            opacity: 0.45,
+            backgroundImage:
+              'linear-gradient(rgba(122,148,179,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(122,148,179,0.08) 1px, transparent 1px)',
+            backgroundSize: '100% 48px, 48px 100%',
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 16% 12%, rgba(19,104,232,0.08), transparent 20%), radial-gradient(circle at 80% 84%, rgba(255,107,61,0.09), transparent 24%)',
+          }}
+        />
+      </>
+    );
+  }
+
+  if (theme.family === 'blackboard') {
+    return (
+      <>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            opacity: 0.18,
+            backgroundImage: 'radial-gradient(rgba(255,255,255,0.25) 0.8px, transparent 0.8px)',
+            backgroundSize: '8px 8px',
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 25% 18%, rgba(255,255,255,0.06), transparent 20%), radial-gradient(circle at 82% 72%, rgba(255,255,255,0.04), transparent 22%)',
+          }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: 0.14,
+          backgroundImage:
+            'linear-gradient(90deg, rgba(17,17,17,0.18) 1px, transparent 1px), linear-gradient(rgba(17,17,17,0.18) 1px, transparent 1px)',
+          backgroundSize: '120px 120px',
+        }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(circle at 12% 18%, rgba(255,61,154,0.16), transparent 16%), radial-gradient(circle at 82% 76%, rgba(0,183,255,0.16), transparent 18%)',
+        }}
+      />
+    </>
+  );
+}
+
+function ThemeFrame({ theme }: { theme: ThemePreset }) {
+  if (theme.family === 'chalk') return <WoodFrame />;
+  if (theme.family === 'whiteboard') return <WhiteboardFrame theme={theme} />;
+  if (theme.family === 'blackboard') return <BlackboardFrame theme={theme} />;
+  return <BrutalFrame theme={theme} />;
+}
+
+function StandbyHeadline({ theme }: { theme: ThemePreset }) {
+  if (theme.family === 'whiteboard') {
+    return (
+      <div
+        className="relative flex flex-col items-center gap-2 rounded-[32px] px-10 py-8"
+        style={{
+          background: theme.surface,
+          border: `4px solid ${theme.border}`,
+          boxShadow: `14px 14px 0 ${theme.accent}22`,
+        }}
+      >
+        {theme.id === 'white-note' && (
+          <div
+            className="absolute -top-5 -right-5 rounded-xl px-4 py-2"
+            style={{ background: '#fff1a6', border: '2px solid #d7c35e', transform: 'rotate(8deg)' }}
+          >
+            <span className="text-xs font-bold text-gray-700">WELCOME</span>
+          </div>
+        )}
+        <span style={{ color: theme.accent, fontSize: 'clamp(0.95rem, 2.2vh, 1.45rem)', letterSpacing: '0.24em', fontWeight: 700 }}>
+          WHITEBOARD MODE
+        </span>
+        <span style={{ color: theme.text, fontSize: 'clamp(2.4rem, 7vh, 6rem)', lineHeight: 1.05, fontWeight: 700 }}>
+          GWANGJU SOFTWARE
+        </span>
+        <span style={{ color: theme.text, fontSize: 'clamp(1.15rem, 3vh, 2.4rem)', letterSpacing: '0.18em', fontWeight: 700 }}>
+          MEISTER HIGH SCHOOL
+        </span>
+      </div>
+    );
+  }
+
+  if (theme.family === 'blackboard') {
+    return (
+      <div
+        className="relative flex flex-col items-center gap-2 rounded-[32px] px-12 py-9"
+        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        <span style={{ color: theme.secondary, fontSize: 'clamp(0.9rem, 2vh, 1.35rem)', letterSpacing: '0.26em' }}>BLACKBOARD MODE</span>
+        <span style={{ color: theme.text, fontSize: 'clamp(2.25rem, 6.8vh, 5.7rem)', lineHeight: 1.02 }}>GWANGJU</span>
+        <span style={{ color: theme.accent, fontSize: 'clamp(3.1rem, 9vh, 8rem)', lineHeight: 1 }}>SOFTWARE</span>
+        <span style={{ color: theme.text, fontSize: 'clamp(2rem, 5.8vh, 5rem)', lineHeight: 1.04 }}>MEISTER</span>
+      </div>
+    );
+  }
+
+  if (theme.family === 'brutal') {
+    return (
+      <div className="flex flex-col items-center">
+        <div
+          className="px-8 py-4"
+          style={{
+            background: theme.surface,
+            border: '4px solid #111',
+            boxShadow: `12px 12px 0 ${theme.secondary}`,
+            transform: 'rotate(-2deg)',
+          }}
+        >
+          <span style={{ color: '#111', fontSize: 'clamp(1.7rem, 5vh, 4.6rem)', letterSpacing: '0.08em' }}>GWANGJU</span>
+        </div>
+        <div
+          className="mt-3 px-10 py-4"
+          style={{
+            background: theme.accent,
+            border: '4px solid #111',
+            boxShadow: '10px 10px 0 #111',
+            transform: 'rotate(1.6deg)',
+          }}
+        >
+          <span style={{ color: '#111', fontSize: 'clamp(2.1rem, 6.2vh, 6rem)', lineHeight: 1 }}>SOFTWARE TV</span>
+        </div>
+        <div
+          className="mt-3 px-8 py-3"
+          style={{
+            background: theme.surface,
+            border: '4px solid #111',
+            transform: 'rotate(-1deg)',
+          }}
+        >
+          <span style={{ color: '#111', fontSize: 'clamp(1rem, 2.7vh, 2rem)', letterSpacing: '0.14em' }}>MEISTER WELCOME BOARD</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em' }}>GWANGJU</span>
+      <span style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1, letterSpacing: '0.2em' }}>SOFTWARE</span>
+      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em' }}>MEISTER</span>
+    </div>
+  );
+}
+
+function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean }) {
+  if (theme.family === 'whiteboard') {
+    return (
+      <>
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            right: '7%',
+            top: '14%',
+            width: 'clamp(110px, 12vw, 180px)',
+            height: 'clamp(12px, 1.6vw, 18px)',
+            background: theme.accent,
+            borderRadius: '999px',
+            transform: 'rotate(12deg)',
+            opacity: show ? 0.75 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            left: '8%',
+            bottom: '16%',
+            width: 'clamp(110px, 14vw, 180px)',
+            height: 'clamp(80px, 10vw, 120px)',
+            background: theme.id === 'white-note' ? '#fff1a6' : '#e6f0ff',
+            border: `3px solid ${theme.border}`,
+            transform: 'rotate(-8deg)',
+            opacity: show ? 0.9 : 0,
+          }}
+        />
+      </>
+    );
+  }
+
+  if (theme.family === 'blackboard') {
+    return (
+      <>
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            top: '13%',
+            right: '6%',
+            color: theme.secondary,
+            fontSize: 'clamp(1rem, 2.2vh, 1.6rem)',
+            opacity: show ? 0.42 : 0,
+            transform: 'rotate(6deg)',
+          }}
+        >
+          E = mc²
+        </div>
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            bottom: '14%',
+            left: '6%',
+            color: theme.accent,
+            fontSize: 'clamp(0.95rem, 2vh, 1.4rem)',
+            opacity: show ? 0.36 : 0,
+            transform: 'rotate(-7deg)',
+          }}
+        >
+          x + y = welcome
+        </div>
+      </>
+    );
+  }
+
+  if (theme.family === 'brutal') {
+    return (
+      <>
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            top: '16%',
+            right: '7%',
+            width: 'clamp(90px, 10vw, 140px)',
+            height: 'clamp(90px, 10vw, 140px)',
+            background: theme.accent,
+            border: '4px solid #111',
+            transform: 'rotate(14deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            bottom: '14%',
+            left: '7%',
+            width: 'clamp(120px, 16vw, 220px)',
+            height: 'clamp(24px, 3vh, 38px)',
+            background: theme.secondary,
+            border: '4px solid #111',
+            transform: 'rotate(-6deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div
+        className="absolute pointer-events-none transition-opacity duration-1000"
+        style={{
+          right: '4%',
+          top: '12%',
+          width: 'clamp(80px, 11vh, 160px)',
+          opacity: show ? 0.9 : 0,
+          transitionDelay: '500ms',
+        }}
+      >
+        <ChalkPink color={theme.secondary} style={{ width: '100%', height: 'auto' }} />
+      </div>
+      <div
+        className="absolute pointer-events-none transition-opacity duration-1000"
+        style={{
+          left: '4%',
+          bottom: '14%',
+          width: 'clamp(55px, 7.5vh, 110px)',
+          opacity: show ? 0.9 : 0,
+          transitionDelay: '700ms',
+        }}
+      >
+        <ChalkGreen color={theme.accent} style={{ width: '100%', height: 'auto' }} />
+      </div>
+    </>
+  );
+}
+
+function DisplayMessage({
+  theme,
+  displayName,
+  msgBody,
+  show,
+}: {
+  theme: ThemePreset;
+  displayName: string;
+  msgBody: string;
+  show: boolean;
+}) {
+  const bodyStyle: React.CSSProperties = {
+    fontSize: 'clamp(1.35rem, 4.3vh, 3.8rem)',
+    lineHeight: 1.55,
+    maxWidth: 'min(78vw, 22ch)',
+    marginInline: 'auto',
+    wordBreak: 'keep-all',
+    overflowWrap: 'break-word',
+    textWrap: 'pretty',
+  };
+
+  if (theme.family === 'whiteboard') {
+    return (
+      <div
+        className="relative w-full max-w-[min(78vw,980px)] transition-all duration-700"
+        style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
+      >
+        {theme.id === 'white-note' && (
+          <div
+            className="absolute -top-6 right-8 z-10 rounded-xl px-4 py-2"
+            style={{ background: '#fff1a6', border: '2px solid #d7c35e', transform: 'rotate(6deg)' }}
+          >
+            <span className="text-xs font-bold text-gray-700">guest note</span>
+          </div>
+        )}
+        <div
+          className="relative rounded-[38px] px-10 py-12"
+          style={{
+            background: theme.surface,
+            border: `4px solid ${theme.border}`,
+            boxShadow: `18px 18px 0 ${theme.accent}22`,
+          }}
+        >
+          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 6.8vh, 6rem)', lineHeight: 1.04, fontWeight: 700, whiteSpace: 'nowrap' }}>
+            {displayName ? `${displayName}님` : '환영합니다'}
+          </p>
+          <div
+            className="rounded-full"
+            style={{ width: 'clamp(120px, 18vw, 220px)', height: '6px', background: theme.secondary, marginTop: 'clamp(1rem, 2vh, 1.5rem)' }}
+          />
+          <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(1rem, 2vh, 1.6rem)' }}>{msgBody}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (theme.family === 'blackboard') {
+    return (
+      <div
+        className="flex flex-col items-center transition-all duration-700"
+        style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
+      >
+        <p style={{ color: theme.accent, fontSize: 'clamp(2.6rem, 7vh, 6.3rem)', lineHeight: 1.06, whiteSpace: 'nowrap' }}>
+          {displayName ? `${displayName}님` : '환영합니다'}
+        </p>
+        <p
+          style={{
+            ...bodyStyle,
+            color: theme.text,
+            marginTop: 'clamp(0.9rem, 1.6vh, 1.3rem)',
+            textShadow: '0 0 10px rgba(255,255,255,0.06)',
+          }}
+        >
+          {msgBody}
+        </p>
+      </div>
+    );
+  }
+
+  if (theme.family === 'brutal') {
+    return (
+      <div className="relative flex flex-col items-center gap-6 transition-all duration-700" style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}>
+        <div
+          className="px-8 py-5"
+          style={{
+            background: theme.surface,
+            border: '5px solid #111',
+            boxShadow: `14px 14px 0 ${theme.accent}`,
+            transform: 'rotate(-1.6deg)',
+          }}
+        >
+          <p style={{ color: '#111', fontSize: 'clamp(2.3rem, 6.6vh, 5.6rem)', lineHeight: 1, whiteSpace: 'nowrap' }}>
+            {displayName ? `${displayName}님` : 'WELCOME'}
+          </p>
+        </div>
+        <div
+          className="px-8 py-8"
+          style={{
+            background: theme.secondary,
+            border: '5px solid #111',
+            boxShadow: `16px 16px 0 ${theme.surface}`,
+            transform: 'rotate(1.2deg)',
+            maxWidth: 'min(82vw, 860px)',
+          }}
+        >
+          <p style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)' }}>{msgBody}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="text-center transition-all duration-700" style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}>
+      <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+        {displayName ? `${displayName}님` : ''}
+      </p>
+      <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}>{msgBody}</p>
+    </div>
+  );
+}
+
 function useClock() {
   const [time, setTime] = useState(() => formatDateTime(new Date()));
+
   useEffect(() => {
     const id = setInterval(() => setTime(formatDateTime(new Date())), 1000);
     return () => clearInterval(id);
   }, []);
+
   return time;
 }
-function formatDateTime(d: Date) {
-  const month = d.getMonth() + 1;
-  const day = d.getDate();
-  const h = d.getHours(),
-    m = d.getMinutes().toString().padStart(2, '0');
-  return `${month}월 ${day}일 ${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${m}`;
+
+function formatDateTime(date: Date) {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${month}월 ${day}일 ${hours < 12 ? '오전' : '오후'} ${hours % 12 || 12}:${minutes}`;
 }
-function escapeRegex(s: string) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function normalizeDisplayName(name: string | undefined) {
@@ -194,6 +666,17 @@ function normalizeMessageBody(message: string | undefined, name: string | undefi
     .trim();
 }
 
+function rootBackground(theme: ThemePreset) {
+  if (theme.family === 'brutal') return `linear-gradient(135deg, ${theme.bg} 0%, ${theme.surface} 160%)`;
+  return theme.bg;
+}
+
+function rootFont(theme: ThemePreset) {
+  if (theme.family === 'whiteboard') return BOARD_FONT;
+  if (theme.family === 'brutal') return BRUTAL_FONT;
+  return CHALK_FONT;
+}
+
 export default function DesktopPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [visible, setVisible] = useState(false);
@@ -202,18 +685,17 @@ export default function DesktopPage() {
   const time = useClock();
   const mobileUrl = `${window.location.origin}/mobile`;
 
-  // 테마는 Firestore session에서 읽음 (모바일에서 제어)
   const themeId: ThemeId = session?.themeId ?? 'green';
-  const theme = THEMES.find((t) => t.id === themeId) ?? THEMES[0];
+  const theme = findTheme(themeId);
+  const displayName = normalizeDisplayName(session?.visitorName);
+  const msgBody = normalizeMessageBody(session?.welcomeMessage, session?.visitorName);
 
-  useEffect(() => {
-    return subscribeSession(setSession);
-  }, []);
+  useEffect(() => subscribeSession(setSession), []);
 
-  // generating → AI 생성 → displaying
   useEffect(() => {
     if (session?.status !== 'generating' || !session.visitorName) return;
     let cancelled = false;
+
     fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -223,7 +705,7 @@ export default function DesktopPage() {
         tone: session.tone,
       }),
     })
-      .then((r) => r.json())
+      .then((response) => response.json())
       .then((data) => {
         if (cancelled) return;
         updateSession({
@@ -240,25 +722,28 @@ export default function DesktopPage() {
           welcomeMessage: '환영합니다!',
         });
       });
+
     return () => {
       cancelled = true;
     };
   }, [session?.status, session?.visitorName, session?.welcomeMessage, session?.tone]);
 
-  // displaying 진입 애니메이션 + 자동 리셋
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-    const t0 = setTimeout(() => setVisible(session?.status === 'displaying'), 0);
+    const startVisible = setTimeout(() => setVisible(session?.status === 'displaying'), 0);
+
     if (session?.status === 'displaying') {
-      const t1 = setTimeout(() => setVisible(true), 60);
+      const animateVisible = setTimeout(() => setVisible(true), 60);
       resetTimerRef.current = setTimeout(() => resetSession(), RESET_DELAY);
+
       return () => {
-        clearTimeout(t0);
-        clearTimeout(t1);
+        clearTimeout(startVisible);
+        clearTimeout(animateVisible);
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       };
     }
-    return () => clearTimeout(t0);
+
+    return () => clearTimeout(startVisible);
   }, [session?.status, session?.welcomeMessage]);
 
   useEffect(() => {
@@ -275,9 +760,6 @@ export default function DesktopPage() {
   const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
   const show = isDisplaying && visible;
-  const displayName = normalizeDisplayName(session?.visitorName);
-
-  const msgBody = normalizeMessageBody(session?.welcomeMessage, session?.visitorName);
 
   async function handleConfirmReset() {
     setShowResetConfirm(false);
@@ -287,71 +769,61 @@ export default function DesktopPage() {
   return (
     <div
       className="relative w-screen h-screen overflow-hidden select-none"
-      style={{ background: theme.bg, fontFamily: CHALK_FONT }}
+      style={{ background: rootBackground(theme), fontFamily: rootFont(theme) }}
     >
-      {/* 칠판 미세 텍스처 */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.025) 3px, rgba(255,255,255,0.025) 6px)',
-        }}
-      />
+      <ThemeTexture theme={theme} />
 
-      {/* ── 대기 화면 ── */}
       <div
         className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-700"
         style={{ opacity: isDisplaying ? 0 : 1, pointerEvents: isDisplaying ? 'none' : 'auto' }}
       >
         {isGenerating && (
-          <div className="absolute flex flex-col items-center gap-4" style={{ top: '26%' }}>
+          <div className="absolute flex flex-col items-center gap-4" style={{ top: '24%' }}>
             <div className="flex gap-3">
-              {[0, 1, 2].map((i) => (
+              {[0, 1, 2].map((index) => (
                 <div
-                  key={i}
-                  className="rounded-full bg-white/60"
+                  key={index}
+                  className="rounded-full"
                   style={{
                     width: 'clamp(10px,1.2vh,16px)',
                     height: 'clamp(10px,1.2vh,16px)',
-                    animation: `bounce 1.2s ${i * 0.2}s infinite`,
+                    background: theme.family === 'brutal' ? '#111' : theme.text,
+                    opacity: 0.6,
+                    animation: `bounce 1.2s ${index * 0.2}s infinite`,
                   }}
                 />
               ))}
             </div>
-            <p className="text-white/55 tracking-[0.18em]" style={{ fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)' }}>
+            <p style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)', letterSpacing: '0.18em' }}>
               {session?.visitorName}님의 환영 문구를 만들고 있어요...
             </p>
           </div>
         )}
 
-        <div className="flex flex-col items-center gap-1" style={{ opacity: isGenerating ? 0.25 : 1 }}>
-          <span className="text-white tracking-widest" style={{ fontSize: 'clamp(2rem, 6.5vh, 5.5rem)' }}>
-            GWANGJU
-          </span>
-          <span
-            className="tracking-widest"
-            style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1 }}
-          >
-            SOFTWARE
-          </span>
-          <span className="text-white tracking-widest" style={{ fontSize: 'clamp(2rem, 6.5vh, 5.5rem)' }}>
-            MEISTER
-          </span>
+        <div style={{ opacity: isGenerating ? 0.3 : 1 }}>
+          <StandbyHeadline theme={theme} />
         </div>
 
         {!isGenerating && (
           <div className="flex flex-col items-center gap-3" style={{ marginTop: 'clamp(2rem, 5vh, 4rem)' }}>
-            <div className="bg-white rounded-xl shadow-2xl" style={{ padding: 'clamp(10px, 1.5vh, 16px)' }}>
+            <div
+              className="rounded-2xl"
+              style={{
+                background: theme.surface,
+                padding: 'clamp(10px, 1.5vh, 16px)',
+                border: theme.family === 'brutal' ? '4px solid #111' : `2px solid ${theme.border}`,
+                boxShadow: theme.family === 'brutal' ? `10px 10px 0 ${theme.accent}` : '0 18px 44px rgba(0,0,0,0.18)',
+              }}
+            >
               <QRCodeSVG value={mobileUrl} size={Math.round(window.innerHeight * 0.14)} />
             </div>
-            <p className="text-white/45 tracking-widest" style={{ fontSize: 'clamp(0.65rem, 1.5vh, 1rem)' }}>
+            <p style={{ color: theme.muted, fontSize: 'clamp(0.7rem, 1.6vh, 1.05rem)', letterSpacing: '0.16em' }}>
               스캔하여 메시지 남기기
             </p>
           </div>
         )}
       </div>
 
-      {/* ── 환영 화면 ── */}
       <div
         className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-700"
         style={{
@@ -361,94 +833,35 @@ export default function DesktopPage() {
           pointerEvents: isDisplaying ? 'auto' : 'none',
         }}
       >
-        {/* 분필 장식 - 핑크 (우상단) */}
-        <div
-          className="absolute pointer-events-none transition-opacity duration-1000"
-          style={{
-            right: '4%',
-            top: '12%',
-            width: 'clamp(80px, 11vh, 160px)',
-            opacity: show ? 0.9 : 0,
-            transitionDelay: '500ms',
-          }}
-        >
-          <ChalkPink style={{ width: '100%', height: 'auto' }} />
-        </div>
-
-        {/* 환영 문구 */}
-        <div
-          className="text-center transition-all duration-700"
-          style={{
-            transitionDelay: '200ms',
-            opacity: show ? 1 : 0,
-            transform: show ? 'translateY(0)' : 'translateY(30px)',
-          }}
-        >
-          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
-            {displayName ? `${displayName}님` : ''}
-          </p>
-          <p
-            className="text-white"
-            style={{
-              fontSize: 'clamp(1.4rem, 4.5vh, 4rem)',
-              lineHeight: 1.55,
-              marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
-              maxWidth: 'min(78vw, 22ch)',
-              marginInline: 'auto',
-              wordBreak: 'keep-all',
-              overflowWrap: 'break-word',
-              textWrap: 'pretty',
-            }}
-          >
-            {msgBody}
-          </p>
-        </div>
-
-        {/* 분필 장식 - 초록 (좌하단) */}
-        <div
-          className="absolute pointer-events-none transition-opacity duration-1000"
-          style={{
-            left: '4%',
-            bottom: '14%',
-            width: 'clamp(55px, 7.5vh, 110px)',
-            opacity: show ? 0.9 : 0,
-            transitionDelay: '700ms',
-          }}
-        >
-          <ChalkGreen style={{ width: '100%', height: 'auto' }} />
-        </div>
+        <DisplayDecorations theme={theme} show={show} />
+        <DisplayMessage theme={theme} displayName={displayName} msgBody={msgBody} show={show} />
       </div>
 
-      {/* ── 상단 정보 ── */}
       <div
         className="absolute flex justify-end z-20"
         style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}
       >
-        <span
-          className="text-white/60 tracking-widest"
-          style={{ fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)', whiteSpace: 'nowrap' }}
-        >
+        <span style={{ color: theme.muted, fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)', whiteSpace: 'nowrap', letterSpacing: '0.16em' }}>
           Gwangju Software Meister High School
         </span>
       </div>
 
-      {/* ── 푸터 ── */}
       <div
         className="absolute flex items-end justify-between z-20"
-        style={{ bottom: 'clamp(24px, 4vh, 50px)', left: 'clamp(50px, 7vw, 100px)', right: 'clamp(50px, 7vw, 100px)' }}
+        style={{
+          bottom: 'clamp(24px, 4vh, 50px)',
+          left: 'clamp(50px, 7vw, 100px)',
+          right: 'clamp(50px, 7vw, 100px)',
+        }}
       >
         <div className="flex flex-col gap-0.5">
-          <span className="text-white/35 tracking-widest" style={{ fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)' }}>
-            since
-          </span>
-          <span className="text-white/60 tracking-widest" style={{ fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)' }}>
+          <span style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)', letterSpacing: '0.16em' }}>since</span>
+          <span style={{ color: theme.family === 'brutal' ? theme.text : theme.text, fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)', letterSpacing: '0.12em' }}>
             2017
           </span>
         </div>
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-white/65 tabular-nums" style={{ fontSize: 'clamp(1.2rem, 3vh, 2.2rem)' }}>
-            {time}
-          </span>
+          <span style={{ color: theme.text, fontSize: 'clamp(1.2rem, 3vh, 2.2rem)' }}>{time}</span>
         </div>
       </div>
 
@@ -485,8 +898,7 @@ export default function DesktopPage() {
         </div>
       )}
 
-      {/* ── 나무 프레임 ── */}
-      <WoodFrame />
+      <ThemeFrame theme={theme} />
     </div>
   );
 }
