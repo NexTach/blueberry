@@ -1,4 +1,4 @@
-import type { TemplateId } from '../../lib/openai';
+import { applyTemplate, type TemplateId } from '../../lib/openai';
 import type { TemplateOption, ThemeOption, AIToneOption, AiToneId } from './types';
 
 export const DEFAULT_TEMPLATE_ID: TemplateId = 1;
@@ -13,7 +13,7 @@ export const TEMPLATES: TemplateOption[] = [
     description: '가장 기본적인 인사',
     accent: 'bg-emerald-50 text-emerald-700',
     mode: 'template',
-    preview: (name) => `${name}님, 환영합니다!`,
+    preview: (name) => applyTemplate(name, 1) ?? '',
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ export const TEMPLATES: TemplateOption[] = [
     description: '학교 방문 인사',
     accent: 'bg-sky-50 text-sky-700',
     mode: 'template',
-    preview: (name) => `${name}님, 광주SW마이스터고에 오신 것을 환영합니다!`,
+    preview: (name) => applyTemplate(name, 2) ?? '',
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ export const TEMPLATES: TemplateOption[] = [
     description: '가볍고 산뜻하게',
     accent: 'bg-amber-50 text-amber-700',
     mode: 'template',
-    preview: (name) => `${name}님, 오늘 이 공간에서 즐거운 시간 보내세요!`,
+    preview: (name) => applyTemplate(name, 3) ?? '',
   },
   {
     id: 4,
@@ -37,7 +37,7 @@ export const TEMPLATES: TemplateOption[] = [
     description: '정돈된 톤의 문구',
     accent: 'bg-slate-100 text-slate-700',
     mode: 'template',
-    preview: (name) => `${name}님, 반갑습니다. 편안하게 둘러보세요!`,
+    preview: (name) => applyTemplate(name, 4) ?? '',
   },
   {
     id: 5,
@@ -45,7 +45,7 @@ export const TEMPLATES: TemplateOption[] = [
     description: '조금 더 눈에 띄게',
     accent: 'bg-pink-50 text-pink-700',
     mode: 'template',
-    preview: (name) => `${name}님, 오늘의 주인공처럼 빛나는 하루 보내세요!`,
+    preview: (name) => applyTemplate(name, 5) ?? '',
   },
   {
     id: 6,
@@ -53,7 +53,7 @@ export const TEMPLATES: TemplateOption[] = [
     description: '힘나는 느낌으로',
     accent: 'bg-violet-50 text-violet-700',
     mode: 'template',
-    preview: (name) => `${name}님, 좋은 에너지 가득 안고 다녀가세요!`,
+    preview: (name) => applyTemplate(name, 6) ?? '',
   },
   {
     id: 7,

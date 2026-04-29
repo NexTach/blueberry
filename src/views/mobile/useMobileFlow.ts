@@ -124,6 +124,7 @@ export function useMobileFlow() {
     speech,
     setAiTone,
     setAiPrompt,
+    setMessage,
     setShowDirectInput,
     setShowSettings,
     handleStartListening,
