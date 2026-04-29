@@ -708,6 +708,7 @@ export default function DesktopPage() {
           status: 'displaying',
           visitorName: data.resolvedName ?? session.visitorName,
           welcomeMessage: data.message ?? '환영합니다!',
+          sourcePrompt: session.sourcePrompt ?? session.welcomeMessage,
         });
       })
       .catch(() => {
@@ -716,6 +717,7 @@ export default function DesktopPage() {
           status: 'displaying',
           visitorName: session.visitorName,
           welcomeMessage: '환영합니다!',
+          sourcePrompt: session.sourcePrompt ?? session.welcomeMessage,
         });
       });
 
