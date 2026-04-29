@@ -17,6 +17,7 @@ export interface Session {
   status: SessionStatus;
   visitorName: string;
   welcomeMessage: string;
+  sourcePrompt?: string;
   themeId?: ThemeId;
   tone?: string;
   updatedAt: Timestamp | null;
