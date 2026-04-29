@@ -36,14 +36,14 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
                           : theme.bg,
                     boxShadow: selected ? `0 0 0 2px ${theme.accent}22` : 'none',
                   }}
-                >
-                  <div className="flex w-full items-start justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded-full shrink-0" style={{ background: theme.accent }} />
-                      <span className="text-sm font-semibold" style={{ color: theme.text }}>
-                        {theme.name}
-                      </span>
-                    </div>
+                  >
+                    <div className="flex w-full items-start justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full shrink-0" style={{ background: theme.accent }} />
+                        <span className="text-sm font-semibold" style={{ color: theme.text }}>
+                          {theme.name}
+                        </span>
+                      </div>
                     {selected && (
                       <svg
                         className="shrink-0"

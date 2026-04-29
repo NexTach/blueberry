@@ -7,6 +7,8 @@ export interface ThemePreset {
   family: ThemeFamily;
   name: string;
   description: string;
+  titleFont: string;
+  bodyFont: string;
   bg: string;
   surface: string;
   text: string;
@@ -23,18 +25,20 @@ export interface ThemeFamilyPreset {
 }
 
 export const THEME_FAMILIES: ThemeFamilyPreset[] = [
-  { id: 'chalk', label: '칠판 디자인', description: '목재 프레임과 분필 질감 중심' },
-  { id: 'whiteboard', label: '화이트보드', description: '마커 기반의 밝은 보드 스타일' },
-  { id: 'blackboard', label: '블랙보드', description: '더 깊고 차가운 검정 보드 무드' },
-  { id: 'brutal', label: '네오 브루탈리즘', description: '강한 테두리와 포스터형 그래픽' },
+  { id: 'chalk', label: '칠판', description: '학교 칠판 느낌의 익숙한 화면' },
+  { id: 'whiteboard', label: '화이트보드', description: '밝고 깔끔한 보드 화면' },
+  { id: 'blackboard', label: '블랙보드', description: '더 진하고 선명한 검정 보드' },
+  { id: 'brutal', label: '포스터 스타일', description: '강한 색과 박스형 그래픽 화면' },
 ];
 
 export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'green',
     family: 'chalk',
-    name: '클래식 그린',
-    description: '가장 익숙한 학교 칠판',
+    name: '기본 칠판',
+    description: '가장 무난한 초록 칠판',
+    titleFont: "'HakgyoansimBunpil', sans-serif",
+    bodyFont: "'HakgyoansimBunpil', sans-serif",
     bg: '#344034',
     surface: '#f9f7ef',
     text: '#f7f6ef',
@@ -46,8 +50,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'black',
     family: 'chalk',
-    name: '크리스프 차콜',
-    description: '선명한 대비의 짙은 칠판',
+    name: '진한 칠판',
+    description: '더 또렷한 어두운 칠판',
+    titleFont: "'HakgyoansimBunpil', sans-serif",
+    bodyFont: "'HakgyoansimBunpil', sans-serif",
     bg: '#1e2820',
     surface: '#fcfcf7',
     text: '#f8f8f3',
@@ -59,8 +65,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'navy',
     family: 'chalk',
-    name: '스카이 초크',
-    description: '청록 바탕에 밝은 분필 포인트',
+    name: '청록 칠판',
+    description: '시원한 느낌의 청록 칠판',
+    titleFont: "'HakgyoansimBunpil', sans-serif",
+    bodyFont: "'HakgyoansimBunpil', sans-serif",
     bg: '#274842',
     surface: '#fbfbf4',
     text: '#eff5ee',
@@ -72,8 +80,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'warm',
     family: 'chalk',
-    name: '올리브 클래식',
-    description: '빈티지한 올리브 계열 보드',
+    name: '올리브 칠판',
+    description: '부드러운 올리브 톤 칠판',
+    titleFont: "'HakgyoansimBunpil', sans-serif",
+    bodyFont: "'HakgyoansimBunpil', sans-serif",
     bg: '#4b5024',
     surface: '#fbf7ec',
     text: '#f7f6ea',
@@ -85,8 +95,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'white-grid',
     family: 'whiteboard',
-    name: '클린 화이트',
-    description: '정갈한 마커 화이트보드',
+    name: '기본 화이트보드',
+    description: '깨끗하고 정돈된 화이트보드',
+    titleFont: "'Avenir Next', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+    bodyFont: "'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
     bg: '#eef7ff',
     surface: '#ffffff',
     text: '#0f1726',
@@ -98,8 +110,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'white-note',
     family: 'whiteboard',
-    name: '스티키 메모',
-    description: '포스트잇이 붙은 화이트보드',
+    name: '메모 화이트보드',
+    description: '메모가 붙은 친근한 화이트보드',
+    titleFont: "'Marker Felt', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+    bodyFont: "'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
     bg: '#fff9ed',
     surface: '#ffffff',
     text: '#20212a',
@@ -111,8 +125,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'board-classic',
     family: 'blackboard',
-    name: '딥 블랙보드',
-    description: '분필 가루가 살아있는 검정 보드',
+    name: '기본 블랙보드',
+    description: '깊은 검정 톤의 클래식 보드',
+    titleFont: "'HakgyoansimBunpil', sans-serif",
+    bodyFont: "'HakgyoansimBunpil', sans-serif",
     bg: '#121619',
     surface: '#f7f6f1',
     text: '#f7f6f1',
@@ -124,8 +140,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'board-neon',
     family: 'blackboard',
-    name: '네온 초크',
-    description: '야간 행사 느낌의 차가운 보드',
+    name: '네온 블랙보드',
+    description: '포인트 색이 강한 야간 느낌 보드',
+    titleFont: "'Trebuchet MS', 'Apple SD Gothic Neo', sans-serif",
+    bodyFont: "'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
     bg: '#101318',
     surface: '#fbfaf7',
     text: '#f7fbff',
@@ -137,8 +155,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'brutal-pop',
     family: 'brutal',
-    name: '팝 스트라이크',
-    description: '형광 핑크와 시안의 충돌',
+    name: '팝 포스터',
+    description: '톡톡 튀는 색감의 포스터 화면',
+    titleFont: "'Arial Black', 'Helvetica Neue', 'Apple SD Gothic Neo', sans-serif",
+    bodyFont: "'Helvetica Neue', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
     bg: '#ffe45c',
     surface: '#ffffff',
     text: '#111111',
@@ -150,8 +170,10 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'brutal-editorial',
     family: 'brutal',
-    name: '오렌지 스택',
-    description: '포스터형 블록이 겹치는 구도',
+    name: '스택 포스터',
+    description: '블록이 겹치는 강한 포스터 화면',
+    titleFont: "'Arial Black', 'Helvetica Neue', 'Apple SD Gothic Neo', sans-serif",
+    bodyFont: "'Helvetica Neue', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
     bg: '#ffb347',
     surface: '#fff8ee',
     text: '#111111',

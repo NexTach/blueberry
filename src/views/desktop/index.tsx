@@ -4,9 +4,6 @@ import { subscribeSession, resetSession, updateSession } from '../../lib/firebas
 import { findTheme, type ThemePreset } from '../../lib/themes';
 import type { Session, ThemeId } from '../../types/session';
 
-const CHALK_FONT = "'HakgyoansimBunpil', sans-serif";
-const BOARD_FONT = "'Trebuchet MS', 'Apple SD Gothic Neo', sans-serif";
-const BRUTAL_FONT = "'Arial Black', 'Arial', 'Apple SD Gothic Neo', sans-serif";
 const RESET_DELAY = 30 * 60 * 1000;
 
 function ChalkPink({ color, style }: { color: string; style?: React.CSSProperties }) {
@@ -302,13 +299,13 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             <span className="text-xs font-bold text-gray-700">WELCOME</span>
           </div>
         )}
-        <span style={{ color: theme.accent, fontSize: 'clamp(0.95rem, 2.2vh, 1.45rem)', letterSpacing: '0.24em', fontWeight: 700 }}>
+        <span style={{ color: theme.accent, fontSize: 'clamp(0.95rem, 2.2vh, 1.45rem)', letterSpacing: '0.24em', fontWeight: 700, fontFamily: theme.bodyFont }}>
           WHITEBOARD MODE
         </span>
-        <span style={{ color: theme.text, fontSize: 'clamp(2.4rem, 7vh, 6rem)', lineHeight: 1.05, fontWeight: 700 }}>
+        <span style={{ color: theme.text, fontSize: 'clamp(2.4rem, 7vh, 6rem)', lineHeight: 1.05, fontWeight: 700, fontFamily: theme.titleFont }}>
           GWANGJU SOFTWARE
         </span>
-        <span style={{ color: theme.text, fontSize: 'clamp(1.15rem, 3vh, 2.4rem)', letterSpacing: '0.18em', fontWeight: 700 }}>
+        <span style={{ color: theme.text, fontSize: 'clamp(1.15rem, 3vh, 2.4rem)', letterSpacing: '0.18em', fontWeight: 700, fontFamily: theme.bodyFont }}>
           MEISTER HIGH SCHOOL
         </span>
       </div>
@@ -321,10 +318,10 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         className="relative flex flex-col items-center gap-2 rounded-[32px] px-12 py-9"
         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        <span style={{ color: theme.secondary, fontSize: 'clamp(0.9rem, 2vh, 1.35rem)', letterSpacing: '0.26em' }}>BLACKBOARD MODE</span>
-        <span style={{ color: theme.text, fontSize: 'clamp(2.25rem, 6.8vh, 5.7rem)', lineHeight: 1.02 }}>GWANGJU</span>
-        <span style={{ color: theme.accent, fontSize: 'clamp(3.1rem, 9vh, 8rem)', lineHeight: 1 }}>SOFTWARE</span>
-        <span style={{ color: theme.text, fontSize: 'clamp(2rem, 5.8vh, 5rem)', lineHeight: 1.04 }}>MEISTER</span>
+        <span style={{ color: theme.secondary, fontSize: 'clamp(0.9rem, 2vh, 1.35rem)', letterSpacing: '0.26em', fontFamily: theme.bodyFont }}>BLACKBOARD MODE</span>
+        <span style={{ color: theme.text, fontSize: 'clamp(2.25rem, 6.8vh, 5.7rem)', lineHeight: 1.02, fontFamily: theme.titleFont }}>GWANGJU</span>
+        <span style={{ color: theme.accent, fontSize: 'clamp(3.1rem, 9vh, 8rem)', lineHeight: 1, fontFamily: theme.titleFont }}>SOFTWARE</span>
+        <span style={{ color: theme.text, fontSize: 'clamp(2rem, 5.8vh, 5rem)', lineHeight: 1.04, fontFamily: theme.titleFont }}>MEISTER</span>
       </div>
     );
   }
@@ -341,7 +338,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             transform: 'rotate(-2deg)',
           }}
         >
-          <span style={{ color: '#111', fontSize: 'clamp(1.7rem, 5vh, 4.6rem)', letterSpacing: '0.08em' }}>GWANGJU</span>
+          <span style={{ color: '#111', fontSize: 'clamp(1.7rem, 5vh, 4.6rem)', letterSpacing: '0.08em', fontFamily: theme.titleFont }}>GWANGJU</span>
         </div>
         <div
           className="mt-3 px-10 py-4"
@@ -352,7 +349,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             transform: 'rotate(1.6deg)',
           }}
         >
-          <span style={{ color: '#111', fontSize: 'clamp(2.1rem, 6.2vh, 6rem)', lineHeight: 1 }}>SOFTWARE TV</span>
+          <span style={{ color: '#111', fontSize: 'clamp(2.1rem, 6.2vh, 6rem)', lineHeight: 1, fontFamily: theme.titleFont }}>SOFTWARE TV</span>
         </div>
         <div
           className="mt-3 px-8 py-3"
@@ -362,7 +359,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             transform: 'rotate(-1deg)',
           }}
         >
-          <span style={{ color: '#111', fontSize: 'clamp(1rem, 2.7vh, 2rem)', letterSpacing: '0.14em' }}>MEISTER WELCOME BOARD</span>
+          <span style={{ color: '#111', fontSize: 'clamp(1rem, 2.7vh, 2rem)', letterSpacing: '0.14em', fontFamily: theme.bodyFont }}>MEISTER WELCOME BOARD</span>
         </div>
       </div>
     );
@@ -370,9 +367,9 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em' }}>GWANGJU</span>
-      <span style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1, letterSpacing: '0.2em' }}>SOFTWARE</span>
-      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em' }}>MEISTER</span>
+      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em', fontFamily: theme.titleFont }}>GWANGJU</span>
+      <span style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1, letterSpacing: '0.2em', fontFamily: theme.titleFont }}>SOFTWARE</span>
+      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em', fontFamily: theme.titleFont }}>MEISTER</span>
     </div>
   );
 }
@@ -550,14 +547,14 @@ function DisplayMessage({
             boxShadow: `18px 18px 0 ${theme.accent}22`,
           }}
         >
-          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 6.8vh, 6rem)', lineHeight: 1.04, fontWeight: 700, whiteSpace: 'nowrap' }}>
+          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 6.8vh, 6rem)', lineHeight: 1.04, fontWeight: 700, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
             {displayName ? `${displayName}님` : '환영합니다'}
           </p>
           <div
             className="rounded-full"
             style={{ width: 'clamp(120px, 18vw, 220px)', height: '6px', background: theme.secondary, marginTop: 'clamp(1rem, 2vh, 1.5rem)' }}
           />
-          <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(1rem, 2vh, 1.6rem)' }}>{msgBody}</p>
+          <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(1rem, 2vh, 1.6rem)', fontFamily: theme.bodyFont }}>{msgBody}</p>
         </div>
       </div>
     );
@@ -569,7 +566,7 @@ function DisplayMessage({
         className="flex flex-col items-center transition-all duration-700"
         style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
       >
-        <p style={{ color: theme.accent, fontSize: 'clamp(2.6rem, 7vh, 6.3rem)', lineHeight: 1.06, whiteSpace: 'nowrap' }}>
+        <p style={{ color: theme.accent, fontSize: 'clamp(2.6rem, 7vh, 6.3rem)', lineHeight: 1.06, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
           {displayName ? `${displayName}님` : '환영합니다'}
         </p>
         <p
@@ -578,6 +575,7 @@ function DisplayMessage({
             color: theme.text,
             marginTop: 'clamp(0.9rem, 1.6vh, 1.3rem)',
             textShadow: '0 0 10px rgba(255,255,255,0.06)',
+            fontFamily: theme.bodyFont,
           }}
         >
           {msgBody}
@@ -598,7 +596,7 @@ function DisplayMessage({
             transform: 'rotate(-1.6deg)',
           }}
         >
-          <p style={{ color: '#111', fontSize: 'clamp(2.3rem, 6.6vh, 5.6rem)', lineHeight: 1, whiteSpace: 'nowrap' }}>
+          <p style={{ color: '#111', fontSize: 'clamp(2.3rem, 6.6vh, 5.6rem)', lineHeight: 1, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
             {displayName ? `${displayName}님` : 'WELCOME'}
           </p>
         </div>
@@ -612,7 +610,7 @@ function DisplayMessage({
             maxWidth: 'min(82vw, 860px)',
           }}
         >
-          <p style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)' }}>{msgBody}</p>
+          <p style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)', fontFamily: theme.bodyFont }}>{msgBody}</p>
         </div>
       </div>
     );
@@ -620,10 +618,10 @@ function DisplayMessage({
 
   return (
     <div className="text-center transition-all duration-700" style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}>
-      <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+      <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
         {displayName ? `${displayName}님` : ''}
       </p>
-      <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}>{msgBody}</p>
+      <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)', fontFamily: theme.bodyFont }}>{msgBody}</p>
     </div>
   );
 }
@@ -672,9 +670,7 @@ function rootBackground(theme: ThemePreset) {
 }
 
 function rootFont(theme: ThemePreset) {
-  if (theme.family === 'whiteboard') return BOARD_FONT;
-  if (theme.family === 'brutal') return BRUTAL_FONT;
-  return CHALK_FONT;
+  return theme.bodyFont;
 }
 
 export default function DesktopPage() {
