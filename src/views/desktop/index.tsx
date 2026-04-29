@@ -393,6 +393,11 @@ export default function DesktopPage() {
               fontSize: 'clamp(1.4rem, 4.5vh, 4rem)',
               lineHeight: 1.55,
               marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
+              maxWidth: 'min(78vw, 22ch)',
+              marginInline: 'auto',
+              wordBreak: 'keep-all',
+              overflowWrap: 'break-word',
+              textWrap: 'pretty',
             }}
           >
             {msgBody}
