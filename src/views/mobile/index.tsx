@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WaveAnimation from '../../components/WaveAnimation';
 import { useSpeechRecognition, isSpeechSupported } from '../../lib/speech';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
@@ -122,7 +122,15 @@ export default function MobilePage() {
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  const { isListening, transcript, error, start, stop, reset } = useSpeechRecognition();
+  const { isListening, transcript, error, errorCode, start, stop, reset } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (step !== 'listening') return;
+    if (errorCode === 'network' || errorCode === 'service-not-allowed' || errorCode === 'start-failed') {
+      setShowDirectInput(true);
+      setStep('start');
+    }
+  }, [errorCode, step]);
 
   function goToConfirm(recognizedName: string) {
     setName(recognizedName);
@@ -232,7 +240,10 @@ export default function MobilePage() {
               <div className="w-full border-t border-gray-100 pt-6 flex flex-col items-center gap-3">
                 <p className="text-xs text-gray-400">음성 인식이 어렵다면</p>
                 <button
-                  onClick={() => setShowDirectInput(true)}
+                  onClick={() => {
+                    reset();
+                    setShowDirectInput(true);
+                  }}
                   className="text-sm font-medium text-gray-600 underline underline-offset-4"
                 >
                   직접 입력하기
@@ -240,7 +251,12 @@ export default function MobilePage() {
               </div>
             </>
           ) : (
-            <DirectInput onSubmit={goToConfirm} />
+            <div className="w-full flex flex-col gap-3">
+              {error && (
+                <p className="text-sm text-red-500 text-center">{error}</p>
+              )}
+              <DirectInput onSubmit={goToConfirm} />
+            </div>
           )}
         </div>
       )}
