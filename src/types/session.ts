@@ -1,7 +1,17 @@
 import type { Timestamp } from 'firebase/firestore';
 
 export type SessionStatus = 'standby' | 'generating' | 'displaying';
-export type ThemeId = 'green' | 'black' | 'navy' | 'warm';
+export type ThemeId =
+  | 'green'
+  | 'black'
+  | 'navy'
+  | 'warm'
+  | 'white-grid'
+  | 'white-note'
+  | 'board-classic'
+  | 'board-neon'
+  | 'brutal-pop'
+  | 'brutal-editorial';
 
 export interface Session {
   status: SessionStatus;
