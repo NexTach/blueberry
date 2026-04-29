@@ -1,7 +1,7 @@
 import type { TemplateId } from '../../lib/openai';
 import type { ThemeId } from '../../types/session';
 
-export type Step = 'start' | 'listening' | 'confirm' | 'done';
+export type Step = 'choose' | 'start' | 'listening' | 'confirm' | 'done';
 export type AiToneId = 'warm' | 'bright' | 'formal' | 'playful';
 
 export interface TemplateOption {

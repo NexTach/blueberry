@@ -2,6 +2,7 @@ import ConfirmScreen from './components/ConfirmScreen';
 import DoneScreen from './components/DoneScreen';
 import ListeningScreen from './components/ListeningScreen';
 import StartScreen from './components/StartScreen';
+import ChooseScreen from './components/ChooseScreen';
 import { useMobileFlow } from './useMobileFlow';
 
 export default function MobilePage() {
@@ -33,12 +34,23 @@ export default function MobilePage() {
     handleBackToPrevious,
     openComposerFromCommand,
     resetSpeech,
+    lastSession,
+    startCreateNew,
+    startEditExisting,
   } = useMobileFlow();
 
   const { isListening, transcript, error } = speech;
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
+      {step === 'choose' && (
+        <ChooseScreen
+          existingPreview={lastSession?.welcomeMessage ?? null}
+          onEditExisting={startEditExisting}
+          onCreateNew={startCreateNew}
+        />
+      )}
+
       {step === 'start' && (
         <StartScreen
           showDirectInput={showDirectInput}
@@ -52,7 +64,8 @@ export default function MobilePage() {
             setShowDirectInput(true);
           }}
           onDirectSubmit={openComposerFromCommand}
-          onDirectBack={() => setShowDirectInput(false)}
+          onDirectBack={handleBackToPrevious}
+          onBack={handleBackToPrevious}
         />
       )}
 
