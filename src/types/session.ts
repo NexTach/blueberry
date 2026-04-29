@@ -1,10 +1,12 @@
 import type { Timestamp } from 'firebase/firestore';
 
 export type SessionStatus = 'standby' | 'generating' | 'displaying';
+export type ThemeId = 'green' | 'black' | 'navy' | 'warm';
 
 export interface Session {
   status: SessionStatus;
   visitorName: string;
-  welcomeMessage: string; // 비어있으면 desktop에서 AI 생성
+  welcomeMessage: string;
+  themeId?: ThemeId;
   updatedAt: Timestamp | null;
 }
