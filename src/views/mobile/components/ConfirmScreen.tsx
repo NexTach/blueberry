@@ -1,8 +1,10 @@
 import type { TemplateId } from '../../../lib/openai';
 import { AI_TEMPLATE_ID } from '../constants';
 import type { AiToneId } from '../types';
+import type { ThemeId } from '../../../types/session';
 import AITonePicker from './AITonePicker';
 import TemplatePicker from './TemplatePicker';
+import ThemePicker from './ThemePicker';
 
 interface ConfirmScreenProps {
   name: string;
@@ -10,12 +12,14 @@ interface ConfirmScreenProps {
   message: string;
   aiTone: AiToneId;
   aiPrompt: string;
+  themeId: ThemeId;
   isSubmitting: boolean;
   onNameChange: (name: string) => void;
   onTemplateChange: (id: TemplateId) => void;
   onMessageChange: (message: string) => void;
   onAiToneChange: (tone: AiToneId) => void;
   onAiPromptChange: (prompt: string) => void;
+  onThemeChange: (themeId: ThemeId) => void;
   onBack: () => void;
   onConfirm: () => void;
 }
@@ -26,12 +30,14 @@ export default function ConfirmScreen({
   message,
   aiTone,
   aiPrompt,
+  themeId,
   isSubmitting,
   onNameChange,
   onTemplateChange,
   onMessageChange,
   onAiToneChange,
   onAiPromptChange,
+  onThemeChange,
   onBack,
   onConfirm,
 }: ConfirmScreenProps) {
@@ -57,6 +63,20 @@ export default function ConfirmScreen({
 
       <TemplatePicker name={name} selectedTemplate={selectedTemplate} onSelect={onTemplateChange} />
 
+      <div className="flex flex-col gap-4 rounded-3xl border border-gray-200 p-4">
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">TV 테마</label>
+          <ThemePicker selectedTheme={themeId} onSelect={onThemeChange} />
+        </div>
+
+        {isAiTemplate && (
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI 어체</label>
+            <AITonePicker selectedTone={aiTone} onSelect={onAiToneChange} />
+          </div>
+        )}
+      </div>
+
       {!isAiTemplate && (
         <div className="flex flex-col gap-1.5">
           <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">최종 문구</label>
@@ -71,11 +91,6 @@ export default function ConfirmScreen({
 
       {isAiTemplate && (
         <>
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI 어체</label>
-            <AITonePicker selectedTone={aiTone} onSelect={onAiToneChange} />
-          </div>
-
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI에게 전달할 내용</label>
             <textarea
@@ -99,7 +114,7 @@ export default function ConfirmScreen({
         </button>
         <button
           onClick={onConfirm}
-          disabled={isSubmitting || (isAiTemplate ? !aiPrompt.trim() : (!name.trim() || !message.trim()))}
+          disabled={isSubmitting || (isAiTemplate ? !aiPrompt.trim() : !message.trim())}
           className="flex-1 py-3.5 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
         >
           {isSubmitting ? '전송 중...' : '화면에 표시하기'}

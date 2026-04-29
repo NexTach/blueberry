@@ -1,8 +1,6 @@
 import ConfirmScreen from './components/ConfirmScreen';
 import DoneScreen from './components/DoneScreen';
 import ListeningScreen from './components/ListeningScreen';
-import SettingsSheet from './components/SettingsSheet';
-import SettingsButton from './components/SettingsButton';
 import StartScreen from './components/StartScreen';
 import { useMobileFlow } from './useMobileFlow';
 
@@ -15,21 +13,21 @@ export default function MobilePage() {
     message,
     aiTone,
     aiPrompt,
+    themeId,
     isInterpreting,
     isSubmitting,
     showDirectInput,
-    showSettings,
     speech,
     setAiTone,
     setAiPrompt,
     setMessage,
     setDirectInputText,
     setShowDirectInput,
-    setShowSettings,
     handleStartListening,
     handleStopListening,
     handleTemplateChange,
     handleNameChange,
+    handleThemeChange,
     handleConfirm,
     handleRestart,
     handleBackToPrevious,
@@ -41,8 +39,6 @@ export default function MobilePage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
-      {step === 'start' && <SettingsButton onClick={() => setShowSettings(true)} />}
-
       {step === 'start' && (
         <StartScreen
           showDirectInput={showDirectInput}
@@ -84,20 +80,20 @@ export default function MobilePage() {
           message={message}
           aiTone={aiTone}
           aiPrompt={aiPrompt}
+          themeId={themeId}
           isSubmitting={isSubmitting}
           onNameChange={handleNameChange}
           onTemplateChange={handleTemplateChange}
           onMessageChange={setMessage}
           onAiToneChange={setAiTone}
           onAiPromptChange={setAiPrompt}
+          onThemeChange={handleThemeChange}
           onBack={handleBackToPrevious}
           onConfirm={handleConfirm}
         />
       )}
 
       {step === 'done' && <DoneScreen onRestart={handleRestart} />}
-
-      {showSettings && <SettingsSheet onClose={() => setShowSettings(false)} />}
     </div>
   );
 }

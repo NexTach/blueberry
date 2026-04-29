@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { updateSession } from '../../lib/firebase';
+import { subscribeSession, updateSession, updateTheme } from '../../lib/firebase';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
-import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME } from './constants';
+import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME, THEMES } from './constants';
 import type { AiToneId, CommandInterpretation, Step } from './types';
+import type { ThemeId } from '../../types/session';
 
 export function useMobileFlow() {
   const [step, setStep] = useState<Step>('start');
@@ -14,13 +15,21 @@ export function useMobileFlow() {
   const [message, setMessage] = useState('');
   const [aiTone, setAiTone] = useState<AiToneId>(DEFAULT_AI_TONE);
   const [aiPrompt, setAiPrompt] = useState('');
+  const [themeId, setThemeId] = useState<ThemeId>(THEMES[0].id);
   const [isInterpreting, setIsInterpreting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
+
+  useEffect(() => {
+    return subscribeSession((session) => {
+      if (session?.themeId) {
+        setThemeId(session.themeId);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (step !== 'listening') return;
@@ -94,32 +103,40 @@ export function useMobileFlow() {
   function handleTemplateChange(id: TemplateId) {
     setSelectedTemplate(id);
     if (id !== AI_TEMPLATE_ID) {
-      setMessage(applyTemplate(name, id) ?? '');
+      setMessage(applyTemplate(name.trim() || FALLBACK_VISITOR_NAME, id) ?? '');
     }
   }
 
   function handleNameChange(nextName: string) {
     setName(nextName);
     if (selectedTemplate !== AI_TEMPLATE_ID) {
-      setMessage(applyTemplate(nextName, selectedTemplate) ?? '');
+      setMessage(applyTemplate(nextName.trim() || FALLBACK_VISITOR_NAME, selectedTemplate) ?? '');
     }
+  }
+
+  async function handleThemeChange(nextThemeId: ThemeId) {
+    setThemeId(nextThemeId);
+    await updateTheme(nextThemeId);
   }
 
   async function handleConfirm() {
     setIsSubmitting(true);
+    const resolvedName = name.trim() || FALLBACK_VISITOR_NAME;
     if (selectedTemplate === AI_TEMPLATE_ID) {
       await updateSession({
         status: 'generating',
-        visitorName: name.trim() || FALLBACK_VISITOR_NAME,
+        visitorName: resolvedName,
         welcomeMessage: aiPrompt.trim(),
         tone: aiTone,
+        themeId,
       });
     } else {
       await updateSession({
         status: 'displaying',
-        visitorName: name.trim(),
+        visitorName: resolvedName,
         welcomeMessage: message,
         tone: '',
+        themeId,
       });
     }
     setIsSubmitting(false);
@@ -165,18 +182,18 @@ export function useMobileFlow() {
     isInterpreting,
     isSubmitting,
     showDirectInput,
-    showSettings,
+    themeId,
     speech,
     setAiTone,
     setAiPrompt,
     setMessage,
     setDirectInputText,
     setShowDirectInput,
-    setShowSettings,
     handleStartListening,
     handleStopListening,
     handleTemplateChange,
     handleNameChange,
+    handleThemeChange,
     handleConfirm,
     handleRestart,
     handleBackToPrevious,
