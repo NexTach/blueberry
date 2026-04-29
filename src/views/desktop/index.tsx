@@ -8,11 +8,11 @@ const RESET_DELAY = 30_000;
 
 const THEMES = [
   { id: 'green', name: '녹색 칠판', bg: '#344034', accent: '#6abeff' },
-  { id: 'black', name: '흑판',      bg: '#1e2820', accent: '#a8f0c6' },
-  { id: 'navy',  name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
-  { id: 'warm',  name: '먹판',      bg: '#1f1a14', accent: '#ff9fd6' },
+  { id: 'black', name: '흑판', bg: '#1e2820', accent: '#a8f0c6' },
+  { id: 'navy', name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
+  { id: 'warm', name: '먹판', bg: '#1f1a14', accent: '#ff9fd6' },
 ] as const;
-type ThemeId = typeof THEMES[number]['id'];
+type ThemeId = (typeof THEMES)[number]['id'];
 
 // Figma 원본 분필 낙서 SVG (fractalNoise 텍스처 포함)
 function ChalkPink({ style }: { style?: React.CSSProperties }) {
@@ -24,12 +24,22 @@ function ChalkPink({ style }: { style?: React.CSSProperties }) {
       style={{ overflow: 'visible', ...style }}
     >
       <defs>
-        <filter id="chalk-pink-f" x="0" y="0" width="122.296" height="173.669" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <filter
+          id="chalk-pink-f"
+          x="0"
+          y="0"
+          width="122.296"
+          height="173.669"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
           <feTurbulence type="fractalNoise" baseFrequency="0.25 0.25" numOctaves="3" seed="3762" />
           <feDisplacementMap in="shape" scale="8" xChannelSelector="R" yChannelSelector="G" result="displacedImage" />
-          <feMerge><feMergeNode in="displacedImage" /></feMerge>
+          <feMerge>
+            <feMergeNode in="displacedImage" />
+          </feMerge>
         </filter>
       </defs>
       <g filter="url(#chalk-pink-f)">
@@ -53,12 +63,22 @@ function ChalkGreen({ style }: { style?: React.CSSProperties }) {
       style={{ overflow: 'visible', ...style }}
     >
       <defs>
-        <filter id="chalk-green-f" x="0" y="0" width="73.7964" height="196.812" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <filter
+          id="chalk-green-f"
+          x="0"
+          y="0"
+          width="73.7964"
+          height="196.812"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
           <feTurbulence type="fractalNoise" baseFrequency="0.25 0.25" numOctaves="3" seed="3097" />
           <feDisplacementMap in="shape" scale="8" xChannelSelector="R" yChannelSelector="G" result="displacedImage" />
-          <feMerge><feMergeNode in="displacedImage" /></feMerge>
+          <feMerge>
+            <feMergeNode in="displacedImage" />
+          </feMerge>
         </filter>
       </defs>
       <g filter="url(#chalk-green-f)">
@@ -76,7 +96,7 @@ function ChalkGreen({ style }: { style?: React.CSSProperties }) {
 // CSS 나무 프레임 오버레이
 function WoodFrame() {
   const FRAME = 'clamp(22px, 3.2vw, 46px)';
-  
+
   // 고퀄리티 나무 질감: 여러 겹의 그라디언트와 패턴 조합
   const wood = `
     repeating-linear-gradient(
@@ -112,40 +132,63 @@ function WoodFrame() {
     )
   `;
 
-  const topBottomShadow = 'inset 0 -2px 4px rgba(0,0,0,0.35), inset 0 2px 3px rgba(255,245,205,0.25), inset 0 -8px 16px rgba(0,0,0,0.3)';
-  const leftRightShadow = 'inset -2px 0 4px rgba(0,0,0,0.35), inset 2px 0 3px rgba(255,245,205,0.25), inset -8px 0 16px rgba(0,0,0,0.3)';
-  const cornerShadow = 'inset -2px -2px 6px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,245,205,0.2), inset -6px -6px 12px rgba(0,0,0,0.3)';
+  const topBottomShadow =
+    'inset 0 -2px 4px rgba(0,0,0,0.35), inset 0 2px 3px rgba(255,245,205,0.25), inset 0 -8px 16px rgba(0,0,0,0.3)';
+  const leftRightShadow =
+    'inset -2px 0 4px rgba(0,0,0,0.35), inset 2px 0 3px rgba(255,245,205,0.25), inset -8px 0 16px rgba(0,0,0,0.3)';
+  const cornerShadow =
+    'inset -2px -2px 6px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,245,205,0.2), inset -6px -6px 12px rgba(0,0,0,0.3)';
 
   return (
     <>
       {/* 상단 */}
-      <div className="absolute top-0 left-0 right-0 pointer-events-none z-10"
-        style={{ height: FRAME, background: wood,
-          boxShadow: topBottomShadow }} />
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none z-10"
+        style={{ height: FRAME, background: wood, boxShadow: topBottomShadow }}
+      />
       {/* 하단 */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-10"
-        style={{ height: FRAME, background: wood,
-          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.35), inset 0 -2px 3px rgba(255,245,205,0.25), inset 0 8px 16px rgba(0,0,0,0.3)' }} />
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none z-10"
+        style={{
+          height: FRAME,
+          background: wood,
+          boxShadow:
+            'inset 0 2px 4px rgba(0,0,0,0.35), inset 0 -2px 3px rgba(255,245,205,0.25), inset 0 8px 16px rgba(0,0,0,0.3)',
+        }}
+      />
       {/* 좌측 */}
-      <div className="absolute top-0 left-0 bottom-0 pointer-events-none z-10"
-        style={{ width: FRAME, background: wood,
-          boxShadow: leftRightShadow }} />
+      <div
+        className="absolute top-0 left-0 bottom-0 pointer-events-none z-10"
+        style={{ width: FRAME, background: wood, boxShadow: leftRightShadow }}
+      />
       {/* 우측 */}
-      <div className="absolute top-0 right-0 bottom-0 pointer-events-none z-10"
-        style={{ width: FRAME, background: wood,
-          boxShadow: 'inset 2px 0 4px rgba(0,0,0,0.35), inset -2px 0 3px rgba(255,245,205,0.25), inset 8px 0 16px rgba(0,0,0,0.3)' }} />
+      <div
+        className="absolute top-0 right-0 bottom-0 pointer-events-none z-10"
+        style={{
+          width: FRAME,
+          background: wood,
+          boxShadow:
+            'inset 2px 0 4px rgba(0,0,0,0.35), inset -2px 0 3px rgba(255,245,205,0.25), inset 8px 0 16px rgba(0,0,0,0.3)',
+        }}
+      />
       {/* 모서리 조각 (겹침 보완) */}
-      {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map(pos => (
-        <div key={pos} className={`absolute ${pos} pointer-events-none z-10`}
-          style={{ width: FRAME, height: FRAME, background: wood,
-            boxShadow: cornerShadow }} />
+      {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map((pos) => (
+        <div
+          key={pos}
+          className={`absolute ${pos} pointer-events-none z-10`}
+          style={{ width: FRAME, height: FRAME, background: wood, boxShadow: cornerShadow }}
+        />
       ))}
       {/* 프레임 내부 그림자 (칠판과의 깊이감) */}
-      <div className="absolute inset-0 pointer-events-none z-[9]"
-        style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.2)' }} />
+      <div
+        className="absolute inset-0 pointer-events-none z-[9]"
+        style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.2)' }}
+      />
       {/* 외곽 선과 모서리 강조 */}
-      <div className="absolute inset-0 pointer-events-none z-10"
-        style={{ outline: '2px solid #3A2215', outlineOffset: '-1px', boxShadow: 'inset 0 0 8px rgba(0,0,0,0.6)' }} />
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{ outline: '2px solid #3A2215', outlineOffset: '-1px', boxShadow: 'inset 0 0 8px rgba(0,0,0,0.6)' }}
+      />
     </>
   );
 }
@@ -159,24 +202,27 @@ function useClock() {
   return time;
 }
 function formatTime(d: Date) {
-  const h = d.getHours(), m = d.getMinutes().toString().padStart(2, '0');
+  const h = d.getHours(),
+    m = d.getMinutes().toString().padStart(2, '0');
   return `${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${m}`;
 }
-function escapeRegex(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function escapeRegex(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 export default function DesktopPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [visible, setVisible] = useState(false);
-  const [themeId, setThemeId] = useState<ThemeId>(
-    () => ((localStorage.getItem('desktopTheme') as ThemeId) ?? 'green'),
-  );
+  const [themeId, setThemeId] = useState<ThemeId>(() => (localStorage.getItem('desktopTheme') as ThemeId) ?? 'green');
   const [showThemePicker, setShowThemePicker] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const time = useClock();
   const mobileUrl = `${window.location.origin}/mobile`;
-  const theme = THEMES.find(t => t.id === themeId) ?? THEMES[0];
+  const theme = THEMES.find((t) => t.id === themeId) ?? THEMES[0];
 
-  useEffect(() => { return subscribeSession(setSession); }, []);
+  useEffect(() => {
+    return subscribeSession(setSession);
+  }, []);
 
   // generating → AI 생성 → displaying
   useEffect(() => {
@@ -187,8 +233,8 @@ export default function DesktopPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: session.visitorName }),
     })
-      .then(r => r.json())
-      .then(data => {
+      .then((r) => r.json())
+      .then((data) => {
         if (cancelled) return;
         updateSession({
           status: 'displaying',
@@ -204,7 +250,9 @@ export default function DesktopPage() {
           welcomeMessage: `${session.visitorName}님, 환영합니다!`,
         });
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [session?.status, session?.visitorName]);
 
   // displaying 진입 애니메이션 + 자동 리셋
@@ -232,9 +280,8 @@ export default function DesktopPage() {
   const isDisplaying = session?.status === 'displaying';
   const show = isDisplaying && visible;
 
-  const msgBody = session?.welcomeMessage
-    ?.replace(new RegExp(`^${escapeRegex(session.visitorName ?? '')}님,?\\s*`), '')
-    .trim() ?? '';
+  const msgBody =
+    session?.welcomeMessage?.replace(new RegExp(`^${escapeRegex(session.visitorName ?? '')}님,?\\s*`), '').trim() ?? '';
 
   return (
     <div
@@ -245,7 +292,8 @@ export default function DesktopPage() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.025) 3px, rgba(255,255,255,0.025) 6px)',
+          backgroundImage:
+            'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.025) 3px, rgba(255,255,255,0.025) 6px)',
         }}
       />
 
@@ -258,9 +306,16 @@ export default function DesktopPage() {
         {isGenerating && (
           <div className="absolute flex flex-col items-center gap-4" style={{ top: '26%' }}>
             <div className="flex gap-3">
-              {[0, 1, 2].map(i => (
-                <div key={i} className="rounded-full bg-white/60"
-                  style={{ width: 'clamp(10px,1.2vh,16px)', height: 'clamp(10px,1.2vh,16px)', animation: `bounce 1.2s ${i * 0.2}s infinite` }} />
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-full bg-white/60"
+                  style={{
+                    width: 'clamp(10px,1.2vh,16px)',
+                    height: 'clamp(10px,1.2vh,16px)',
+                    animation: `bounce 1.2s ${i * 0.2}s infinite`,
+                  }}
+                />
               ))}
             </div>
             <p className="text-white/55 tracking-[0.18em]" style={{ fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)' }}>
@@ -274,7 +329,10 @@ export default function DesktopPage() {
           <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1.4rem, 5vh, 4.5rem)' }}>
             GWANGJU
           </span>
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7.5vh, 7rem)', lineHeight: 1 }}>
+          <span
+            className="tracking-widest"
+            style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7.5vh, 7rem)', lineHeight: 1 }}
+          >
             SOFTWARE
           </span>
           <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1.4rem, 5vh, 4.5rem)' }}>
@@ -309,21 +367,32 @@ export default function DesktopPage() {
         <div
           className="absolute flex flex-col gap-0.5 transition-all duration-700"
           style={{
-            top: 'clamp(40px,6vh,80px)', left: 'clamp(50px,7vw,100px)',
+            top: 'clamp(40px,6vh,80px)',
+            left: 'clamp(50px,7vw,100px)',
             opacity: show ? 1 : 0,
             transform: show ? 'translateY(0)' : 'translateY(-10px)',
           }}
         >
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>GWANGJU</span>
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(0.7rem, 1.8vh, 1.2rem)', fontWeight: 700 }}>SOFTWARE</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>MEISTER</span>
+          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>
+            GWANGJU
+          </span>
+          <span
+            className="tracking-widest"
+            style={{ color: theme.accent, fontSize: 'clamp(0.7rem, 1.8vh, 1.2rem)', fontWeight: 700 }}
+          >
+            SOFTWARE
+          </span>
+          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>
+            MEISTER
+          </span>
         </div>
 
         {/* 분필 장식 - 핑크 (왼쪽) */}
         <div
           className="absolute pointer-events-none transition-opacity duration-1000"
           style={{
-            left: '5%', top: '38%',
+            left: '5%',
+            top: '38%',
             width: 'clamp(80px, 11vh, 160px)',
             opacity: show ? 0.9 : 0,
             transitionDelay: '500ms',
@@ -344,7 +413,15 @@ export default function DesktopPage() {
           <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1 }}>
             {session?.visitorName}
           </p>
-          <p className="text-white" style={{ fontSize: 'clamp(1.4rem, 4.5vh, 4rem)', lineHeight: 1.55, maxWidth: '75vw', marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}>
+          <p
+            className="text-white"
+            style={{
+              fontSize: 'clamp(1.4rem, 4.5vh, 4rem)',
+              lineHeight: 1.55,
+              maxWidth: '75vw',
+              marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
+            }}
+          >
             {msgBody || '님, 환영합니다!'}
           </p>
         </div>
@@ -353,7 +430,8 @@ export default function DesktopPage() {
         <div
           className="absolute pointer-events-none transition-opacity duration-1000"
           style={{
-            right: '7%', bottom: '22%',
+            right: '7%',
+            bottom: '22%',
             width: 'clamp(55px, 7.5vh, 110px)',
             opacity: show ? 0.9 : 0,
             transitionDelay: '700ms',
@@ -373,16 +451,22 @@ export default function DesktopPage() {
         }}
       >
         <div className="flex flex-col gap-0.5">
-          <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)' }}>since</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2.8vh, 2.2rem)' }}>2017</span>
+          <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)' }}>
+            since
+          </span>
+          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2.8vh, 2.2rem)' }}>
+            2017
+          </span>
         </div>
         <button
           className="flex flex-col items-center gap-1.5"
-          onClick={() => setShowThemePicker(v => !v)}
+          onClick={() => setShowThemePicker((v) => !v)}
           aria-label="테마 선택"
         >
           <img src="/images/berry.png" alt="BERRY" style={{ height: 'clamp(20px, 3vh, 36px)', width: 'auto' }} />
-          <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(0.6rem, 1.4vh, 1rem)' }}>{time}</span>
+          <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(0.6rem, 1.4vh, 1rem)' }}>
+            {time}
+          </span>
         </button>
       </div>
 
@@ -398,19 +482,27 @@ export default function DesktopPage() {
         >
           <div
             className="flex flex-col gap-5 rounded-2xl"
-            style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(24px)', padding: 'clamp(1.5rem, 3vh, 2.5rem)' }}
-            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'rgba(255,255,255,0.12)',
+              backdropFilter: 'blur(24px)',
+              padding: 'clamp(1.5rem, 3vh, 2.5rem)',
+            }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-white/70 text-center tracking-widest" style={{ fontFamily: CHALK_FONT, fontSize: 'clamp(0.8rem, 1.8vh, 1.1rem)' }}>
+            <p
+              className="text-white/70 text-center tracking-widest"
+              style={{ fontFamily: CHALK_FONT, fontSize: 'clamp(0.8rem, 1.8vh, 1.1rem)' }}
+            >
               테마 선택
             </p>
             <div className="flex gap-5">
-              {THEMES.map(t => (
+              {THEMES.map((t) => (
                 <button key={t.id} onClick={() => selectTheme(t.id)} className="flex flex-col items-center gap-2">
                   <div
                     className="rounded-xl flex items-center justify-center transition-all duration-150"
                     style={{
-                      width: 'clamp(52px, 7vh, 72px)', height: 'clamp(52px, 7vh, 72px)',
+                      width: 'clamp(52px, 7vh, 72px)',
+                      height: 'clamp(52px, 7vh, 72px)',
                       background: t.bg,
                       outline: themeId === t.id ? `3px solid ${t.accent}` : '3px solid rgba(255,255,255,0.15)',
                       transform: themeId === t.id ? 'scale(1.12)' : 'scale(1)',
@@ -418,7 +510,9 @@ export default function DesktopPage() {
                   >
                     <div className="rounded-full" style={{ width: '30%', height: '30%', background: t.accent }} />
                   </div>
-                  <span className="text-white/65" style={{ fontSize: 'clamp(0.65rem, 1.3vh, 0.85rem)' }}>{t.name}</span>
+                  <span className="text-white/65" style={{ fontSize: 'clamp(0.65rem, 1.3vh, 0.85rem)' }}>
+                    {t.name}
+                  </span>
                 </button>
               ))}
             </div>
