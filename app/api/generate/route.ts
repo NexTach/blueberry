@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     if (!name) return NextResponse.json({ error: 'name required' }, { status: 400 });
 
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-5-mini',
       messages: [
         {
           role: 'system',
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
             '본문에 이름이 있으면 그 이름을 resolvedName으로 반영해.',
         },
       ],
-      max_tokens: 80,
+      max_completion_tokens: 80,
       temperature: 0.9,
     });
 
