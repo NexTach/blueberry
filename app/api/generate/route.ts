@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         },
       ],
       max_completion_tokens: 80,
-      temperature: 0.9,
+      response_format: { type: 'json_object' },
     });
 
     const content = response.choices[0]?.message?.content?.trim();
@@ -49,7 +49,8 @@ export async function POST(request: Request) {
     } catch {
       return NextResponse.json({ resolvedName: name, message: content || fallbackMessage });
     }
-  } catch {
-    return NextResponse.json({ error: 'generation failed' }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'generation failed';
+    return NextResponse.json({ error: 'generation failed', detail: message }, { status: 500 });
   }
 }
