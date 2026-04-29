@@ -8,5 +8,6 @@ export interface Session {
   visitorName: string;
   welcomeMessage: string;
   themeId?: ThemeId;
+  tone?: string;
   updatedAt: Timestamp | null;
 }

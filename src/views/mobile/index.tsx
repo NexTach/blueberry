@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WaveAnimation from '../../components/WaveAnimation';
 import { useSpeechRecognition, isSpeechSupported } from '../../lib/speech';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
@@ -19,6 +19,15 @@ const THEMES: { id: ThemeId; name: string; bg: string; accent: string }[] = [
   { id: 'navy', name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
   { id: 'warm', name: '먹판', bg: '#1f1a14', accent: '#ff9fd6' },
 ];
+
+const AI_TONES = [
+  { id: 'warm', label: '따뜻하게', description: '포근하고 다정한 환영' },
+  { id: 'bright', label: '밝고 경쾌하게', description: '생기 있고 활발한 분위기' },
+  { id: 'formal', label: '정중하게', description: '차분하고 단정한 표현' },
+  { id: 'playful', label: '재치 있게', description: '센스 있고 기억에 남게' },
+] as const;
+
+type AiToneId = (typeof AI_TONES)[number]['id'];
 
 function DirectInput({ onSubmit, onBack }: { onSubmit: (name: string) => void; onBack: () => void }) {
   const [value, setValue] = useState('');
@@ -128,11 +137,21 @@ export default function MobilePage() {
   const [name, setName] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(1);
   const [message, setMessage] = useState('');
+  const [aiTone, setAiTone] = useState<AiToneId>('warm');
+  const [aiPrompt, setAiPrompt] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  const { isListening, transcript, error, start, stop, reset } = useSpeechRecognition();
+  const { isListening, transcript, error, errorCode, start, stop, reset } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (step !== 'listening') return;
+    if (errorCode === 'network' || errorCode === 'service-not-allowed' || errorCode === 'start-failed') {
+      setShowDirectInput(true);
+      setStep('start');
+    }
+  }, [errorCode, step]);
 
   function goToConfirm(recognizedName: string) {
     setPreviousStep(step);
@@ -160,14 +179,31 @@ export default function MobilePage() {
     setMessage(applyTemplate(name, id) ?? '');
   }
 
+  function handleNameChange(nextName: string) {
+    setName(nextName);
+    if (selectedTemplate !== 3) {
+      setMessage(applyTemplate(nextName, selectedTemplate) ?? '');
+    }
+  }
+
   async function handleConfirm() {
     setIsSubmitting(true);
     if (selectedTemplate === 3) {
       // AI 생성: 데스크탑이 /api/generate 호출 후 displaying으로 전환
-      await updateSession({ status: 'generating', visitorName: name, welcomeMessage: '' });
+      await updateSession({
+        status: 'generating',
+        visitorName: name.trim(),
+        welcomeMessage: aiPrompt.trim(),
+        tone: aiTone,
+      });
     } else {
       // 고정 템플릿: 바로 displaying
-      await updateSession({ status: 'displaying', visitorName: name, welcomeMessage: message });
+      await updateSession({
+        status: 'displaying',
+        visitorName: name.trim(),
+        welcomeMessage: message,
+        tone: '',
+      });
     }
     setIsSubmitting(false);
     setStep('done');
@@ -177,6 +213,8 @@ export default function MobilePage() {
     reset();
     setName('');
     setMessage('');
+    setAiPrompt('');
+    setAiTone('warm');
     setShowDirectInput(false);
     setSelectedTemplate(1);
     setStep('start');
@@ -246,7 +284,10 @@ export default function MobilePage() {
               <div className="w-full border-t border-gray-100 pt-6 flex flex-col items-center gap-3">
                 <p className="text-xs text-gray-400">음성 인식이 어렵다면</p>
                 <button
-                  onClick={() => setShowDirectInput(true)}
+                  onClick={() => {
+                    reset();
+                    setShowDirectInput(true);
+                  }}
                   className="text-sm font-medium text-gray-600 underline underline-offset-4"
                 >
                   직접 입력하기
@@ -254,7 +295,10 @@ export default function MobilePage() {
               </div>
             </>
           ) : (
-            <DirectInput onSubmit={goToConfirm} onBack={() => setShowDirectInput(false)} />
+            <div className="w-full flex flex-col gap-3">
+              {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+              <DirectInput onSubmit={goToConfirm} onBack={() => setShowDirectInput(false)} />
+            </div>
           )}
         </div>
       )}
@@ -324,6 +368,17 @@ export default function MobilePage() {
             <p className="text-sm text-gray-500">원하는 스타일을 골라주세요</p>
           </div>
 
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">이름</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => handleNameChange(e.target.value)}
+              placeholder="이름을 수정할 수 있어요"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors"
+            />
+          </div>
+
           <div className="flex flex-col gap-2">
             {TEMPLATES.map((t) => (
               <button
@@ -360,6 +415,42 @@ export default function MobilePage() {
             </div>
           )}
 
+          {selectedTemplate === 3 && (
+            <>
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI 어체</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {AI_TONES.map((tone) => (
+                    <button
+                      key={tone.id}
+                      onClick={() => setAiTone(tone.id)}
+                      className={`rounded-xl border px-3 py-3 text-left transition-all ${
+                        aiTone === tone.id ? 'border-black bg-gray-50' : 'border-gray-200 bg-white'
+                      }`}
+                    >
+                      <p className="text-sm font-semibold text-gray-900">{tone.label}</p>
+                      <p className="mt-1 text-xs text-gray-500">{tone.description}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">
+                  AI에게 전달할 내용
+                </label>
+                <textarea
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  rows={4}
+                  placeholder="예: 김민준 학생, 오늘 방문 고마워요. 밝고 센스 있게 환영해줘."
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors resize-none"
+                />
+                <p className="text-xs text-gray-400">본문에 이름이 들어 있으면 AI가 그 이름을 우선 적용합니다.</p>
+              </div>
+            </>
+          )}
+
           <div className="flex gap-3">
             <button
               onClick={handleBackToPrevious}
@@ -369,7 +460,7 @@ export default function MobilePage() {
             </button>
             <button
               onClick={handleConfirm}
-              disabled={isSubmitting || (selectedTemplate !== 3 && !message.trim())}
+              disabled={isSubmitting || !name.trim() || (selectedTemplate !== 3 && !message.trim())}
               className="flex-1 py-3.5 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
             >
               {isSubmitting ? '전송 중...' : '화면에 표시하기'}

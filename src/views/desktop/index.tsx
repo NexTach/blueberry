@@ -122,14 +122,18 @@ export default function DesktopPage() {
     fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: session.visitorName }),
+      body: JSON.stringify({
+        name: session.visitorName,
+        prompt: session.welcomeMessage,
+        tone: session.tone,
+      }),
     })
       .then(r => r.json())
       .then(data => {
         if (cancelled) return;
         updateSession({
           status: 'displaying',
-          visitorName: session.visitorName,
+          visitorName: data.resolvedName ?? session.visitorName,
           welcomeMessage: data.message ?? `${session.visitorName}님, 환영합니다!`,
         });
       })
@@ -142,7 +146,7 @@ export default function DesktopPage() {
         });
       });
     return () => { cancelled = true; };
-  }, [session?.status, session?.visitorName]);
+  }, [session?.status, session?.visitorName, session?.welcomeMessage, session?.tone]);
 
   // displaying 진입 애니메이션 + 자동 리셋
   useEffect(() => {
@@ -217,11 +221,12 @@ export default function DesktopPage() {
         style={{ paddingLeft: 'clamp(60px, 8vw, 130px)', paddingRight: 'clamp(60px, 8vw, 130px)', opacity: show ? 1 : 0, pointerEvents: isDisplaying ? 'auto' : 'none' }}>
 
         {/* 코너 학교명 */}
-        <div className="absolute flex flex-col gap-0.5 transition-all duration-700"
+        <div className="absolute transition-all duration-700"
           style={{ top: 'clamp(40px,6vh,80px)', left: 'clamp(50px,7vw,100px)', opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(-10px)' }}>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)' }}>GWANGJU</span>
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(0.9rem, 2.4vh, 1.7rem)', fontWeight: 700 }}>SOFTWARE</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)' }}>MEISTER</span>
+          <span className="text-white tracking-widest"
+            style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)', whiteSpace: 'nowrap' }}>
+            GWANGJU SOFTWARE MEISTER
+          </span>
         </div>
 
         {/* 분필 장식 - 핑크 (우상단) */}
