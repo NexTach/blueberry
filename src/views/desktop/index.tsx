@@ -26,10 +26,9 @@ function formatTime(d: Date) {
 
 export default function DesktopPage() {
   const [session, setSession] = useState<Session | null>(null);
-  const [visible, setVisible] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const time = useClock();
-  const mobileUrl = `${window.location.origin}/mobile`;
+  const mobileUrl = typeof window === 'undefined' ? '/mobile' : `${window.location.origin}/mobile`;
 
   useEffect(() => {
     const unsub = subscribeSession(setSession);
@@ -59,24 +58,22 @@ export default function DesktopPage() {
           welcomeMessage: `${session.visitorName}님, 환영합니다!`,
         });
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [session?.status, session?.visitorName]);
 
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
 
     if (session?.status === 'displaying') {
-      setVisible(false);
-      const enterTimer = setTimeout(() => setVisible(true), 50);
       resetTimerRef.current = setTimeout(() => resetSession(), RESET_DELAY);
-      return () => {
-        clearTimeout(enterTimer);
-        if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      };
-    } else {
-      setVisible(false);
     }
-  }, [session?.status, session?.welcomeMessage]);
+
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    };
+  }, [session?.status]);
 
   const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
@@ -89,7 +86,7 @@ export default function DesktopPage() {
       {/* 나무 프레임 테두리 */}
       <div className="absolute inset-0 pointer-events-none z-10">
         <div
-          className="absolute inset-0 border-[28px] rounded-sm"
+          className="absolute inset-0 border-28 rounded-sm"
           style={{
             borderColor: '#7a4f2e',
             boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5), 0 0 40px rgba(0,0,0,0.4)',
@@ -153,14 +150,14 @@ export default function DesktopPage() {
       {/* 환영 화면 */}
       <div
         className="absolute inset-0 flex flex-col items-start justify-center px-[8vw] transition-opacity duration-700"
-        style={{ opacity: isDisplaying && visible ? 1 : 0, pointerEvents: isDisplaying ? 'auto' : 'none' }}
+        style={{ opacity: isDisplaying ? 1 : 0, pointerEvents: isDisplaying ? 'auto' : 'none' }}
       >
         {/* 코너 학교 이름 */}
         <div
           className="absolute top-14 left-14 flex flex-col gap-0.5 transition-all duration-700"
           style={{
-            opacity: isDisplaying && visible ? 1 : 0,
-            transform: isDisplaying && visible ? 'translateY(0)' : 'translateY(-12px)',
+            opacity: isDisplaying ? 1 : 0,
+            transform: isDisplaying ? 'translateY(0)' : 'translateY(-12px)',
           }}
         >
           <span className="text-white/80 tracking-widest text-sm">GWANGJU</span>
@@ -174,8 +171,8 @@ export default function DesktopPage() {
         <div
           className="transition-all duration-700 delay-200"
           style={{
-            opacity: isDisplaying && visible ? 1 : 0,
-            transform: isDisplaying && visible ? 'translateY(0)' : 'translateY(32px)',
+            opacity: isDisplaying ? 1 : 0,
+            transform: isDisplaying ? 'translateY(0)' : 'translateY(32px)',
           }}
         >
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -186,7 +183,10 @@ export default function DesktopPage() {
               님,
             </span>
           </div>
-          <p className="text-white mt-4" style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)', lineHeight: 1.4, maxWidth: '80vw' }}>
+          <p
+            className="text-white mt-4"
+            style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)', lineHeight: 1.4, maxWidth: '80vw' }}
+          >
             {session?.welcomeMessage?.replace(`${session.visitorName}님, `, '')}
           </p>
         </div>
@@ -197,7 +197,7 @@ export default function DesktopPage() {
           style={{
             bottom: '15%',
             right: '10%',
-            opacity: isDisplaying && visible ? 0.5 : 0,
+            opacity: isDisplaying ? 0.5 : 0,
             transition: 'opacity 1s 0.6s',
           }}
           width="120"
@@ -205,14 +205,20 @@ export default function DesktopPage() {
           viewBox="0 0 120 50"
           fill="none"
         >
-          <path d="M10 35 Q30 10 55 25 Q75 38 100 20" stroke="#ff9fd6" strokeWidth="3" strokeLinecap="round" fill="none" />
+          <path
+            d="M10 35 Q30 10 55 25 Q75 38 100 20"
+            stroke="#ff9fd6"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          />
         </svg>
         <svg
           className="absolute"
           style={{
             top: '30%',
             right: '8%',
-            opacity: isDisplaying && visible ? 0.4 : 0,
+            opacity: isDisplaying ? 0.4 : 0,
             transition: 'opacity 1s 0.8s',
           }}
           width="80"
@@ -220,7 +226,13 @@ export default function DesktopPage() {
           viewBox="0 0 80 30"
           fill="none"
         >
-          <path d="M5 20 Q20 5 40 18 Q58 28 70 12" stroke="#6affd4" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path
+            d="M5 20 Q20 5 40 18 Q58 28 70 12"
+            stroke="#6affd4"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+          />
         </svg>
       </div>
 
