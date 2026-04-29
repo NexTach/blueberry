@@ -76,38 +76,76 @@ function ChalkGreen({ style }: { style?: React.CSSProperties }) {
 // CSS 나무 프레임 오버레이
 function WoodFrame() {
   const FRAME = 'clamp(22px, 3.2vw, 46px)';
-  const wood = 'repeating-linear-gradient(112deg, #C4903A 0px, #9B6430 6px, #8B5A2C 12px, #C08040 18px, #8B5A2C 24px, #B07838 30px)';
+  
+  // 고퀄리티 나무 질감: 여러 겹의 그라디언트와 패턴 조합
+  const wood = `
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 18px,
+      rgba(0, 0, 0, 0.12) 18px,
+      rgba(0, 0, 0, 0.12) 19px,
+      transparent 19px,
+      transparent 38px,
+      rgba(0, 0, 0, 0.08) 38px,
+      rgba(0, 0, 0, 0.08) 39px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 24px,
+      rgba(255, 255, 255, 0.08) 24px,
+      rgba(255, 255, 255, 0.08) 25px
+    ),
+    repeating-linear-gradient(
+      112deg,
+      #D4A055 0px,
+      #B8893F 4px,
+      #9B7330 8px,
+      #8B6428 12px,
+      #C4903A 16px,
+      #9B6430 20px,
+      #8B5A2C 24px,
+      #C08040 28px,
+      #8B5A2C 32px,
+      #B07838 36px
+    )
+  `;
+
+  const topBottomShadow = 'inset 0 -2px 4px rgba(0,0,0,0.35), inset 0 2px 3px rgba(255,245,205,0.25), inset 0 -8px 16px rgba(0,0,0,0.3)';
+  const leftRightShadow = 'inset -2px 0 4px rgba(0,0,0,0.35), inset 2px 0 3px rgba(255,245,205,0.25), inset -8px 0 16px rgba(0,0,0,0.3)';
+  const cornerShadow = 'inset -2px -2px 6px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,245,205,0.2), inset -6px -6px 12px rgba(0,0,0,0.3)';
 
   return (
     <>
       {/* 상단 */}
       <div className="absolute top-0 left-0 right-0 pointer-events-none z-10"
         style={{ height: FRAME, background: wood,
-          boxShadow: 'inset 0 -3px 8px rgba(0,0,0,0.45), inset 0 3px 6px rgba(255,220,140,0.35)' }} />
+          boxShadow: topBottomShadow }} />
       {/* 하단 */}
       <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-10"
         style={{ height: FRAME, background: wood,
-          boxShadow: 'inset 0 3px 8px rgba(0,0,0,0.5), inset 0 -3px 6px rgba(255,220,140,0.25)' }} />
+          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.35), inset 0 -2px 3px rgba(255,245,205,0.25), inset 0 8px 16px rgba(0,0,0,0.3)' }} />
       {/* 좌측 */}
       <div className="absolute top-0 left-0 bottom-0 pointer-events-none z-10"
         style={{ width: FRAME, background: wood,
-          boxShadow: 'inset -3px 0 8px rgba(0,0,0,0.45), inset 3px 0 6px rgba(255,220,140,0.35)' }} />
+          boxShadow: leftRightShadow }} />
       {/* 우측 */}
       <div className="absolute top-0 right-0 bottom-0 pointer-events-none z-10"
         style={{ width: FRAME, background: wood,
-          boxShadow: 'inset 3px 0 8px rgba(0,0,0,0.5), inset -3px 0 6px rgba(255,220,140,0.25)' }} />
+          boxShadow: 'inset 2px 0 4px rgba(0,0,0,0.35), inset -2px 0 3px rgba(255,245,205,0.25), inset 8px 0 16px rgba(0,0,0,0.3)' }} />
       {/* 모서리 조각 (겹침 보완) */}
       {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map(pos => (
         <div key={pos} className={`absolute ${pos} pointer-events-none z-10`}
           style={{ width: FRAME, height: FRAME, background: wood,
-            boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }} />
+            boxShadow: cornerShadow }} />
       ))}
-      {/* 프레임 내부 그림자 (칠판 깊이감) */}
+      {/* 프레임 내부 그림자 (칠판과의 깊이감) */}
       <div className="absolute inset-0 pointer-events-none z-[9]"
-        style={{ boxShadow: 'inset 0 0 40px rgba(0,0,0,0.3)' }} />
-      {/* 외곽 선 */}
+        style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.2)' }} />
+      {/* 외곽 선과 모서리 강조 */}
       <div className="absolute inset-0 pointer-events-none z-10"
-        style={{ outline: '2px solid #4A2E0E', outlineOffset: '-1px' }} />
+        style={{ outline: '2px solid #3A2215', outlineOffset: '-1px', boxShadow: 'inset 0 0 8px rgba(0,0,0,0.6)' }} />
     </>
   );
 }
