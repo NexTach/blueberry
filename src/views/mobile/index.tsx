@@ -2,7 +2,8 @@ import { useState } from 'react';
 import WaveAnimation from '../../components/WaveAnimation';
 import { useSpeechRecognition, isSpeechSupported } from '../../lib/speech';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
-import { updateSession } from '../../lib/firebase';
+import { updateSession, updateTheme } from '../../lib/firebase';
+import type { ThemeId } from '../../types/session';
 
 type Step = 'start' | 'listening' | 'confirm' | 'done';
 
@@ -10,6 +11,13 @@ const TEMPLATES: { id: TemplateId; label: string; preview: (name: string) => str
   { id: 1, label: '간단 환영', preview: (n) => `${n}님, 환영합니다!` },
   { id: 2, label: '오픈하우스', preview: (n) => `${n}님, 광주SW마이스터고 오픈하우스에 오신 것을 환영합니다!` },
   { id: 3, label: 'AI 창의 생성', preview: () => 'TV 화면에서 AI가 특별한 문구를 생성합니다 ✨' },
+];
+
+const THEMES: { id: ThemeId; name: string; bg: string; accent: string }[] = [
+  { id: 'green', name: '녹색 칠판', bg: '#344034', accent: '#6abeff' },
+  { id: 'black', name: '흑판',      bg: '#1e2820', accent: '#a8f0c6' },
+  { id: 'navy',  name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
+  { id: 'warm',  name: '먹판',      bg: '#1f1a14', accent: '#ff9fd6' },
 ];
 
 function DirectInput({ onSubmit }: { onSubmit: (name: string) => void }) {
@@ -36,6 +44,64 @@ function DirectInput({ onSubmit }: { onSubmit: (name: string) => void }) {
   );
 }
 
+function SettingsSheet({ onClose }: { onClose: () => void }) {
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState<ThemeId | null>(null);
+
+  async function handleSelectTheme(id: ThemeId) {
+    setSaving(true);
+    await updateTheme(id);
+    setSaving(false);
+    setSaved(id);
+    setTimeout(() => setSaved(null), 1500);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col justify-end"
+      style={{ background: 'rgba(0,0,0,0.4)' }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-t-3xl px-6 pt-5 pb-10 flex flex-col gap-6"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* 핸들 */}
+        <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto" />
+
+        <div className="flex items-center justify-between">
+          <p className="text-lg font-bold text-gray-900">TV 설정</p>
+          <button onClick={onClose} className="text-sm text-gray-400">닫기</button>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">칠판 테마</p>
+          <div className="grid grid-cols-2 gap-3">
+            {THEMES.map(t => (
+              <button
+                key={t.id}
+                onClick={() => handleSelectTheme(t.id)}
+                disabled={saving}
+                className="flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all active:scale-95"
+                style={{ borderColor: saved === t.id ? t.accent : 'transparent', background: t.bg }}
+              >
+                <div className="w-4 h-4 rounded-full shrink-0" style={{ background: t.accent }} />
+                <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>{t.name}</span>
+                {saved === t.id && (
+                  <svg className="ml-auto shrink-0" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={t.accent} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 text-center mt-1">선택하면 TV 화면에 즉시 반영됩니다</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MobilePage() {
   const [step, setStep] = useState<Step>('start');
   const [name, setName] = useState('');
@@ -43,6 +109,7 @@ export default function MobilePage() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const { isListening, transcript, error, start, stop, reset } = useSpeechRecognition();
 
@@ -73,7 +140,6 @@ export default function MobilePage() {
 
   async function handleConfirm() {
     setIsSubmitting(true);
-    // template 3이면 welcomeMessage를 비워서 보냄 → desktop에서 AI 생성
     const welcomeMessage = selectedTemplate === 3 ? '' : message;
     await updateSession({ status: 'generating', visitorName: name, welcomeMessage });
     setIsSubmitting(false);
@@ -91,6 +157,20 @@ export default function MobilePage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
+
+      {/* 설정 버튼 (우상단, start 화면에서만) */}
+      {step === 'start' && (
+        <button
+          onClick={() => setShowSettings(true)}
+          className="fixed top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 active:bg-gray-200 transition-colors"
+          aria-label="설정"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
+      )}
 
       {/* Step: start */}
       {step === 'start' && (
@@ -214,7 +294,6 @@ export default function MobilePage() {
             ))}
           </div>
 
-          {/* 템플릿 1, 2만 직접 수정 가능 */}
           {selectedTemplate !== 3 && (
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">최종 문구</label>
@@ -265,6 +344,9 @@ export default function MobilePage() {
           </button>
         </div>
       )}
+
+      {/* 설정 시트 */}
+      {showSettings && <SettingsSheet onClose={() => setShowSettings(false)} />}
     </div>
   );
 }
