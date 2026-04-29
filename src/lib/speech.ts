@@ -36,6 +36,9 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const shouldKeepListeningRef = useRef(false);
+  const manuallyStoppedRef = useRef(false);
+  const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!isSpeechSupported) return;
@@ -45,7 +48,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     const recognition: SpeechRecognitionLike = new SR();
 
     recognition.lang = 'ko-KR';
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = true;
 
     recognition.onresult = (e: SpeechRecognitionEvent) => {
@@ -56,6 +59,11 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     };
 
     recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
+      if (e.error === 'aborted') return;
+
+      shouldKeepListeningRef.current = false;
+      manuallyStoppedRef.current = true;
+
       const msg: Record<string, string> = {
         'not-allowed': '마이크 권한이 필요합니다.',
         'no-speech': '음성이 인식되지 않았습니다.',
@@ -68,13 +76,39 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
       setIsListening(false);
     };
 
-    recognition.onend = () => setIsListening(false);
+    recognition.onend = () => {
+      if (shouldKeepListeningRef.current && !manuallyStoppedRef.current) {
+        restartTimeoutRef.current = setTimeout(() => {
+          try {
+            recognition.start();
+            setIsListening(true);
+          } catch {
+            shouldKeepListeningRef.current = false;
+            setErrorCode('start-failed');
+            setError('음성 인식을 다시 시작할 수 없습니다. 직접 입력을 사용해주세요.');
+            setIsListening(false);
+          }
+        }, 250);
+        return;
+      }
+
+      setIsListening(false);
+    };
+
     recognitionRef.current = recognition;
-    return () => recognition.abort();
+    return () => {
+      shouldKeepListeningRef.current = false;
+      manuallyStoppedRef.current = true;
+      if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
+      recognition.abort();
+    };
   }, []);
 
   const start = useCallback(() => {
     if (!recognitionRef.current) return;
+    shouldKeepListeningRef.current = true;
+    manuallyStoppedRef.current = false;
+    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
     setError(null);
     setErrorCode(null);
     setTranscript('');
@@ -89,11 +123,17 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
   }, []);
 
   const stop = useCallback(() => {
+    shouldKeepListeningRef.current = false;
+    manuallyStoppedRef.current = true;
+    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
     recognitionRef.current?.stop();
     setIsListening(false);
   }, []);
 
   const reset = useCallback(() => {
+    shouldKeepListeningRef.current = false;
+    manuallyStoppedRef.current = true;
+    if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
     recognitionRef.current?.abort();
     setIsListening(false);
     setTranscript('');

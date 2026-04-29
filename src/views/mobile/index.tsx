@@ -9,7 +9,7 @@ type Step = 'start' | 'listening' | 'confirm' | 'done';
 
 const TEMPLATES: { id: TemplateId; label: string; preview: (name: string) => string }[] = [
   { id: 1, label: '간단 환영', preview: (n) => `${n}님, 환영합니다!` },
-  { id: 2, label: '오픈하우스', preview: (n) => `${n}님, 광주SW마이스터고 오픈하우스에 오신 것을 환영합니다!` },
+  { id: 2, label: '학교 환영', preview: (n) => `${n}님, 광주SW마이스터고에 오신 것을 환영합니다!` },
   { id: 3, label: 'AI 창의 생성', preview: () => 'TV 화면에서 AI가 특별한 문구를 생성합니다 ✨' },
 ];
 
@@ -29,7 +29,7 @@ const AI_TONES = [
 
 type AiToneId = (typeof AI_TONES)[number]['id'];
 
-function DirectInput({ onSubmit, onBack }: { onSubmit: (name: string) => void; onBack: () => void }) {
+function DirectInput({ onSubmit, onBack }: { onSubmit: (command: string) => void; onBack: () => void }) {
   const [value, setValue] = useState('');
   return (
     <div className="flex flex-col gap-3 w-full">
@@ -38,7 +38,7 @@ function DirectInput({ onSubmit, onBack }: { onSubmit: (name: string) => void; o
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && value.trim() && onSubmit(value.trim())}
-        placeholder="이름을 입력하세요"
+        placeholder="띄울 내용을 입력하세요"
         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-base text-gray-900 outline-none focus:border-black transition-colors"
         autoFocus
       />
@@ -153,11 +153,12 @@ export default function MobilePage() {
     }
   }, [errorCode, step]);
 
-  function goToConfirm(recognizedName: string) {
+  function goToConfirm(commandText: string) {
     setPreviousStep(step);
-    setName(recognizedName);
-    setSelectedTemplate(1);
-    setMessage(applyTemplate(recognizedName, 1) ?? '');
+    setName('');
+    setSelectedTemplate(3);
+    setMessage('');
+    setAiPrompt(commandText);
     setStep('confirm');
   }
 
@@ -176,7 +177,9 @@ export default function MobilePage() {
 
   function handleTemplateChange(id: TemplateId) {
     setSelectedTemplate(id);
-    setMessage(applyTemplate(name, id) ?? '');
+    if (id !== 3) {
+      setMessage(applyTemplate(name, id) ?? '');
+    }
   }
 
   function handleNameChange(nextName: string) {
@@ -192,7 +195,7 @@ export default function MobilePage() {
       // AI 생성: 데스크탑이 /api/generate 호출 후 displaying으로 전환
       await updateSession({
         status: 'generating',
-        visitorName: name.trim(),
+        visitorName: name.trim() || '방문자',
         welcomeMessage: aiPrompt.trim(),
         tone: aiTone,
       });
@@ -263,9 +266,9 @@ export default function MobilePage() {
       {step === 'start' && (
         <div className="flex flex-col items-center gap-8 w-full max-w-sm">
           <div className="flex flex-col items-center gap-2 text-center">
-            <p className="text-2xl font-bold text-gray-900">환영 메시지 남기기</p>
+            <p className="text-2xl font-bold text-gray-900">표시할 내용 보내기</p>
             <p className="text-sm text-gray-500">
-              {isSpeechSupported ? '마이크 버튼을 눌러 이름을 말해주세요' : '이름을 입력해주세요'}
+              {isSpeechSupported ? '마이크 버튼을 눌러 띄울 내용을 말해주세요' : '띄울 내용을 입력해주세요'}
             </p>
           </div>
 
@@ -282,7 +285,7 @@ export default function MobilePage() {
                 </svg>
               </button>
               <div className="w-full border-t border-gray-100 pt-6 flex flex-col items-center gap-3">
-                <p className="text-xs text-gray-400">음성 인식이 어렵다면</p>
+                <p className="text-xs text-gray-400">음성 입력이 어렵다면</p>
                 <button
                   onClick={() => {
                     reset();
@@ -308,7 +311,7 @@ export default function MobilePage() {
         <div className="flex flex-col items-center gap-10 w-full max-w-sm">
           <div className="flex flex-col items-center gap-2 text-center">
             <p className="text-2xl font-bold text-gray-900">듣고 있어요</p>
-            <p className="text-sm text-gray-500">이름을 말씀해 주세요</p>
+            <p className="text-sm text-gray-500">띄울 내용을 말씀해 주세요</p>
           </div>
 
           <WaveAnimation isActive={isListening} />
@@ -364,17 +367,17 @@ export default function MobilePage() {
       {step === 'confirm' && (
         <div className="flex flex-col gap-6 w-full max-w-sm">
           <div className="flex flex-col gap-1">
-            <p className="text-2xl font-bold text-gray-900">문구 선택</p>
-            <p className="text-sm text-gray-500">원하는 스타일을 골라주세요</p>
+            <p className="text-2xl font-bold text-gray-900">표시 내용 설정</p>
+            <p className="text-sm text-gray-500">AI 생성 또는 템플릿 방식을 골라주세요</p>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">이름</label>
+            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">이름 (선택)</label>
             <input
               type="text"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="이름을 수정할 수 있어요"
+              placeholder="이름이 필요하면 입력하세요"
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors"
             />
           </div>
@@ -443,7 +446,7 @@ export default function MobilePage() {
                   value={aiPrompt}
                   onChange={(e) => setAiPrompt(e.target.value)}
                   rows={4}
-                  placeholder="예: 김민준 학생, 오늘 방문 고마워요. 밝고 센스 있게 환영해줘."
+                  placeholder="예: 이모지를 넣고, 밝고 재치 있게 환영 문구를 만들어줘."
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors resize-none"
                 />
                 <p className="text-xs text-gray-400">본문에 이름이 들어 있으면 AI가 그 이름을 우선 적용합니다.</p>
@@ -460,7 +463,7 @@ export default function MobilePage() {
             </button>
             <button
               onClick={handleConfirm}
-              disabled={isSubmitting || !name.trim() || (selectedTemplate !== 3 && !message.trim())}
+              disabled={isSubmitting || (selectedTemplate === 3 ? !aiPrompt.trim() : (!name.trim() || !message.trim()))}
               className="flex-1 py-3.5 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
             >
               {isSubmitting ? '전송 중...' : '화면에 표시하기'}
