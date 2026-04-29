@@ -1,5 +1,5 @@
 import { TEMPLATES, FALLBACK_VISITOR_NAME } from '../constants';
-import type { TemplateId } from '../../../lib/openai';
+import type { TemplateId } from '@/src/lib/openai';
 
 interface TemplatePickerProps {
   name: string;

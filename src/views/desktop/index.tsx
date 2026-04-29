@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
 import type { Session, ThemeId } from '../../types/session';
@@ -78,7 +78,7 @@ function WoodFrame() {
         <div key={pos} className={`absolute ${pos} pointer-events-none z-10`}
           style={{ width: FRAME, height: FRAME, background: wood, boxShadow: 'inset -2px -2px 6px rgba(0,0,0,0.4), inset 2px 2px 4px rgba(255,245,205,0.2)' }} />
       ))}
-      <div className="absolute inset-0 pointer-events-none z-[9]"
+      <div className="absolute inset-0 pointer-events-none z-9"
         style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.2)' }} />
       <div className="absolute inset-0 pointer-events-none z-10"
         style={{ outline: '2px solid #3A2215', outlineOffset: '-1px' }} />
