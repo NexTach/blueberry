@@ -1,17 +1,15 @@
 import { useState } from 'react';
 import WaveAnimation from '../../components/WaveAnimation';
 import { useSpeechRecognition, isSpeechSupported } from '../../lib/speech';
-import { applyTemplate, generateWelcomeMessage, type TemplateId } from '../../lib/openai';
+import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { updateSession } from '../../lib/firebase';
 
 type Step = 'start' | 'listening' | 'confirm' | 'done';
 
-const hasOpenAI = Boolean(import.meta.env.VITE_OPENAI_API_KEY);
-
 const TEMPLATES: { id: TemplateId; label: string; preview: (name: string) => string }[] = [
   { id: 1, label: '간단 환영', preview: (n) => `${n}님, 환영합니다!` },
   { id: 2, label: '오픈하우스', preview: (n) => `${n}님, 광주SW마이스터고 오픈하우스에 오신 것을 환영합니다!` },
-  ...(hasOpenAI ? [{ id: 3 as TemplateId, label: 'AI 창의 생성', preview: () => 'AI가 특별한 문구를 만들어드립니다 ✨' }] : []),
+  { id: 3, label: 'AI 창의 생성', preview: () => 'TV 화면에서 AI가 특별한 문구를 생성합니다 ✨' },
 ];
 
 function DirectInput({ onSubmit }: { onSubmit: (name: string) => void }) {
@@ -43,7 +41,6 @@ export default function MobilePage() {
   const [name, setName] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateId>(1);
   const [message, setMessage] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
 
@@ -51,8 +48,8 @@ export default function MobilePage() {
 
   function goToConfirm(recognizedName: string) {
     setName(recognizedName);
-    setMessage(applyTemplate(recognizedName, 1) ?? '');
     setSelectedTemplate(1);
+    setMessage(applyTemplate(recognizedName, 1) ?? '');
     setStep('confirm');
   }
 
@@ -69,21 +66,16 @@ export default function MobilePage() {
     if (n) goToConfirm(n);
   }
 
-  async function handleTemplateChange(id: TemplateId) {
+  function handleTemplateChange(id: TemplateId) {
     setSelectedTemplate(id);
-    if (id === 3) {
-      setIsGenerating(true);
-      const generated = await generateWelcomeMessage(name);
-      setMessage(generated);
-      setIsGenerating(false);
-    } else {
-      setMessage(applyTemplate(name, id) ?? '');
-    }
+    setMessage(applyTemplate(name, id) ?? '');
   }
 
   async function handleConfirm() {
     setIsSubmitting(true);
-    await updateSession({ status: 'displaying', visitorName: name, welcomeMessage: message });
+    // template 3이면 welcomeMessage를 비워서 보냄 → desktop에서 AI 생성
+    const welcomeMessage = selectedTemplate === 3 ? '' : message;
+    await updateSession({ status: 'generating', visitorName: name, welcomeMessage });
     setIsSubmitting(false);
     setStep('done');
   }
@@ -106,9 +98,7 @@ export default function MobilePage() {
           <div className="flex flex-col items-center gap-2 text-center">
             <p className="text-2xl font-bold text-gray-900">환영 메시지 남기기</p>
             <p className="text-sm text-gray-500">
-              {isSpeechSupported
-                ? '마이크 버튼을 눌러 이름을 말해주세요'
-                : '이름을 입력해주세요'}
+              {isSpeechSupported ? '마이크 버튼을 눌러 이름을 말해주세요' : '이름을 입력해주세요'}
             </p>
           </div>
 
@@ -135,7 +125,7 @@ export default function MobilePage() {
               </div>
             </>
           ) : (
-            <DirectInput onSubmit={(n) => goToConfirm(n)} />
+            <DirectInput onSubmit={goToConfirm} />
           )}
         </div>
       )}
@@ -197,7 +187,7 @@ export default function MobilePage() {
         <div className="flex flex-col gap-6 w-full max-w-sm">
           <div className="flex flex-col gap-1">
             <p className="text-2xl font-bold text-gray-900">문구 선택</p>
-            <p className="text-sm text-gray-500">원하는 스타일을 고르고 수정할 수 있어요</p>
+            <p className="text-sm text-gray-500">원하는 스타일을 골라주세요</p>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -224,16 +214,18 @@ export default function MobilePage() {
             ))}
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">최종 문구</label>
-            <textarea
-              value={isGenerating ? '생성 중...' : message}
-              onChange={(e) => setMessage(e.target.value)}
-              disabled={isGenerating}
-              rows={3}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors resize-none disabled:opacity-50"
-            />
-          </div>
+          {/* 템플릿 1, 2만 직접 수정 가능 */}
+          {selectedTemplate !== 3 && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">최종 문구</label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                rows={3}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors resize-none"
+              />
+            </div>
+          )}
 
           <div className="flex gap-3">
             <button
@@ -244,7 +236,7 @@ export default function MobilePage() {
             </button>
             <button
               onClick={handleConfirm}
-              disabled={isGenerating || isSubmitting || !message.trim()}
+              disabled={isSubmitting || (selectedTemplate !== 3 && !message.trim())}
               className="flex-1 py-3.5 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
             >
               {isSubmitting ? '전송 중...' : '화면에 표시하기'}

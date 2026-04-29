@@ -1,19 +1,22 @@
-import { useNavigate } from 'react-router-dom';
+'use client';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[#344034] flex flex-col items-center justify-center px-6 gap-16"
-      style={{ fontFamily: "'HakgyoansimBunpil', sans-serif" }}>
-
-      {/* 학교 이름 */}
+    <div
+      className="min-h-screen bg-[#344034] flex flex-col items-center justify-center px-6 gap-16"
+      style={{ fontFamily: "'HakgyoansimBunpil', sans-serif" }}
+    >
       <div className="flex flex-col items-center gap-1 text-center">
         <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
           GWANGJU
         </span>
-        <span style={{ color: '#6abeff', fontSize: 'clamp(2rem, 6vw, 3.5rem)', lineHeight: 1 }}
-          className="tracking-widest">
+        <span
+          style={{ color: '#6abeff', fontSize: 'clamp(2rem, 6vw, 3.5rem)', lineHeight: 1 }}
+          className="tracking-widest"
+        >
           SOFTWARE
         </span>
         <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}>
@@ -22,10 +25,9 @@ export default function HomePage() {
         <p className="text-white/40 text-xs tracking-[0.3em] mt-3">WELCOME SYSTEM</p>
       </div>
 
-      {/* 카드 두 개 */}
       <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
         <button
-          onClick={() => navigate('/desktop')}
+          onClick={() => router.push('/desktop')}
           className="flex-1 group flex flex-col items-center gap-4 px-8 py-10 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 transition-all"
         >
           <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
@@ -43,7 +45,7 @@ export default function HomePage() {
         </button>
 
         <button
-          onClick={() => navigate('/mobile')}
+          onClick={() => router.push('/mobile')}
           className="flex-1 group flex flex-col items-center gap-4 px-8 py-10 rounded-2xl border border-[#6abeff]/40 bg-[#6abeff]/10 hover:bg-[#6abeff]/20 transition-all"
         >
           <div className="w-14 h-14 rounded-xl bg-[#6abeff]/20 flex items-center justify-center group-hover:bg-[#6abeff]/30 transition-colors">
@@ -61,7 +63,6 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* 푸터 */}
       <p className="text-white/20 text-xs tracking-widest" style={{ fontFamily: 'sans-serif' }}>
         since 2017 · BERRY
       </p>

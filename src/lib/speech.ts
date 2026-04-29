@@ -1,8 +1,21 @@
+'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export const isSpeechSupported =
   typeof window !== 'undefined' &&
   ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+
+interface SpeechRecognitionLike {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((e: SpeechRecognitionEvent) => void) | null;
+  onerror: ((e: SpeechRecognitionErrorEvent) => void) | null;
+  onend: (() => void) | null;
+  start(): void;
+  stop(): void;
+  abort(): void;
+}
 
 export interface SpeechState {
   isListening: boolean;
@@ -20,16 +33,15 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   useEffect(() => {
     if (!isSpeechSupported) return;
 
-    const SR =
-      (window as typeof window & { SpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition ??
-      (window as typeof window & { webkitSpeechRecognition?: typeof SpeechRecognition }).webkitSpeechRecognition!;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+    const recognition: SpeechRecognitionLike = new SR();
 
-    const recognition = new SR();
     recognition.lang = 'ko-KR';
     recognition.continuous = false;
     recognition.interimResults = true;
@@ -52,7 +64,6 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     };
 
     recognition.onend = () => setIsListening(false);
-
     recognitionRef.current = recognition;
     return () => recognition.abort();
   }, []);

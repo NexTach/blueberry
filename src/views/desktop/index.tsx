@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { subscribeSession, resetSession } from '../../lib/firebase';
+import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
 import type { Session } from '../../types/session';
 
 const CHALK_FONT = "'HakgyoansimBunpil', sans-serif";
@@ -36,6 +36,32 @@ export default function DesktopPage() {
     return unsub;
   }, []);
 
+  // AI 생성: generating 상태 감지 → /api/generate 호출 → displaying으로 전환
+  useEffect(() => {
+    if (session?.status !== 'generating' || !session.visitorName) return;
+    let cancelled = false;
+    fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: session.visitorName }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        const msg = data.message ?? `${session.visitorName}님, 환영합니다!`;
+        updateSession({ status: 'displaying', visitorName: session.visitorName, welcomeMessage: msg });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        updateSession({
+          status: 'displaying',
+          visitorName: session.visitorName,
+          welcomeMessage: `${session.visitorName}님, 환영합니다!`,
+        });
+      });
+    return () => { cancelled = true; };
+  }, [session?.status, session?.visitorName]);
+
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
 
@@ -52,6 +78,7 @@ export default function DesktopPage() {
     }
   }, [session?.status, session?.welcomeMessage]);
 
+  const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
 
   return (
@@ -84,7 +111,23 @@ export default function DesktopPage() {
         className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-700"
         style={{ opacity: isDisplaying ? 0 : 1, pointerEvents: isDisplaying ? 'none' : 'auto' }}
       >
-        <div className="flex flex-col items-center gap-1 animate-pulse">
+        {isGenerating && (
+          <div className="absolute top-1/4 flex flex-col items-center gap-4">
+            <div className="flex gap-2">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="w-3 h-3 bg-white/60 rounded-full"
+                  style={{ animation: `bounce 1.2s ${i * 0.2}s infinite` }}
+                />
+              ))}
+            </div>
+            <p className="text-white/60 text-sm tracking-widest">
+              {session?.visitorName}님의 환영 문구를 만들고 있어요...
+            </p>
+          </div>
+        )}
+        <div className={`flex flex-col items-center gap-1 ${isGenerating ? 'opacity-30' : 'animate-pulse'}`}>
           <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}>
             GWANGJU
           </span>
