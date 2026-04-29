@@ -140,8 +140,13 @@ export default function MobilePage() {
 
   async function handleConfirm() {
     setIsSubmitting(true);
-    const welcomeMessage = selectedTemplate === 3 ? '' : message;
-    await updateSession({ status: 'generating', visitorName: name, welcomeMessage });
+    if (selectedTemplate === 3) {
+      // AI 생성: 데스크탑이 /api/generate 호출 후 displaying으로 전환
+      await updateSession({ status: 'generating', visitorName: name, welcomeMessage: '' });
+    } else {
+      // 고정 템플릿: 바로 displaying
+      await updateSession({ status: 'displaying', visitorName: name, welcomeMessage: message });
+    }
     setIsSubmitting(false);
     setStep('done');
   }
