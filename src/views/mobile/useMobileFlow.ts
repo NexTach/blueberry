@@ -6,6 +6,16 @@ import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_
 import type { AiToneId, CommandInterpretation, ConfirmStage, Step } from './types';
 import type { ThemeId, Session } from '../../types/session';
 
+interface ConfirmDraftSnapshot {
+  templateId: TemplateId;
+  name: string;
+  message: string;
+  aiPrompt: string;
+  aiTone: AiToneId;
+  themeId: ThemeId;
+  sourcePrompt: string;
+}
+
 function getConfirmStages(templateId: TemplateId): ConfirmStage[] {
   if (templateId === AI_TEMPLATE_ID) {
     return ['template', 'content', 'tone', 'theme', 'name'];
@@ -29,6 +39,7 @@ export function useMobileFlow() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [lastSession, setLastSession] = useState<Session | null>(null);
+  const [initialConfirmSnapshot, setInitialConfirmSnapshot] = useState<ConfirmDraftSnapshot | null>(null);
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
@@ -78,6 +89,15 @@ export function useMobileFlow() {
     setAiTone(nextTone);
     setDirectInputText('');
     setShowDirectInput(false);
+    setInitialConfirmSnapshot({
+      templateId: nextTemplate,
+      name: nextName,
+      message: nextMessage,
+      aiPrompt: nextPrompt,
+      aiTone: nextTone,
+      themeId: session.themeId ?? themeId,
+      sourcePrompt: session.sourcePrompt?.trim() || nextPrompt,
+    });
     setConfirmStageIndex(0);
     setStep('confirm');
   }
@@ -140,6 +160,7 @@ export function useMobileFlow() {
       setMessage(
         nextTemplate === AI_TEMPLATE_ID ? '' : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''),
       );
+      setInitialConfirmSnapshot(null);
       setConfirmStageIndex(0);
       setStep('confirm');
     } finally {
@@ -193,14 +214,30 @@ export function useMobileFlow() {
       message.trim() ||
       `${resolvedName}님을 위한 환영 문구를 만들어줘`;
     if (selectedTemplate === AI_TEMPLATE_ID) {
-      await updateSession({
-        status: 'generating',
-        visitorName: resolvedName,
-        welcomeMessage: resolvedAiPrompt,
-        sourcePrompt: resolvedAiPrompt,
-        tone: aiTone,
-        themeId,
-      });
+      const shouldRegenerate =
+        initialConfirmSnapshot?.templateId !== AI_TEMPLATE_ID ||
+        initialConfirmSnapshot.aiPrompt.trim() !== resolvedAiPrompt ||
+        initialConfirmSnapshot.aiTone !== aiTone;
+
+      if (!shouldRegenerate) {
+        await updateSession({
+          status: 'displaying',
+          visitorName: resolvedName,
+          welcomeMessage: initialConfirmSnapshot?.message || message || '환영합니다!',
+          sourcePrompt: initialConfirmSnapshot?.sourcePrompt || resolvedAiPrompt,
+          tone: aiTone,
+          themeId,
+        });
+      } else {
+        await updateSession({
+          status: 'generating',
+          visitorName: resolvedName,
+          welcomeMessage: resolvedAiPrompt,
+          sourcePrompt: resolvedAiPrompt,
+          tone: aiTone,
+          themeId,
+        });
+      }
     } else {
       await updateSession({
         status: 'displaying',
@@ -242,6 +279,7 @@ export function useMobileFlow() {
     setAiTone(DEFAULT_AI_TONE);
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+    setInitialConfirmSnapshot(null);
     setConfirmStageIndex(0);
     setPreviousStep('choose');
     setStep('start');
@@ -281,6 +319,7 @@ export function useMobileFlow() {
     setIsInterpreting(false);
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+    setInitialConfirmSnapshot(null);
     setConfirmStageIndex(0);
     setPreviousStep(null);
     setStep('choose');
