@@ -179,7 +179,6 @@ function WoodFrame() {
           style={{ width: FRAME, height: FRAME, background: wood, boxShadow: cornerShadow }}
         />
       ))}
-<<<<<<< HEAD
       {/* 프레임 내부 그림자 (칠판과의 깊이감) */}
       <div
         className="absolute inset-0 pointer-events-none z-[9]"
@@ -190,14 +189,6 @@ function WoodFrame() {
         className="absolute inset-0 pointer-events-none z-10"
         style={{ outline: '2px solid #3A2215', outlineOffset: '-1px', boxShadow: 'inset 0 0 8px rgba(0,0,0,0.6)' }}
       />
-=======
-      {/* 프레임 내부 그림자 (칠판 깊이감) */}
-      <div className="absolute inset-0 pointer-events-none z-9"
-        style={{ boxShadow: 'inset 0 0 40px rgba(0,0,0,0.3)' }} />
-      {/* 외곽 선 */}
-      <div className="absolute inset-0 pointer-events-none z-10"
-        style={{ outline: '2px solid #4A2E0E', outlineOffset: '-1px' }} />
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
     </>
   );
 }
@@ -338,14 +329,10 @@ export default function DesktopPage() {
           <span className="text-white tracking-widest" style={{ fontSize: 'clamp(2rem, 6.5vh, 5.5rem)' }}>
             GWANGJU
           </span>
-<<<<<<< HEAD
           <span
             className="tracking-widest"
             style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7.5vh, 7rem)', lineHeight: 1 }}
           >
-=======
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1 }}>
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
             SOFTWARE
           </span>
           <span className="text-white tracking-widest" style={{ fontSize: 'clamp(2rem, 6.5vh, 5.5rem)' }}>
@@ -386,7 +373,6 @@ export default function DesktopPage() {
             transform: show ? 'translateY(0)' : 'translateY(-10px)',
           }}
         >
-<<<<<<< HEAD
           <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>
             GWANGJU
           </span>
@@ -399,23 +385,14 @@ export default function DesktopPage() {
           <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>
             MEISTER
           </span>
-=======
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)' }}>GWANGJU</span>
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(0.9rem, 2.4vh, 1.7rem)', fontWeight: 700 }}>SOFTWARE</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)' }}>MEISTER</span>
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
         </div>
 
         {/* 분필 장식 - 핑크 (우상단, 텍스트 영역 밖) */}
         <div
           className="absolute pointer-events-none transition-opacity duration-1000"
           style={{
-<<<<<<< HEAD
-            left: '5%',
-            top: '38%',
-=======
-            right: '4%', top: '12%',
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
+            right: '4%',
+            top: '12%',
             width: 'clamp(80px, 11vh, 160px)',
             opacity: show ? 0.9 : 0,
             transitionDelay: '500ms',
@@ -436,7 +413,6 @@ export default function DesktopPage() {
           <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1 }}>
             {session?.visitorName}
           </p>
-<<<<<<< HEAD
           <p
             className="text-white"
             style={{
@@ -446,9 +422,6 @@ export default function DesktopPage() {
               marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
             }}
           >
-=======
-          <p className="text-white" style={{ fontSize: 'clamp(1.4rem, 4.5vh, 4rem)', lineHeight: 1.55, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}>
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
             {msgBody || '님, 환영합니다!'}
           </p>
         </div>
@@ -457,12 +430,8 @@ export default function DesktopPage() {
         <div
           className="absolute pointer-events-none transition-opacity duration-1000"
           style={{
-<<<<<<< HEAD
-            right: '7%',
-            bottom: '22%',
-=======
-            left: '4%', bottom: '14%',
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
+            left: '4%',
+            bottom: '14%',
             width: 'clamp(55px, 7.5vh, 110px)',
             opacity: show ? 0.9 : 0,
             transitionDelay: '700ms',
@@ -482,7 +451,6 @@ export default function DesktopPage() {
         }}
       >
         <div className="flex flex-col gap-0.5">
-<<<<<<< HEAD
           <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)' }}>
             since
           </span>
@@ -499,18 +467,6 @@ export default function DesktopPage() {
           <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(0.6rem, 1.4vh, 1rem)' }}>
             {time}
           </span>
-=======
-          <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2vh, 1.5rem)' }}>since</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(1.5rem, 4vh, 3.2rem)' }}>2017</span>
-        </div>
-        <button
-          className="flex flex-col items-center gap-2"
-          onClick={() => setShowThemePicker(v => !v)}
-          aria-label="테마 선택"
-        >
-          <img src="/images/berry.png" alt="BERRY" style={{ height: 'clamp(30px, 5vh, 55px)', width: 'auto' }} />
-          <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(1rem, 2.5vh, 1.8rem)' }}>{time}</span>
->>>>>>> f59e4c070d864cc36a3034ece7def86d2e366c1e
         </button>
       </div>
 
