@@ -330,7 +330,7 @@ export default function DesktopPage() {
               <QRCodeSVG value={mobileUrl} size={Math.round(window.innerHeight * 0.14)} />
             </div>
             <p className="text-white/45 tracking-widest" style={{ fontSize: 'clamp(0.65rem, 1.5vh, 1rem)' }}>
-              스캔하여 환영 메시지 남기기
+              스캔하여 메시지 남기기
             </p>
           </div>
         )}
