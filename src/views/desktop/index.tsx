@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
-import type { Session } from '../../types/session';
+import type { Session, ThemeId } from '../../types/session';
 
 const CHALK_FONT = "'HakgyoansimBunpil', sans-serif";
 const RESET_DELAY = 30 * 60 * 1000; // 30분
@@ -12,7 +12,6 @@ const THEMES = [
   { id: 'navy',  name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
   { id: 'warm',  name: '먹판',      bg: '#1f1a14', accent: '#ff9fd6' },
 ] as const;
-type ThemeId = typeof THEMES[number]['id'];
 
 // Figma 원본 분필 낙서 SVG (fractalNoise 텍스처 포함)
 function ChalkPink({ style }: { style?: React.CSSProperties }) {
@@ -73,7 +72,6 @@ function ChalkGreen({ style }: { style?: React.CSSProperties }) {
   );
 }
 
-// CSS 나무 프레임 오버레이
 function WoodFrame() {
   const FRAME = 'clamp(22px, 3.2vw, 46px)';
   const wood = 'repeating-linear-gradient(112deg, #C4903A 0px, #9B6430 6px, #8B5A2C 12px, #C08040 18px, #8B5A2C 24px, #B07838 30px)';
@@ -129,13 +127,13 @@ function escapeRegex(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'
 export default function DesktopPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [visible, setVisible] = useState(false);
-  const [themeId, setThemeId] = useState<ThemeId>(
-    () => ((localStorage.getItem('desktopTheme') as ThemeId) ?? 'green'),
-  );
   const [showThemePicker, setShowThemePicker] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const time = useClock();
   const mobileUrl = `${window.location.origin}/mobile`;
+
+  // Firestore themeId 우선, 없으면 'green'
+  const themeId: ThemeId = session?.themeId ?? 'green';
   const theme = THEMES.find(t => t.id === themeId) ?? THEMES[0];
 
   useEffect(() => { return subscribeSession(setSession); }, []);
@@ -172,23 +170,18 @@ export default function DesktopPage() {
   // displaying 진입 애니메이션 + 자동 리셋
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    const t0 = setTimeout(() => setVisible(session?.status === 'displaying'), 0);
     if (session?.status === 'displaying') {
-      setVisible(false);
       const t1 = setTimeout(() => setVisible(true), 60);
       resetTimerRef.current = setTimeout(() => resetSession(), RESET_DELAY);
       return () => {
+        clearTimeout(t0);
         clearTimeout(t1);
         if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       };
     }
-    setVisible(false);
+    return () => clearTimeout(t0);
   }, [session?.status, session?.welcomeMessage]);
-
-  function selectTheme(id: ThemeId) {
-    setThemeId(id);
-    localStorage.setItem('desktopTheme', id);
-    setShowThemePicker(false);
-  }
 
   const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
@@ -339,12 +332,12 @@ export default function DesktopPage() {
           <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(1.5rem, 4vh, 3.2rem)' }}>2017</span>
         </div>
         <button
-          className="flex flex-col items-center gap-2"
+          className="flex flex-col items-center gap-1 group"
           onClick={() => setShowThemePicker(v => !v)}
           aria-label="테마 선택"
         >
-          <img src="/images/berry.png" alt="BERRY" style={{ height: 'clamp(30px, 5vh, 55px)', width: 'auto' }} />
           <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(1rem, 2.5vh, 1.8rem)' }}>{time}</span>
+          <span className="text-white/25 tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ fontSize: 'clamp(0.5rem, 1vh, 0.7rem)' }}>테마 선택</span>
         </button>
       </div>
 
@@ -364,24 +357,28 @@ export default function DesktopPage() {
             onClick={e => e.stopPropagation()}
           >
             <p className="text-white/70 text-center tracking-widest" style={{ fontFamily: CHALK_FONT, fontSize: 'clamp(0.8rem, 1.8vh, 1.1rem)' }}>
-              테마 선택
+              현재 테마
+            </p>
+            <p className="text-white/50 text-center tracking-wider" style={{ fontSize: 'clamp(0.65rem, 1.3vh, 0.85rem)' }}>
+              모바일에서 변경하세요
             </p>
             <div className="flex gap-5">
               {THEMES.map(t => (
-                <button key={t.id} onClick={() => selectTheme(t.id)} className="flex flex-col items-center gap-2">
+                <div key={t.id} className="flex flex-col items-center gap-2">
                   <div
-                    className="rounded-xl flex items-center justify-center transition-all duration-150"
+                    className="rounded-xl flex items-center justify-center"
                     style={{
                       width: 'clamp(52px, 7vh, 72px)', height: 'clamp(52px, 7vh, 72px)',
                       background: t.bg,
                       outline: themeId === t.id ? `3px solid ${t.accent}` : '3px solid rgba(255,255,255,0.15)',
                       transform: themeId === t.id ? 'scale(1.12)' : 'scale(1)',
+                      transition: 'all 0.3s',
                     }}
                   >
                     <div className="rounded-full" style={{ width: '30%', height: '30%', background: t.accent }} />
                   </div>
                   <span className="text-white/65" style={{ fontSize: 'clamp(0.65rem, 1.3vh, 0.85rem)' }}>{t.name}</span>
-                </button>
+                </div>
               ))}
             </div>
           </div>
