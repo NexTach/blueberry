@@ -58,7 +58,9 @@ export default function DesktopPage() {
           welcomeMessage: `${session.visitorName}님, 환영합니다!`,
         });
       });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [session?.status, session?.visitorName]);
 
   useEffect(() => {
@@ -181,7 +183,10 @@ export default function DesktopPage() {
               님,
             </span>
           </div>
-          <p className="text-white mt-4" style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)', lineHeight: 1.4, maxWidth: '80vw' }}>
+          <p
+            className="text-white mt-4"
+            style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)', lineHeight: 1.4, maxWidth: '80vw' }}
+          >
             {session?.welcomeMessage?.replace(`${session.visitorName}님, `, '')}
           </p>
         </div>
@@ -200,7 +205,13 @@ export default function DesktopPage() {
           viewBox="0 0 120 50"
           fill="none"
         >
-          <path d="M10 35 Q30 10 55 25 Q75 38 100 20" stroke="#ff9fd6" strokeWidth="3" strokeLinecap="round" fill="none" />
+          <path
+            d="M10 35 Q30 10 55 25 Q75 38 100 20"
+            stroke="#ff9fd6"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          />
         </svg>
         <svg
           className="absolute"
@@ -215,7 +226,13 @@ export default function DesktopPage() {
           viewBox="0 0 80 30"
           fill="none"
         >
-          <path d="M5 20 Q20 5 40 18 Q58 28 70 12" stroke="#6affd4" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path
+            d="M5 20 Q20 5 40 18 Q58 28 70 12"
+            stroke="#6affd4"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+          />
         </svg>
       </div>
 
