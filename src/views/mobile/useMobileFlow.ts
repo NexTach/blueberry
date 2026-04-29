@@ -7,7 +7,7 @@ import type { AiToneId, CommandInterpretation, Step } from './types';
 import type { ThemeId, Session } from '../../types/session';
 
 export function useMobileFlow() {
-  const [step, setStep] = useState<Step>('choose');
+  const [step, setStep] = useState<Step>('start');
   const [previousStep, setPreviousStep] = useState<Step | null>(null);
   const [directInputText, setDirectInputText] = useState('');
   const [name, setName] = useState('');
@@ -20,9 +20,50 @@ export function useMobileFlow() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [lastSession, setLastSession] = useState<Session | null>(null);
+  const [didHydrateFromSession, setDidHydrateFromSession] = useState(false);
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
+
+  function inferTemplateId(visitorName: string, welcomeMessage: string, tone?: string): TemplateId {
+    if (tone) return AI_TEMPLATE_ID;
+
+    const normalizedMessage = welcomeMessage.trim();
+    const normalizedName = visitorName.trim() || FALLBACK_VISITOR_NAME;
+    const templateIds: Exclude<TemplateId, 7>[] = [1, 2, 3, 4, 5, 6];
+
+    for (const templateId of templateIds) {
+      if (applyTemplate(normalizedName, templateId) === normalizedMessage) {
+        return templateId;
+      }
+    }
+
+    return AI_TEMPLATE_ID;
+  }
+
+  function hydrateComposerFromSession(session: Session | null) {
+    if (!session || (session.status === 'standby' && !session.welcomeMessage.trim() && !session.visitorName.trim())) {
+      setStep('start');
+      return;
+    }
+
+    const nextName = session.visitorName?.trim() ?? '';
+    const nextMessage = session.welcomeMessage?.trim() ?? '';
+    const nextTemplate = inferTemplateId(nextName, nextMessage, session.tone);
+    const nextTone: AiToneId =
+      session.tone === 'bright' || session.tone === 'formal' || session.tone === 'playful' || session.tone === 'warm'
+        ? session.tone
+        : DEFAULT_AI_TONE;
+
+    setName(nextName);
+    setSelectedTemplate(nextTemplate);
+    setMessage(nextTemplate === AI_TEMPLATE_ID ? nextMessage : nextMessage || (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''));
+    setAiPrompt(nextTemplate === AI_TEMPLATE_ID ? nextMessage : '');
+    setAiTone(nextTone);
+    setDirectInputText('');
+    setShowDirectInput(false);
+    setStep('confirm');
+  }
 
   useEffect(() => {
     return subscribeSession((session) => {
@@ -30,8 +71,12 @@ export function useMobileFlow() {
         setThemeId(session.themeId);
       }
       setLastSession(session);
+      if (!didHydrateFromSession) {
+        hydrateComposerFromSession(session);
+        setDidHydrateFromSession(true);
+      }
     });
-  }, []);
+  }, [didHydrateFromSession]);
 
   useEffect(() => {
     if (step !== 'listening') return;
@@ -145,23 +190,22 @@ export function useMobileFlow() {
     setStep('done');
   }
 
-  function startCreateNew() {
-    // clear any draft and go to start flow for creating a new message
+  function handleReenterDirect() {
+    reset();
     setDirectInputText('');
-    setName('');
     setShowDirectInput(false);
-    setPreviousStep('choose');
+    setPreviousStep('confirm');
+    setShowDirectInput(true);
     setStep('start');
   }
 
-  function startEditExisting() {
-    // prefill composer with last session welcome message for manual edit
-    const existing = lastSession;
-    setDirectInputText(existing?.welcomeMessage ?? '');
-    setName(existing?.visitorName ?? '');
-    setShowDirectInput(true);
-    setPreviousStep('choose');
-    setStep('start');
+  function handleReenterVoice() {
+    reset();
+    setDirectInputText('');
+    setShowDirectInput(false);
+    setPreviousStep('confirm');
+    setStep('listening');
+    start();
   }
 
   function handleRestart() {
@@ -175,22 +219,24 @@ export function useMobileFlow() {
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
     setPreviousStep(null);
-    setStep('start');
+    hydrateComposerFromSession(lastSession);
   }
 
   function handleBackToPrevious() {
     reset();
-    setSelectedTemplate(DEFAULT_TEMPLATE_ID);
-    setMessage('');
     if (previousStep === 'listening') {
+      setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+      setMessage('');
       setStep('listening');
       start();
     } else if (previousStep === 'start') {
+      setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+      setMessage('');
       setShowDirectInput(true);
       setStep('start');
-    } else if (previousStep === 'choose') {
+    } else if (previousStep === 'confirm') {
       setShowDirectInput(false);
-      setStep('choose');
+      setStep('confirm');
     }
     setPreviousStep(null);
   }
@@ -224,7 +270,7 @@ export function useMobileFlow() {
     openComposerFromCommand,
     resetSpeech: reset,
     lastSession,
-    startCreateNew,
-    startEditExisting,
+    handleReenterDirect,
+    handleReenterVoice,
   };
 }
