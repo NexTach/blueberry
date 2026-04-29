@@ -1,34 +1,74 @@
+import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
+
 interface DoneScreenProps {
   onRestart: () => void;
 }
 
 export default function DoneScreen({ onRestart }: DoneScreenProps) {
+  const palette = mobilePalette;
+
   return (
-    <div className="flex flex-col items-center gap-8 text-center w-full max-w-sm">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center">
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+    <div className="w-full max-w-sm px-1 py-2">
+      <div className="flex flex-col items-center text-center" style={{ gap: 32 }}>
+        <div className="flex flex-col items-center" style={{ gap: mobileSpacing.item }}>
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center"
+            style={{ background: palette.accent }}
           >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <p
+            style={{
+              color: palette.text,
+              fontSize: mobileTypography.hero.fontSize,
+              lineHeight: mobileTypography.hero.lineHeight,
+              letterSpacing: mobileTypography.hero.letterSpacing,
+              fontWeight: mobileTypography.hero.fontWeight,
+            }}
+          >
+            전송 완료!
+          </p>
+          <p
+            style={{
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: mobileTypography.bodySmall.fontWeight,
+            }}
+          >
+            TV 화면을 확인해주세요.
+          </p>
         </div>
-        <p className="text-2xl font-bold text-gray-900">전송 완료!</p>
-        <p className="text-sm text-gray-500">TV 화면을 확인해주세요 😊</p>
+        <button
+          onClick={onRestart}
+          className="w-full"
+          style={{
+            minHeight: mobileControl.buttonHeight,
+            borderRadius: mobileRadius.button,
+            border: `1px solid ${palette.line}`,
+            background: palette.surface,
+            color: palette.subtext,
+            fontSize: mobileTypography.bodySmall.fontSize,
+            lineHeight: mobileTypography.bodySmall.lineHeight,
+            letterSpacing: mobileTypography.bodySmall.letterSpacing,
+            fontWeight: 600,
+          }}
+        >
+          처음으로
+        </button>
       </div>
-      <button
-        onClick={onRestart}
-        className="w-full py-3.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700"
-      >
-        처음으로
-      </button>
     </div>
   );
 }

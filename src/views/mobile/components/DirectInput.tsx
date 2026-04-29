@@ -1,3 +1,5 @@
+import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
+
 interface DirectInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -7,8 +9,10 @@ interface DirectInputProps {
 }
 
 export default function DirectInput({ value, onChange, onSubmit, onBack, disabled = false }: DirectInputProps) {
+  const palette = mobilePalette;
+
   return (
-    <div className="flex flex-col gap-3 w-full">
+    <div className="flex w-full flex-col" style={{ gap: mobileSpacing.item }}>
       <input
         type="text"
         value={value}
@@ -16,22 +20,54 @@ export default function DirectInput({ value, onChange, onSubmit, onBack, disable
         onKeyDown={(e) => e.key === 'Enter' && value.trim() && onSubmit(value.trim())}
         placeholder="띄울 내용을 입력하세요"
         disabled={disabled}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-base text-gray-900 outline-none focus:border-black transition-colors disabled:opacity-50"
+        className="w-full px-4 outline-none transition-colors disabled:opacity-50"
+        style={{
+          minHeight: mobileControl.inputMinHeight,
+          borderRadius: mobileRadius.field,
+          border: `1px solid ${palette.line}`,
+          background: palette.surface,
+          color: palette.text,
+          fontSize: mobileTypography.body.fontSize,
+          lineHeight: mobileTypography.body.lineHeight,
+          letterSpacing: mobileTypography.body.letterSpacing,
+          fontWeight: mobileTypography.body.fontWeight,
+        }}
         autoFocus
       />
 
-      <div className="flex gap-3 w-full">
+      <div className="flex w-full" style={{ gap: mobileSpacing.item }}>
         <button
           onClick={onBack}
           disabled={disabled}
-          className="w-full py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 disabled:opacity-40"
+          className="w-full disabled:opacity-40"
+          style={{
+            minHeight: mobileControl.buttonHeight,
+            borderRadius: mobileRadius.button,
+            border: `1px solid ${palette.line}`,
+            background: palette.surface,
+            color: palette.subtext,
+            fontSize: mobileTypography.bodySmall.fontSize,
+            lineHeight: mobileTypography.bodySmall.lineHeight,
+            letterSpacing: mobileTypography.bodySmall.letterSpacing,
+            fontWeight: 600,
+          }}
         >
           이전으로
         </button>
         <button
           onClick={() => value.trim() && onSubmit(value.trim())}
           disabled={disabled || !value.trim()}
-          className="w-full bg-black text-white rounded-xl py-3 font-semibold text-sm disabled:opacity-30 transition-opacity"
+          className="w-full disabled:opacity-30 transition-opacity"
+          style={{
+            minHeight: mobileControl.buttonHeight,
+            borderRadius: mobileRadius.button,
+            background: palette.accent,
+            color: '#ffffff',
+            fontSize: mobileTypography.bodySmall.fontSize,
+            lineHeight: mobileTypography.bodySmall.lineHeight,
+            letterSpacing: mobileTypography.bodySmall.letterSpacing,
+            fontWeight: 600,
+          }}
         >
           다음
         </button>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
 
 interface ChooseScreenProps {
   existingPreview?: string | null;
@@ -14,6 +15,8 @@ export default function ChooseScreen({
   onCreateNew,
 }: ChooseScreenProps) {
   const [selected, setSelected] = useState<'edit' | 'create' | null>(null);
+  const palette = mobilePalette;
+  const selectedBorder = palette.accent;
 
   function handleProceed() {
     if (selected === 'edit') {
@@ -24,72 +27,120 @@ export default function ChooseScreen({
   }
 
   return (
-    <div className="flex flex-col items-center gap-8 w-full max-w-sm">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <p className="text-2xl font-bold text-gray-900">문구 선택</p>
-        <p className="text-sm text-gray-500">현재 문구를 수정하거나 새 문구를 만들어보세요</p>
+    <div className="w-full max-w-sm px-1 py-2">
+      <div className="flex flex-col" style={{ gap: mobileSpacing.item }}>
+        <p
+          style={{
+            color: palette.text,
+            fontSize: mobileTypography.hero.fontSize,
+            lineHeight: mobileTypography.hero.lineHeight,
+            letterSpacing: mobileTypography.hero.letterSpacing,
+            fontWeight: mobileTypography.hero.fontWeight,
+          }}
+        >
+          어떻게 시작할까요?
+        </p>
+        <p
+          style={{
+            color: palette.subtext,
+            fontSize: mobileTypography.bodySmall.fontSize,
+            lineHeight: mobileTypography.bodySmall.lineHeight,
+            letterSpacing: mobileTypography.bodySmall.letterSpacing,
+            fontWeight: mobileTypography.bodySmall.fontWeight,
+          }}
+        >
+          현재 화면의 문구를 다듬거나, 새 문구를 처음부터 만들 수 있어요.
+        </p>
       </div>
 
-      <div className="w-full flex flex-col gap-3">
+      <div className="mt-6 flex flex-col" style={{ gap: mobileSpacing.item }}>
         <button
           onClick={() => canEditExisting && setSelected('edit')}
           disabled={!canEditExisting}
-          className="w-full rounded-2xl border px-4 py-4 text-left transition-colors disabled:cursor-not-allowed"
+          className="w-full text-left transition-colors disabled:cursor-not-allowed"
           style={{
-            borderColor: selected === 'edit' ? '#111111' : '#e5e7eb',
-            background: !canEditExisting ? '#f3f4f6' : selected === 'edit' ? '#111111' : '#ffffff',
+            borderRadius: mobileRadius.section,
+            border: `2px solid ${!canEditExisting ? palette.line : selected === 'edit' ? selectedBorder : palette.line}`,
+            background: !canEditExisting ? palette.disabled : palette.surface,
+            padding: mobileControl.sectionPadding,
           }}
         >
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className={`text-sm font-semibold ${!canEditExisting ? 'text-gray-400' : selected === 'edit' ? 'text-white' : 'text-gray-900'}`}>
-                현재 문구 수정하기
-              </p>
-              <p className={`mt-1 text-xs leading-5 ${!canEditExisting ? 'text-gray-400' : selected === 'edit' ? 'text-white/75' : 'text-gray-500'}`}>
-                {canEditExisting ? existingPreview || '지금 표시 중인 내용을 바로 수정합니다.' : '현재 데스크탑에 표시 중인 내용이 없어요.'}
-              </p>
-            </div>
-            {canEditExisting && (
-              <div
-                className="mt-0.5 h-5 w-5 rounded-full border flex items-center justify-center shrink-0"
-                style={{ borderColor: selected === 'edit' ? 'rgba(255,255,255,0.75)' : '#d1d5db' }}
-              >
-                {selected === 'edit' && <div className="h-2.5 w-2.5 rounded-full bg-white" />}
-              </div>
-            )}
-          </div>
+          <p
+            style={{
+              color: !canEditExisting ? '#b0b8c1' : palette.text,
+              fontSize: mobileTypography.body.fontSize,
+              lineHeight: mobileTypography.body.lineHeight,
+              letterSpacing: mobileTypography.body.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            현재 문구 수정하기
+          </p>
+          <p
+            className="mt-2"
+            style={{
+              color: !canEditExisting ? '#b0b8c1' : palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: mobileTypography.bodySmall.fontWeight,
+            }}
+          >
+            {canEditExisting ? existingPreview || '지금 표시 중인 내용을 바로 수정합니다.' : '현재 데스크탑에 표시 중인 내용이 없어요.'}
+          </p>
         </button>
 
         <button
           onClick={() => setSelected('create')}
-          className="w-full rounded-2xl border px-4 py-4 text-left transition-colors"
+          className="w-full text-left transition-colors"
           style={{
-            borderColor: selected === 'create' ? '#111111' : '#e5e7eb',
-            background: selected === 'create' ? '#111111' : '#ffffff',
+            borderRadius: mobileRadius.section,
+            border: `2px solid ${selected === 'create' ? selectedBorder : palette.line}`,
+            background: palette.surface,
+            padding: mobileControl.sectionPadding,
           }}
         >
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className={`text-sm font-semibold ${selected === 'create' ? 'text-white' : 'text-gray-900'}`}>새로 문구 만들기</p>
-              <p className={`mt-1 text-xs leading-5 ${selected === 'create' ? 'text-white/75' : 'text-gray-500'}`}>
-                음성이나 직접 입력으로 새 문구를 처음부터 만듭니다.
-              </p>
-            </div>
-            <div
-              className="mt-0.5 h-5 w-5 rounded-full border flex items-center justify-center shrink-0"
-              style={{ borderColor: selected === 'create' ? 'rgba(255,255,255,0.75)' : '#d1d5db' }}
-            >
-              {selected === 'create' && <div className="h-2.5 w-2.5 rounded-full bg-white" />}
-            </div>
-          </div>
+          <p
+            style={{
+              color: palette.text,
+              fontSize: mobileTypography.body.fontSize,
+              lineHeight: mobileTypography.body.lineHeight,
+              letterSpacing: mobileTypography.body.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            새로 문구 만들기
+          </p>
+          <p
+            className="mt-2"
+            style={{
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: mobileTypography.bodySmall.fontWeight,
+            }}
+          >
+            음성이나 직접 입력으로 새 문구를 처음부터 만듭니다.
+          </p>
         </button>
       </div>
 
-      <div className="w-full">
+      <div className="mt-6 w-full">
         <button
           onClick={handleProceed}
           disabled={selected === null}
-          className="w-full py-3 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30"
+          className="w-full transition-opacity disabled:opacity-40"
+          style={{
+            minHeight: mobileControl.buttonHeight,
+            borderRadius: mobileRadius.button,
+            background: palette.accent,
+            color: '#ffffff',
+            fontSize: mobileTypography.body.fontSize,
+            lineHeight: mobileTypography.body.lineHeight,
+            letterSpacing: mobileTypography.body.letterSpacing,
+            fontWeight: 600,
+          }}
         >
           진행하기
         </button>

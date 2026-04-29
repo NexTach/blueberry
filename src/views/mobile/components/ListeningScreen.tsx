@@ -1,4 +1,5 @@
 import WaveAnimation from '../../../components/WaveAnimation';
+import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
 
 interface ListeningScreenProps {
   isListening: boolean;
@@ -21,57 +22,180 @@ export default function ListeningScreen({
   onCancel,
   onComplete,
 }: ListeningScreenProps) {
+  const palette = mobilePalette;
+
   return (
-    <div className="flex flex-col items-center gap-10 w-full max-w-sm">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <p className="text-2xl font-bold text-gray-900">듣고 있어요</p>
-        <p className="text-sm text-gray-500">띄울 내용을 말씀해 주세요</p>
+    <div className="w-full max-w-sm px-1 py-2">
+      <div className="flex flex-col items-center" style={{ gap: 32 }}>
+        <div className="flex flex-col items-center text-center" style={{ gap: mobileSpacing.item }}>
+          <p
+            style={{
+              color: palette.text,
+              fontSize: mobileTypography.hero.fontSize,
+              lineHeight: mobileTypography.hero.lineHeight,
+              letterSpacing: mobileTypography.hero.letterSpacing,
+              fontWeight: mobileTypography.hero.fontWeight,
+            }}
+          >
+            듣고 있어요
+          </p>
+          <p
+            style={{
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: mobileTypography.bodySmall.fontWeight,
+            }}
+          >
+            띄울 내용을 말씀해 주세요
+          </p>
+        </div>
+
+        <div
+          className="w-full"
+          style={{
+            borderRadius: mobileRadius.section,
+            padding: mobileControl.sectionPadding,
+            background: palette.surface,
+            border: `1px solid ${palette.line}`,
+          }}
+        >
+          <WaveAnimation isActive={isListening} />
+        </div>
+
+        {transcript && (
+          <div
+            className="w-full text-center"
+            style={{
+              borderRadius: mobileRadius.section,
+              padding: mobileControl.sectionPadding,
+              background: palette.surface,
+              border: `1px solid ${palette.line}`,
+            }}
+          >
+            <p
+              style={{
+                color: palette.text,
+                fontSize: mobileTypography.body.fontSize,
+                lineHeight: mobileTypography.body.lineHeight,
+                letterSpacing: mobileTypography.body.letterSpacing,
+                fontWeight: 600,
+              }}
+            >
+              "{transcript}"
+            </p>
+          </div>
+        )}
+
+        {error ? (
+          <div className="flex flex-col items-center" style={{ gap: mobileSpacing.group }}>
+            <p
+              className="text-center"
+              style={{
+                color: palette.danger,
+                fontSize: mobileTypography.bodySmall.fontSize,
+                lineHeight: mobileTypography.bodySmall.lineHeight,
+                letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                fontWeight: mobileTypography.bodySmall.fontWeight,
+              }}
+            >
+              {error}
+            </p>
+            <div className="flex" style={{ gap: mobileSpacing.item }}>
+              <button
+                onClick={onRetry}
+                style={{
+                  minHeight: mobileControl.buttonHeight,
+                  borderRadius: mobileRadius.button,
+                  paddingInline: 20,
+                  border: `1px solid ${palette.line}`,
+                  background: palette.surface,
+                  color: palette.subtext,
+                  fontSize: mobileTypography.bodySmall.fontSize,
+                  lineHeight: mobileTypography.bodySmall.lineHeight,
+                  letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                  fontWeight: 600,
+                }}
+              >
+                다시 시도
+              </button>
+              <button
+                onClick={onUseTranscript}
+                disabled={!transcript.trim()}
+                className="disabled:opacity-30"
+                style={{
+                  minHeight: mobileControl.buttonHeight,
+                  borderRadius: mobileRadius.button,
+                  paddingInline: 20,
+                  background: palette.accent,
+                  color: '#ffffff',
+                  fontSize: mobileTypography.bodySmall.fontSize,
+                  lineHeight: mobileTypography.bodySmall.lineHeight,
+                  letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                  fontWeight: 600,
+                }}
+              >
+                텍스트로 사용
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex w-full flex-col" style={{ gap: mobileSpacing.item }}>
+            {isInterpreting && (
+              <p
+                className="text-center"
+                style={{
+                  color: palette.subtext,
+                  fontSize: mobileTypography.bodySmall.fontSize,
+                  lineHeight: mobileTypography.bodySmall.lineHeight,
+                  letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                  fontWeight: mobileTypography.bodySmall.fontWeight,
+                }}
+              >
+                AI가 명령을 해석하고 있어요...
+              </p>
+            )}
+            <div className="flex w-full" style={{ gap: mobileSpacing.item }}>
+              <button
+                onClick={onCancel}
+                disabled={isInterpreting}
+                className="flex-1 disabled:opacity-40"
+                style={{
+                  minHeight: mobileControl.buttonHeight,
+                  borderRadius: mobileRadius.button,
+                  border: `1px solid ${palette.line}`,
+                  background: palette.surface,
+                  color: palette.subtext,
+                  fontSize: mobileTypography.bodySmall.fontSize,
+                  lineHeight: mobileTypography.bodySmall.lineHeight,
+                  letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                  fontWeight: 600,
+                }}
+              >
+                취소
+              </button>
+              <button
+                onClick={onComplete}
+                disabled={isInterpreting || !transcript}
+                className="flex-1 disabled:opacity-30 transition-opacity"
+                style={{
+                  minHeight: mobileControl.buttonHeight,
+                  borderRadius: mobileRadius.button,
+                  background: palette.accent,
+                  color: '#ffffff',
+                  fontSize: mobileTypography.bodySmall.fontSize,
+                  lineHeight: mobileTypography.bodySmall.lineHeight,
+                  letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                  fontWeight: 600,
+                }}
+              >
+                완료
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-
-      <WaveAnimation isActive={isListening} />
-
-      {transcript && <p className="text-lg font-medium text-gray-800 text-center px-4">"{transcript}"</p>}
-
-      {error ? (
-        <div className="flex flex-col items-center gap-4">
-          <p className="text-sm text-red-500 text-center">{error}</p>
-          <div className="flex gap-3">
-            <button
-              onClick={onRetry}
-              className="px-5 py-2.5 border border-gray-300 rounded-xl text-sm font-medium text-gray-700"
-            >
-              다시 시도
-            </button>
-            <button
-              onClick={onUseTranscript}
-              disabled={!transcript.trim()}
-              className="px-5 py-2.5 bg-black text-white rounded-xl text-sm font-medium disabled:opacity-30"
-            >
-              텍스트로 사용
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-3 w-full">
-          {isInterpreting && <p className="text-sm text-gray-500 text-center">AI가 명령을 해석하고 있어요...</p>}
-          <div className="flex gap-3 w-full">
-            <button
-              onClick={onCancel}
-              disabled={isInterpreting}
-              className="flex-1 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 disabled:opacity-40"
-            >
-              취소
-            </button>
-            <button
-              onClick={onComplete}
-              disabled={isInterpreting || !transcript}
-              className="flex-1 py-3 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
-            >
-              완료
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
