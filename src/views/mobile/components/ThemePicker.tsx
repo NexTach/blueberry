@@ -1,4 +1,5 @@
-import { THEME_FAMILIES } from '../../../lib/themes';
+import { findTheme, THEME_FAMILIES } from '../../../lib/themes';
+import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
 import { THEMES } from '../constants';
 import type { ThemeId } from '../../../types/session';
 
@@ -8,75 +9,136 @@ interface ThemePickerProps {
 }
 
 export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProps) {
+  const palette = mobilePalette;
+  const selectedBorder = palette.accent;
+  const selectedFamily = findTheme(selectedTheme).family;
+  const familyThemes = THEMES.filter((theme) => theme.family === selectedFamily);
+
   return (
-    <div className="flex flex-col gap-5">
-      {THEME_FAMILIES.map((family) => (
-        <div key={family.id} className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-semibold text-gray-900">{family.label}</p>
-            <p className="text-xs text-gray-500">{family.description}</p>
-          </div>
+    <div className="flex flex-col" style={{ gap: mobileSpacing.group }}>
+      <div className="flex flex-col" style={{ gap: 8 }}>
+        <p
+          style={{
+            color: palette.text,
+            fontSize: mobileTypography.label.fontSize,
+            lineHeight: mobileTypography.label.lineHeight,
+            fontWeight: mobileTypography.label.fontWeight,
+          }}
+        >
+          디자인 종류
+        </p>
+        <div className="grid grid-cols-2" style={{ gap: mobileSpacing.item }}>
+          {THEME_FAMILIES.map((family) => {
+            const selected = family.id === selectedFamily;
 
-          <div className="grid grid-cols-2 gap-3">
-            {THEMES.filter((theme) => theme.family === family.id).map((theme) => {
-              const selected = selectedTheme === theme.id;
-
-              return (
-                <button
-                  key={theme.id}
-                  onClick={() => onSelect(theme.id)}
-                  className="flex flex-col items-start gap-3 px-4 py-3 rounded-2xl border-2 text-left transition-all active:scale-[0.99]"
+            return (
+              <button
+                key={family.id}
+                onClick={() => {
+                  const nextTheme = THEMES.find((theme) => theme.family === family.id);
+                  if (nextTheme) onSelect(nextTheme.id);
+                }}
+                className="text-left transition-colors"
+                style={{
+                  minHeight: mobileControl.inputMinHeight,
+                  borderRadius: mobileRadius.field,
+                  border: `2px solid ${selected ? selectedBorder : palette.line}`,
+                  background: palette.surface,
+                  padding: 16,
+                }}
+              >
+                <p
                   style={{
-                    borderColor: selected ? theme.accent : theme.border,
-                    background:
-                      theme.family === 'whiteboard'
-                        ? `linear-gradient(135deg, ${theme.surface} 0%, ${theme.bg} 100%)`
-                        : theme.family === 'brutal'
-                          ? `linear-gradient(135deg, ${theme.bg} 0%, ${theme.surface} 100%)`
-                          : theme.bg,
-                    boxShadow: selected ? `0 0 0 2px ${theme.accent}22` : 'none',
+                    color: palette.text,
+                    fontSize: mobileTypography.bodySmall.fontSize,
+                    lineHeight: mobileTypography.bodySmall.lineHeight,
+                    letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                    fontWeight: 600,
                   }}
-                  >
-                    <div className="flex w-full items-start justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full shrink-0" style={{ background: theme.accent }} />
-                        <span className="text-sm font-semibold" style={{ color: theme.text }}>
-                          {theme.name}
-                        </span>
-                      </div>
-                    {selected && (
-                      <svg
-                        className="shrink-0"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke={theme.accent}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    )}
-                  </div>
+                >
+                  {family.label}
+                </p>
+                <p
+                  className="mt-1"
+                  style={{
+                    color: palette.subtext,
+                    fontSize: mobileTypography.caption.fontSize,
+                    lineHeight: mobileTypography.caption.lineHeight,
+                    letterSpacing: mobileTypography.caption.letterSpacing,
+                    fontWeight: mobileTypography.caption.fontWeight,
+                  }}
+                >
+                  {family.description}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-                  <div
-                    className="w-full rounded-xl px-3 py-2 text-xs leading-5"
+      <div className="flex flex-col" style={{ gap: 8 }}>
+        <p
+          style={{
+            color: palette.text,
+            fontSize: mobileTypography.label.fontSize,
+            lineHeight: mobileTypography.label.lineHeight,
+            fontWeight: mobileTypography.label.fontWeight,
+          }}
+        >
+          세부 테마
+        </p>
+        <div className="grid grid-cols-2" style={{ gap: mobileSpacing.item }}>
+          {familyThemes.map((theme) => {
+            const selected = selectedTheme === theme.id;
+
+            return (
+              <button
+                key={theme.id}
+                onClick={() => onSelect(theme.id)}
+                className="text-left transition-colors"
+                style={{
+                  borderRadius: mobileRadius.option,
+                  border: `2px solid ${selected ? selectedBorder : palette.line}`,
+                  background: palette.surface,
+                  padding: mobileControl.sectionPadding,
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: theme.accent }} />
+                  <p
                     style={{
-                      color: theme.text,
-                      background: family.id === 'chalk' || family.id === 'blackboard' ? 'rgba(255,255,255,0.12)' : `${theme.surface}cc`,
-                      border: `1px solid ${theme.border}`,
+                      color: palette.text,
+                      fontSize: mobileTypography.bodySmall.fontSize,
+                      lineHeight: mobileTypography.bodySmall.lineHeight,
+                      letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                      fontWeight: 600,
                     }}
                   >
-                    {theme.description}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                    {theme.name}
+                  </p>
+                </div>
+                <p
+                  className="mt-2"
+                  style={{
+                    color: palette.subtext,
+                    fontSize: mobileTypography.caption.fontSize,
+                    lineHeight: mobileTypography.caption.lineHeight,
+                    letterSpacing: mobileTypography.caption.letterSpacing,
+                    fontWeight: mobileTypography.caption.fontWeight,
+                  }}
+                >
+                  {theme.description}
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <span className="h-8 flex-1 rounded-md" style={{ background: theme.bg, border: `1px solid ${theme.border}` }} />
+                  <span className="h-8 w-8 rounded-md" style={{ background: theme.surface, border: `1px solid ${theme.border}` }} />
+                  <span className="h-8 w-8 rounded-md" style={{ background: theme.accent }} />
+                </div>
+              </button>
+            );
+          })}
         </div>
-      ))}
+      </div>
     </div>
   );
 }
