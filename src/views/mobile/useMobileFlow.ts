@@ -7,7 +7,7 @@ import type { AiToneId, CommandInterpretation, Step } from './types';
 import type { ThemeId, Session } from '../../types/session';
 
 export function useMobileFlow() {
-  const [step, setStep] = useState<Step>('start');
+  const [step, setStep] = useState<Step>('choose');
   const [previousStep, setPreviousStep] = useState<Step | null>(null);
   const [directInputText, setDirectInputText] = useState('');
   const [name, setName] = useState('');
@@ -20,7 +20,6 @@ export function useMobileFlow() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [lastSession, setLastSession] = useState<Session | null>(null);
-  const [didHydrateFromSession, setDidHydrateFromSession] = useState(false);
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
@@ -43,7 +42,7 @@ export function useMobileFlow() {
 
   function hydrateComposerFromSession(session: Session | null) {
     if (!session || (session.status === 'standby' && !session.welcomeMessage.trim() && !session.visitorName.trim())) {
-      setStep('start');
+      setStep('choose');
       return;
     }
 
@@ -71,12 +70,8 @@ export function useMobileFlow() {
         setThemeId(session.themeId);
       }
       setLastSession(session);
-      if (!didHydrateFromSession) {
-        hydrateComposerFromSession(session);
-        setDidHydrateFromSession(true);
-      }
     });
-  }, [didHydrateFromSession]);
+  }, []);
 
   useEffect(() => {
     if (step !== 'listening') return;
@@ -190,6 +185,25 @@ export function useMobileFlow() {
     setStep('done');
   }
 
+  function startCreateNew() {
+    reset();
+    setDirectInputText('');
+    setName('');
+    setMessage('');
+    setAiPrompt('');
+    setAiTone(DEFAULT_AI_TONE);
+    setShowDirectInput(false);
+    setSelectedTemplate(DEFAULT_TEMPLATE_ID);
+    setPreviousStep('choose');
+    setStep('start');
+  }
+
+  function startEditExisting() {
+    if (!canEditExisting) return;
+    setPreviousStep('choose');
+    hydrateComposerFromSession(lastSession);
+  }
+
   function handleReenterDirect() {
     reset();
     setDirectInputText('');
@@ -219,7 +233,7 @@ export function useMobileFlow() {
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
     setPreviousStep(null);
-    hydrateComposerFromSession(lastSession);
+    setStep('choose');
   }
 
   function handleBackToPrevious() {
@@ -232,14 +246,19 @@ export function useMobileFlow() {
     } else if (previousStep === 'start') {
       setSelectedTemplate(DEFAULT_TEMPLATE_ID);
       setMessage('');
-      setShowDirectInput(true);
+      setShowDirectInput(false);
       setStep('start');
+    } else if (previousStep === 'choose') {
+      setShowDirectInput(false);
+      setStep('choose');
     } else if (previousStep === 'confirm') {
       setShowDirectInput(false);
       setStep('confirm');
     }
     setPreviousStep(null);
   }
+
+  const canEditExisting = lastSession?.status === 'displaying' && Boolean(lastSession.welcomeMessage?.trim());
 
   return {
     step,
@@ -270,6 +289,9 @@ export function useMobileFlow() {
     openComposerFromCommand,
     resetSpeech: reset,
     lastSession,
+    canEditExisting,
+    startCreateNew,
+    startEditExisting,
     handleReenterDirect,
     handleReenterVoice,
   };

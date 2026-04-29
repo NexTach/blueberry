@@ -1,4 +1,5 @@
 import ConfirmScreen from './components/ConfirmScreen';
+import ChooseScreen from './components/ChooseScreen';
 import DoneScreen from './components/DoneScreen';
 import ListeningScreen from './components/ListeningScreen';
 import StartScreen from './components/StartScreen';
@@ -33,6 +34,10 @@ export default function MobilePage() {
     handleBackToPrevious,
     openComposerFromCommand,
     resetSpeech,
+    lastSession,
+    canEditExisting,
+    startCreateNew,
+    startEditExisting,
     handleReenterDirect,
     handleReenterVoice,
   } = useMobileFlow();
@@ -41,6 +46,15 @@ export default function MobilePage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
+      {step === 'choose' && (
+        <ChooseScreen
+          existingPreview={lastSession?.welcomeMessage ?? null}
+          canEditExisting={canEditExisting}
+          onEditExisting={startEditExisting}
+          onCreateNew={startCreateNew}
+        />
+      )}
+
       {step === 'start' && (
         <StartScreen
           showDirectInput={showDirectInput}
