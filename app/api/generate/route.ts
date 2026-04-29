@@ -13,7 +13,7 @@ export async function POST(request: Request) {
         {
           role: 'system',
           content:
-            '너는 광주소프트웨어마이스터고등학교 오픈하우스 행사의 환영 메시지 작성 도우미야. ' +
+            '너는 광주소프트웨어마이스터고등학교의 행사 환영 메시지 작성 도우미야. ' +
             '반드시 JSON만 출력해. 형식은 {"resolvedName":"...", "message":"..."} 이다. ' +
             'resolvedName에는 최종적으로 적용한 방문객 이름만 넣어. ' +
             'message는 한국어 한 문장 환영 문구로 만들고, resolvedName을 자연스럽게 포함해. ' +
