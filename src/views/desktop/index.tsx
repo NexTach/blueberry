@@ -179,6 +179,16 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function normalizeMessageBody(message: string | undefined, name: string | undefined) {
+  if (!message?.trim()) return '환영합니다!';
+  if (!name?.trim()) return message.trim();
+
+  return message
+    .trim()
+    .replace(new RegExp(`^${escapeRegex(name)}님,?\\s*`), '')
+    .trim();
+}
+
 export default function DesktopPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [visible, setVisible] = useState(false);
@@ -214,7 +224,7 @@ export default function DesktopPage() {
         updateSession({
           status: 'displaying',
           visitorName: data.resolvedName ?? session.visitorName,
-          welcomeMessage: data.message ?? `${session.visitorName}님, 환영합니다!`,
+          welcomeMessage: data.message ?? '환영합니다!',
         });
       })
       .catch(() => {
@@ -222,7 +232,7 @@ export default function DesktopPage() {
         updateSession({
           status: 'displaying',
           visitorName: session.visitorName,
-          welcomeMessage: `${session.visitorName}님, 환영합니다!`,
+          welcomeMessage: '환영합니다!',
         });
       });
     return () => {
@@ -261,8 +271,7 @@ export default function DesktopPage() {
   const isDisplaying = session?.status === 'displaying';
   const show = isDisplaying && visible;
 
-  const msgBody =
-    session?.welcomeMessage?.replace(new RegExp(`^${escapeRegex(session.visitorName ?? '')}님,?\\s*`), '').trim() ?? '';
+  const msgBody = normalizeMessageBody(session?.welcomeMessage, session?.visitorName);
 
   async function handleConfirmReset() {
     setShowResetConfirm(false);
@@ -380,7 +389,7 @@ export default function DesktopPage() {
               marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
             }}
           >
-            {msgBody || '님, 환영합니다!'}
+            {session?.visitorName ? `님, ${msgBody}` : msgBody}
           </p>
         </div>
 
