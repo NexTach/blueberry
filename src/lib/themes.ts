@@ -5,12 +5,14 @@ export type ThemeFamily = 'chalk' | 'whiteboard' | 'blackboard' | 'brutal';
 const CLEAN_KR_TITLE = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const CLEAN_KR_BODY = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const CHALK_KR = "'HakgyoansimBunpil', sans-serif";
-const WHITEBOARD_CLEAN_TITLE = "var(--font-nanum-gothic), var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const WHITEBOARD_CLEAN_BODY = "var(--font-nanum-gothic), var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const WHITEBOARD_NOTE_TITLE = "var(--font-gowun-dodum), var(--font-nanum-gothic), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const BLACKBOARD_CLASSIC_TITLE = "var(--font-nanum-myeongjo), var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', serif";
-const BRUTAL_POP_TITLE = "var(--font-black-han-sans), var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const BRUTAL_EDITORIAL_TITLE = "var(--font-do-hyeon), var(--font-black-han-sans), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const MARKER_TITLE = "var(--font-gaegu), var(--font-hi-melody), 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
+const MARKER_BODY = "var(--font-gaegu), var(--font-hi-melody), 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
+const NOTE_MARKER_TITLE = "var(--font-hi-melody), var(--font-gaegu), 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
+const NOTE_MARKER_BODY = "var(--font-gaegu), var(--font-hi-melody), 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
+const BRUTAL_POP_TITLE = "var(--font-stylish), var(--font-black-han-sans), var(--font-jua), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_POP_BODY = "var(--font-jua), var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_EDITORIAL_TITLE = "var(--font-black-han-sans), var(--font-stylish), var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_EDITORIAL_BODY = "var(--font-song-myung), var(--font-gowun-batang), 'Apple SD Gothic Neo', 'Malgun Gothic', serif";
 
 export interface ThemePreset {
   id: ThemeId;
@@ -107,8 +109,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'whiteboard',
     name: '기본 화이트보드',
     description: '깨끗하고 정돈된 화이트보드',
-    titleFont: WHITEBOARD_CLEAN_TITLE,
-    bodyFont: WHITEBOARD_CLEAN_BODY,
+    titleFont: MARKER_TITLE,
+    bodyFont: MARKER_BODY,
     bg: '#eef7ff',
     surface: '#ffffff',
     text: '#0f1726',
@@ -122,8 +124,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'whiteboard',
     name: '메모 화이트보드',
     description: '메모가 붙은 친근한 화이트보드',
-    titleFont: WHITEBOARD_NOTE_TITLE,
-    bodyFont: CLEAN_KR_BODY,
+    titleFont: NOTE_MARKER_TITLE,
+    bodyFont: NOTE_MARKER_BODY,
     bg: '#fff9ed',
     surface: '#ffffff',
     text: '#20212a',
@@ -137,8 +139,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'blackboard',
     name: '기본 블랙보드',
     description: '깊은 검정 톤의 클래식 보드',
-    titleFont: BLACKBOARD_CLASSIC_TITLE,
-    bodyFont: CLEAN_KR_BODY,
+    titleFont: MARKER_TITLE,
+    bodyFont: MARKER_BODY,
     bg: '#121619',
     surface: '#f7f6f1',
     text: '#f7f6f1',
@@ -152,8 +154,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'blackboard',
     name: '네온 블랙보드',
     description: '포인트 색이 강한 야간 느낌 보드',
-    titleFont: BRUTAL_POP_TITLE,
-    bodyFont: CLEAN_KR_BODY,
+    titleFont: NOTE_MARKER_TITLE,
+    bodyFont: MARKER_BODY,
     bg: '#101318',
     surface: '#fbfaf7',
     text: '#f7fbff',
@@ -168,7 +170,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     name: '팝 포스터',
     description: '톡톡 튀는 색감의 포스터 화면',
     titleFont: BRUTAL_POP_TITLE,
-    bodyFont: CLEAN_KR_BODY,
+    bodyFont: BRUTAL_POP_BODY,
     bg: '#ffe45c',
     surface: '#ffffff',
     text: '#111111',
@@ -183,7 +185,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     name: '스택 포스터',
     description: '블록이 겹치는 강한 포스터 화면',
     titleFont: BRUTAL_EDITORIAL_TITLE,
-    bodyFont: CLEAN_KR_BODY,
+    bodyFont: BRUTAL_EDITORIAL_BODY,
     bg: '#ffb347',
     surface: '#fff8ee',
     text: '#111111',
