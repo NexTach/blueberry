@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { subscribeSession, resetSession, updateSession, updateTheme } from '../../lib/firebase';
+import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
 import type { Session, ThemeId } from '../../types/session';
 
 const CHALK_FONT = "'HakgyoansimBunpil', sans-serif";
@@ -87,23 +87,24 @@ function WoodFrame() {
 }
 
 function useClock() {
-  const [time, setTime] = useState(() => formatTime(new Date()));
+  const [time, setTime] = useState(() => formatDateTime(new Date()));
   useEffect(() => {
-    const id = setInterval(() => setTime(formatTime(new Date())), 1000);
+    const id = setInterval(() => setTime(formatDateTime(new Date())), 1000);
     return () => clearInterval(id);
   }, []);
   return time;
 }
-function formatTime(d: Date) {
+function formatDateTime(d: Date) {
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
   const h = d.getHours(), m = d.getMinutes().toString().padStart(2, '0');
-  return `${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${m}`;
+  return `${month}월 ${day}일 ${h < 12 ? '오전' : '오후'} ${h % 12 || 12}:${m}`;
 }
 function escapeRegex(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
 export default function DesktopPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [visible, setVisible] = useState(false);
-  const [showThemePicker, setShowThemePicker] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const time = useClock();
   const mobileUrl = `${window.location.origin}/mobile`;
@@ -158,11 +159,6 @@ export default function DesktopPage() {
     }
     return () => clearTimeout(t0);
   }, [session?.status, session?.welcomeMessage]);
-
-  async function selectTheme(id: ThemeId) {
-    await updateTheme(id);
-    setShowThemePicker(false);
-  }
 
   const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
@@ -259,46 +255,13 @@ export default function DesktopPage() {
           <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2vh, 1.5rem)' }}>since</span>
           <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(1.5rem, 4vh, 3.2rem)' }}>2017</span>
         </div>
-        <button className="flex flex-col items-center gap-1.5"
-          onClick={() => setShowThemePicker(v => !v)} aria-label="테마 선택">
-          <img src="/images/berry.png" alt="BERRY" style={{ height: 'clamp(20px, 3vh, 36px)', width: 'auto' }} />
+        <div className="flex flex-col items-center gap-1.5">
           <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(1rem, 2.5vh, 1.8rem)' }}>{time}</span>
-        </button>
+        </div>
       </div>
 
       {/* ── 나무 프레임 ── */}
       <WoodFrame />
-
-      {/* ── 테마 선택 오버레이 ── */}
-      {showThemePicker && (
-        <div className="absolute inset-0 z-40 flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.55)' }}
-          onClick={() => setShowThemePicker(false)}>
-          <div className="flex flex-col gap-5 rounded-2xl"
-            style={{ background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(24px)', padding: 'clamp(1.5rem, 3vh, 2.5rem)' }}
-            onClick={e => e.stopPropagation()}>
-            <p className="text-white/70 text-center tracking-widest"
-              style={{ fontFamily: CHALK_FONT, fontSize: 'clamp(0.8rem, 1.8vh, 1.1rem)' }}>테마 선택</p>
-            <div className="flex gap-5">
-              {THEMES.map(t => (
-                <button key={t.id} onClick={() => selectTheme(t.id)} className="flex flex-col items-center gap-2">
-                  <div className="rounded-xl flex items-center justify-center transition-all duration-150"
-                    style={{
-                      width: 'clamp(52px, 7vh, 72px)', height: 'clamp(52px, 7vh, 72px)',
-                      background: t.bg,
-                      outline: themeId === t.id ? `3px solid ${t.accent}` : '3px solid rgba(255,255,255,0.15)',
-                      transform: themeId === t.id ? 'scale(1.12)' : 'scale(1)',
-                      transition: 'all 0.3s',
-                    }}>
-                    <div className="rounded-full" style={{ width: '30%', height: '30%', background: t.accent }} />
-                  </div>
-                  <span className="text-white/65" style={{ fontSize: 'clamp(0.65rem, 1.3vh, 0.85rem)' }}>{t.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
