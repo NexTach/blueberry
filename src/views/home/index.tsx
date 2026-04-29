@@ -64,7 +64,7 @@ export default function HomePage() {
       </div>
 
       <p className="text-white/20 text-xs tracking-widest" style={{ fontFamily: 'sans-serif' }}>
-        since 2017 · BERRY
+        since 2026 · BERRY
       </p>
     </div>
   );
