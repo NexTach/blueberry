@@ -5,8 +5,12 @@ export type ThemeFamily = 'chalk' | 'whiteboard' | 'blackboard' | 'brutal';
 const CLEAN_KR_TITLE = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const CLEAN_KR_BODY = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const CHALK_KR = "'HakgyoansimBunpil', sans-serif";
-const WHITEBOARD_KR = "var(--font-gowun-dodum), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const BRUTAL_TITLE_KR = "var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const WHITEBOARD_CLEAN_TITLE = "var(--font-nanum-gothic), var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const WHITEBOARD_CLEAN_BODY = "var(--font-nanum-gothic), var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const WHITEBOARD_NOTE_TITLE = "var(--font-gowun-dodum), var(--font-nanum-gothic), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BLACKBOARD_CLASSIC_TITLE = "var(--font-nanum-myeongjo), var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', serif";
+const BRUTAL_POP_TITLE = "var(--font-black-han-sans), var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_EDITORIAL_TITLE = "var(--font-do-hyeon), var(--font-black-han-sans), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 
 export interface ThemePreset {
   id: ThemeId;
@@ -103,8 +107,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'whiteboard',
     name: '기본 화이트보드',
     description: '깨끗하고 정돈된 화이트보드',
-    titleFont: WHITEBOARD_KR,
-    bodyFont: WHITEBOARD_KR,
+    titleFont: WHITEBOARD_CLEAN_TITLE,
+    bodyFont: WHITEBOARD_CLEAN_BODY,
     bg: '#eef7ff',
     surface: '#ffffff',
     text: '#0f1726',
@@ -118,7 +122,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'whiteboard',
     name: '메모 화이트보드',
     description: '메모가 붙은 친근한 화이트보드',
-    titleFont: WHITEBOARD_KR,
+    titleFont: WHITEBOARD_NOTE_TITLE,
     bodyFont: CLEAN_KR_BODY,
     bg: '#fff9ed',
     surface: '#ffffff',
@@ -133,7 +137,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'blackboard',
     name: '기본 블랙보드',
     description: '깊은 검정 톤의 클래식 보드',
-    titleFont: CLEAN_KR_TITLE,
+    titleFont: BLACKBOARD_CLASSIC_TITLE,
     bodyFont: CLEAN_KR_BODY,
     bg: '#121619',
     surface: '#f7f6f1',
@@ -148,7 +152,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'blackboard',
     name: '네온 블랙보드',
     description: '포인트 색이 강한 야간 느낌 보드',
-    titleFont: CLEAN_KR_TITLE,
+    titleFont: BRUTAL_POP_TITLE,
     bodyFont: CLEAN_KR_BODY,
     bg: '#101318',
     surface: '#fbfaf7',
@@ -163,7 +167,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'brutal',
     name: '팝 포스터',
     description: '톡톡 튀는 색감의 포스터 화면',
-    titleFont: BRUTAL_TITLE_KR,
+    titleFont: BRUTAL_POP_TITLE,
     bodyFont: CLEAN_KR_BODY,
     bg: '#ffe45c',
     surface: '#ffffff',
@@ -178,7 +182,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'brutal',
     name: '스택 포스터',
     description: '블록이 겹치는 강한 포스터 화면',
-    titleFont: CLEAN_KR_TITLE,
+    titleFont: BRUTAL_EDITORIAL_TITLE,
     bodyFont: CLEAN_KR_BODY,
     bg: '#ffb347',
     surface: '#fff8ee',

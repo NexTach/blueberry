@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Do_Hyeon, Gowun_Dodum, Noto_Sans_KR } from 'next/font/google';
+import { Black_Han_Sans, Do_Hyeon, Gowun_Dodum, Nanum_Gothic, Nanum_Myeongjo, Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 
 const notoSansKr = Noto_Sans_KR({
@@ -23,6 +23,27 @@ const doHyeon = Do_Hyeon({
   preload: false,
 });
 
+const nanumGothic = Nanum_Gothic({
+  variable: '--font-nanum-gothic',
+  weight: ['400', '700', '800'],
+  display: 'swap',
+  preload: false,
+});
+
+const nanumMyeongjo = Nanum_Myeongjo({
+  variable: '--font-nanum-myeongjo',
+  weight: ['400', '700', '800'],
+  display: 'swap',
+  preload: false,
+});
+
+const blackHanSans = Black_Han_Sans({
+  variable: '--font-black-han-sans',
+  weight: '400',
+  display: 'swap',
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: '블루베리 - 광주SW마이스터고 환영 시스템',
   icons: { icon: '/favicon.svg' },
@@ -30,7 +51,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} ${gowunDodum.variable} ${doHyeon.variable}`}>
+    <html
+      lang="ko"
+      className={`${notoSansKr.variable} ${gowunDodum.variable} ${doHyeon.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${blackHanSans.variable}`}
+    >
       <body>{children}</body>
     </html>
   );
