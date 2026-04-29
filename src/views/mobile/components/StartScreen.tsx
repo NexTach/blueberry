@@ -11,6 +11,7 @@ interface StartScreenProps {
   onShowDirectInput: () => void;
   onDirectSubmit: (command: string) => void;
   onDirectBack: () => void;
+  onBack: () => void;
 }
 
 export default function StartScreen({
@@ -23,9 +24,15 @@ export default function StartScreen({
   onShowDirectInput,
   onDirectSubmit,
   onDirectBack,
+  onBack,
 }: StartScreenProps) {
   return (
     <div className="flex flex-col items-center gap-8 w-full max-w-sm">
+      <div className="w-full flex justify-start">
+        <button onClick={onBack} className="text-sm text-gray-600">
+          ← 이전으로
+        </button>
+      </div>
       <div className="flex flex-col items-center gap-2 text-center">
         <p className="text-2xl font-bold text-gray-900">표시할 내용 보내기</p>
         <p className="text-sm text-gray-500">

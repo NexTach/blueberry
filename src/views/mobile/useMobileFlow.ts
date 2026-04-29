@@ -4,10 +4,10 @@ import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
 import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME, THEMES } from './constants';
 import type { AiToneId, CommandInterpretation, Step } from './types';
-import type { ThemeId } from '../../types/session';
+import type { ThemeId, Session } from '../../types/session';
 
 export function useMobileFlow() {
-  const [step, setStep] = useState<Step>('start');
+  const [step, setStep] = useState<Step>('choose');
   const [previousStep, setPreviousStep] = useState<Step | null>(null);
   const [directInputText, setDirectInputText] = useState('');
   const [name, setName] = useState('');
@@ -19,6 +19,7 @@ export function useMobileFlow() {
   const [isInterpreting, setIsInterpreting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
+  const [lastSession, setLastSession] = useState<Session | null>(null);
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
@@ -28,6 +29,7 @@ export function useMobileFlow() {
       if (session?.themeId) {
         setThemeId(session.themeId);
       }
+      setLastSession(session);
     });
   }, []);
 
@@ -78,7 +80,7 @@ export function useMobileFlow() {
       setAiTone(interpretation.tone);
       setAiPrompt(interpretation.prompt);
       setMessage(
-        nextTemplate === AI_TEMPLATE_ID ? '' : applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? '',
+        nextTemplate === AI_TEMPLATE_ID ? '' : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''),
       );
       setStep('confirm');
     } finally {
@@ -143,6 +145,25 @@ export function useMobileFlow() {
     setStep('done');
   }
 
+  function startCreateNew() {
+    // clear any draft and go to start flow for creating a new message
+    setDirectInputText('');
+    setName('');
+    setShowDirectInput(false);
+    setPreviousStep('choose');
+    setStep('start');
+  }
+
+  function startEditExisting() {
+    // prefill composer with last session welcome message for manual edit
+    const existing = lastSession;
+    setDirectInputText(existing?.welcomeMessage ?? '');
+    setName(existing?.visitorName ?? '');
+    setShowDirectInput(true);
+    setPreviousStep('choose');
+    setStep('start');
+  }
+
   function handleRestart() {
     reset();
     setDirectInputText('');
@@ -167,6 +188,9 @@ export function useMobileFlow() {
     } else if (previousStep === 'start') {
       setShowDirectInput(true);
       setStep('start');
+    } else if (previousStep === 'choose') {
+      setShowDirectInput(false);
+      setStep('choose');
     }
     setPreviousStep(null);
   }
@@ -199,5 +223,8 @@ export function useMobileFlow() {
     handleBackToPrevious,
     openComposerFromCommand,
     resetSpeech: reset,
+    lastSession,
+    startCreateNew,
+    startEditExisting,
   };
 }
