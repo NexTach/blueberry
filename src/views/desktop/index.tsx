@@ -248,7 +248,7 @@ export default function DesktopPage() {
       <div className="absolute flex justify-end z-20"
         style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}>
         <span className="text-white/60 tracking-widest"
-          style={{ fontSize: 'clamp(0.7rem, 1.8vh, 1.2rem)', whiteSpace: 'nowrap' }}>
+          style={{ fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)', whiteSpace: 'nowrap' }}>
           Gwangju Software Meister High School
         </span>
       </div>
