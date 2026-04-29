@@ -179,13 +179,18 @@ function escapeRegex(s: string) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function normalizeDisplayName(name: string | undefined) {
+  return name?.trim().replace(/님\s*$/, '') ?? '';
+}
+
 function normalizeMessageBody(message: string | undefined, name: string | undefined) {
   if (!message?.trim()) return '환영합니다!';
-  if (!name?.trim()) return message.trim();
+  const displayName = normalizeDisplayName(name);
+  if (!displayName) return message.trim();
 
   return message
     .trim()
-    .replace(new RegExp(`^${escapeRegex(name)}님,?\\s*`), '')
+    .replace(new RegExp(`^${escapeRegex(displayName)}님,?\\s*`), '')
     .trim();
 }
 
@@ -270,6 +275,7 @@ export default function DesktopPage() {
   const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
   const show = isDisplaying && visible;
+  const displayName = normalizeDisplayName(session?.visitorName);
 
   const msgBody = normalizeMessageBody(session?.welcomeMessage, session?.visitorName);
 
@@ -378,8 +384,8 @@ export default function DesktopPage() {
             transform: show ? 'translateY(0)' : 'translateY(30px)',
           }}
         >
-          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1 }}>
-            {session?.visitorName}
+          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+            {displayName ? `${displayName}님` : ''}
           </p>
           <p
             className="text-white"
@@ -389,7 +395,7 @@ export default function DesktopPage() {
               marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
             }}
           >
-            {session?.visitorName ? `님, ${msgBody}` : msgBody}
+            {msgBody}
           </p>
         </div>
 
