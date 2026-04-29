@@ -1,12 +1,18 @@
 import type { TemplateId } from '../../../lib/openai';
 import { AI_TEMPLATE_ID } from '../constants';
-import type { AiToneId } from '../types';
+import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
+import type { AiToneId, ConfirmStage } from '../types';
 import type { ThemeId } from '../../../types/session';
 import AITonePicker from './AITonePicker';
 import TemplatePicker from './TemplatePicker';
 import ThemePicker from './ThemePicker';
 
 interface ConfirmScreenProps {
+  confirmStage: ConfirmStage;
+  confirmStageIndex: number;
+  confirmStageCount: number;
+  canContinue: boolean;
+  isLastStage: boolean;
   name: string;
   selectedTemplate: TemplateId;
   message: string;
@@ -23,10 +29,15 @@ interface ConfirmScreenProps {
   onReenterVoice: () => void;
   onReenterDirect: () => void;
   onBack: () => void;
-  onConfirm: () => void;
+  onContinue: () => void;
 }
 
 export default function ConfirmScreen({
+  confirmStage,
+  confirmStageIndex,
+  confirmStageCount,
+  canContinue,
+  isLastStage,
   name,
   selectedTemplate,
   message,
@@ -43,104 +54,284 @@ export default function ConfirmScreen({
   onReenterVoice,
   onReenterDirect,
   onBack,
-  onConfirm,
+  onContinue,
 }: ConfirmScreenProps) {
   const isAiTemplate = selectedTemplate === AI_TEMPLATE_ID;
+  const palette = mobilePalette;
+  const labelStyle = {
+    color: palette.subtext,
+    fontSize: mobileTypography.caption.fontSize,
+    lineHeight: mobileTypography.caption.lineHeight,
+    letterSpacing: '0',
+    fontWeight: 600,
+  } as const;
+  const helperTextStyle = {
+    color: palette.subtext,
+    fontSize: mobileTypography.bodySmall.fontSize,
+    lineHeight: mobileTypography.bodySmall.lineHeight,
+    letterSpacing: mobileTypography.bodySmall.letterSpacing,
+    fontWeight: mobileTypography.bodySmall.fontWeight,
+  } as const;
+
+  const stageMeta = {
+    template: {
+      title: '문구 방식을 골라주세요',
+      description: '고정 템플릿을 쓸지, AI로 자유 생성할지 먼저 정합니다.',
+    },
+    content: {
+      title: isAiTemplate ? 'AI에게 전달할 내용을 확인해주세요' : '표시될 문구를 확인해주세요',
+      description: isAiTemplate
+        ? '말하거나 입력한 명령을 다듬어 AI 생성 방향을 정할 수 있어요.'
+        : '화면에 올라갈 최종 문구를 바로 수정할 수 있어요.',
+    },
+    tone: {
+      title: 'AI 어체를 골라주세요',
+      description: '같은 내용도 어체에 따라 화면 분위기가 달라집니다.',
+    },
+    theme: {
+      title: 'TV 테마를 골라주세요',
+      description: '디자인 종류를 먼저 고르고, 세부 테마를 선택하세요.',
+    },
+    name: {
+      title: '이름을 확인해주세요',
+      description: '선택 입력입니다. 비워두면 방문자로 표시됩니다.',
+    },
+  }[confirmStage];
+
+  const stageProgress = `${confirmStageIndex + 1} / ${confirmStageCount}`;
+  const progressPercent = ((confirmStageIndex + 1) / confirmStageCount) * 100;
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-sm">
-      <div className="flex flex-col gap-1">
-        <p className="text-2xl font-bold text-gray-900">표시 내용 설정</p>
-        <p className="text-sm text-gray-500">AI 생성 또는 템플릿 방식을 골라주세요</p>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">이름 (선택)</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
-          placeholder="이름이 필요하면 입력하세요"
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors"
-        />
-      </div>
-
-      <TemplatePicker name={name} selectedTemplate={selectedTemplate} onSelect={onTemplateChange} />
-
-      <div className="flex flex-col gap-4 rounded-3xl border border-gray-200 p-4">
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">TV 테마</label>
-          <ThemePicker selectedTheme={themeId} onSelect={onThemeChange} />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">내용 다시 입력</label>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={onReenterVoice}
-              className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700"
-            >
-              마이크로 다시 입력
-            </button>
-            <button
-              onClick={onReenterDirect}
-              className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700"
-            >
-              직접 다시 입력
-            </button>
+    <div className="w-full max-w-sm px-1 py-2">
+      <div className="flex flex-col" style={{ gap: mobileSpacing.section }}>
+        <div className="flex flex-col" style={{ gap: 10 }}>
+          <p style={labelStyle}>
+            표시 내용 설정 {stageProgress}
+          </p>
+          <div
+            aria-hidden
+            style={{
+              width: '100%',
+              height: 6,
+              borderRadius: 999,
+              background: palette.line,
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                width: `${progressPercent}%`,
+                height: '100%',
+                borderRadius: 999,
+                background: palette.accent,
+                transition: 'width 180ms ease',
+              }}
+            />
           </div>
+          <p
+            style={{
+              color: palette.text,
+              fontSize: mobileTypography.hero.fontSize,
+              lineHeight: mobileTypography.hero.lineHeight,
+              letterSpacing: mobileTypography.hero.letterSpacing,
+              fontWeight: mobileTypography.hero.fontWeight,
+            }}
+          >
+            {stageMeta.title}
+          </p>
+          <p style={helperTextStyle}>{stageMeta.description}</p>
         </div>
 
-        {isAiTemplate && (
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI 어체</label>
-            <AITonePicker selectedTone={aiTone} onSelect={onAiToneChange} />
+        {confirmStage === 'template' && (
+          <TemplatePicker name={name} selectedTemplate={selectedTemplate} onSelect={onTemplateChange} />
+        )}
+
+        {confirmStage === 'content' && (
+          <div className="flex flex-col" style={{ gap: mobileSpacing.group }}>
+            {!isAiTemplate ? (
+              <div className="flex flex-col" style={{ gap: 6 }}>
+                <label style={labelStyle}>
+                  최종 문구
+                </label>
+                <textarea
+                  value={message}
+                  onChange={(e) => onMessageChange(e.target.value)}
+                  rows={3}
+                  className="w-full resize-none px-4 py-4 outline-none transition-colors"
+                  style={{
+                    minHeight: mobileControl.textAreaMinHeight,
+                    borderRadius: mobileRadius.field,
+                    border: `1px solid ${palette.line}`,
+                    background: palette.surface,
+                    color: palette.text,
+                    fontSize: mobileTypography.body.fontSize,
+                    lineHeight: mobileTypography.body.lineHeight,
+                    letterSpacing: mobileTypography.body.letterSpacing,
+                    fontWeight: mobileTypography.body.fontWeight,
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col" style={{ gap: 6 }}>
+                <label style={labelStyle}>
+                  AI에게 전달할 내용
+                </label>
+                <textarea
+                  value={aiPrompt}
+                  onChange={(e) => onAiPromptChange(e.target.value)}
+                  rows={4}
+                  placeholder="예: 이모지를 넣고, 밝고 재치 있게 환영 문구를 만들어줘."
+                  className="w-full resize-none px-4 py-4 outline-none transition-colors"
+                  style={{
+                    minHeight: mobileControl.textAreaMinHeight,
+                    borderRadius: mobileRadius.field,
+                    border: `1px solid ${palette.line}`,
+                    background: palette.surface,
+                    color: palette.text,
+                    fontSize: mobileTypography.body.fontSize,
+                    lineHeight: mobileTypography.body.lineHeight,
+                    letterSpacing: mobileTypography.body.letterSpacing,
+                    fontWeight: mobileTypography.body.fontWeight,
+                  }}
+                />
+                <p
+                  style={{
+                    color: palette.subtext,
+                    fontSize: mobileTypography.caption.fontSize,
+                    lineHeight: mobileTypography.caption.lineHeight,
+                    letterSpacing: mobileTypography.caption.letterSpacing,
+                    fontWeight: mobileTypography.caption.fontWeight,
+                  }}
+                >
+                  본문에 이름이 들어 있으면 AI가 그 이름을 우선 적용합니다.
+                </p>
+                <p style={helperTextStyle}>
+                  이미 해석된 내용이 들어 있으니, 그대로 두고 다음으로 넘어가도 됩니다.
+                </p>
+              </div>
+            )}
+
+            <div
+              className="flex flex-col"
+              style={{
+                gap: 8,
+                borderRadius: mobileRadius.section,
+                border: `1px solid ${palette.line}`,
+                background: palette.surface,
+                padding: mobileControl.sectionPadding,
+              }}
+            >
+              <label style={labelStyle}>
+                입력 다시 받기
+              </label>
+              <div className="grid grid-cols-2" style={{ gap: mobileSpacing.item }}>
+                <button
+                  onClick={onReenterVoice}
+                  style={{
+                    minHeight: mobileControl.buttonHeight,
+                    borderRadius: mobileRadius.button,
+                    border: `1px solid ${palette.line}`,
+                    background: palette.surface,
+                    color: palette.subtext,
+                    fontSize: mobileTypography.bodySmall.fontSize,
+                    lineHeight: mobileTypography.bodySmall.lineHeight,
+                    letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                    fontWeight: 600,
+                  }}
+                >
+                  마이크로 다시 입력
+                </button>
+                <button
+                  onClick={onReenterDirect}
+                  style={{
+                    minHeight: mobileControl.buttonHeight,
+                    borderRadius: mobileRadius.button,
+                    border: `1px solid ${palette.line}`,
+                    background: palette.surface,
+                    color: palette.subtext,
+                    fontSize: mobileTypography.bodySmall.fontSize,
+                    lineHeight: mobileTypography.bodySmall.lineHeight,
+                    letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                    fontWeight: 600,
+                  }}
+                >
+                  직접 다시 입력
+                </button>
+              </div>
+            </div>
           </div>
         )}
-      </div>
 
-      {!isAiTemplate && (
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">최종 문구</label>
-          <textarea
-            value={message}
-            onChange={(e) => onMessageChange(e.target.value)}
-            rows={3}
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors resize-none"
-          />
-        </div>
-      )}
+        {confirmStage === 'tone' && isAiTemplate && (
+          <AITonePicker selectedTone={aiTone} onSelect={onAiToneChange} />
+        )}
 
-      {isAiTemplate && (
-        <>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI에게 전달할 내용</label>
-            <textarea
-              value={aiPrompt}
-              onChange={(e) => onAiPromptChange(e.target.value)}
-              rows={4}
-              placeholder="예: 이모지를 넣고, 밝고 재치 있게 환영 문구를 만들어줘."
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none focus:border-black transition-colors resize-none"
+        {confirmStage === 'theme' && (
+          <ThemePicker selectedTheme={themeId} onSelect={onThemeChange} />
+        )}
+
+        {confirmStage === 'name' && (
+          <div className="flex flex-col" style={{ gap: 6 }}>
+            <label style={labelStyle}>
+              이름 (선택)
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => onNameChange(e.target.value)}
+              placeholder="이름이 필요하면 입력하세요"
+              className="w-full px-4 outline-none transition-colors"
+              style={{
+                minHeight: mobileControl.inputMinHeight,
+                borderRadius: mobileRadius.field,
+                border: `1px solid ${palette.line}`,
+                background: palette.surface,
+                color: palette.text,
+                fontSize: mobileTypography.body.fontSize,
+                lineHeight: mobileTypography.body.lineHeight,
+                letterSpacing: mobileTypography.body.letterSpacing,
+                fontWeight: mobileTypography.body.fontWeight,
+              }}
             />
-            <p className="text-xs text-gray-400">본문에 이름이 들어 있으면 AI가 그 이름을 우선 적용합니다.</p>
           </div>
-        </>
-      )}
+        )}
 
-      <div className="flex gap-3">
-        <button
-          onClick={onBack}
-          className="flex-1 py-3.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600"
-        >
-          이전으로
-        </button>
-        <button
-          onClick={onConfirm}
-          disabled={isSubmitting || (isAiTemplate ? !aiPrompt.trim() : !message.trim())}
-          className="flex-1 py-3.5 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
-        >
-          {isSubmitting ? '전송 중...' : '화면에 표시하기'}
-        </button>
+        <div className="flex" style={{ gap: mobileSpacing.item }}>
+          <button
+            onClick={onBack}
+            className="flex-1"
+            style={{
+              minHeight: mobileControl.buttonHeight,
+              borderRadius: mobileRadius.button,
+              border: `1px solid ${palette.line}`,
+              background: palette.surface,
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            이전으로
+          </button>
+          <button
+            onClick={onContinue}
+            disabled={isSubmitting || !canContinue}
+            className="flex-1 disabled:opacity-30 transition-opacity"
+            style={{
+              minHeight: mobileControl.buttonHeight,
+              borderRadius: mobileRadius.button,
+              background: palette.accent,
+              color: '#ffffff',
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            {isSubmitting ? '전송 중...' : isLastStage ? '화면에 표시하기' : '다음'}
+          </button>
+        </div>
       </div>
     </div>
   );
