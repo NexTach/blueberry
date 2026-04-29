@@ -8,7 +8,8 @@ export async function POST(request: Request) {
     if (!name) return NextResponse.json({ error: 'name required' }, { status: 400 });
 
     const response = await client.chat.completions.create({
-      model: 'gpt-5-mini',
+      model: 'gpt-5.2',
+      reasoning_effort: 'none',
       messages: [
         {
           role: 'system',
