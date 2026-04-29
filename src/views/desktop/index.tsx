@@ -220,15 +220,6 @@ export default function DesktopPage() {
       <div className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-700"
         style={{ paddingLeft: 'clamp(60px, 8vw, 130px)', paddingRight: 'clamp(60px, 8vw, 130px)', opacity: show ? 1 : 0, pointerEvents: isDisplaying ? 'auto' : 'none' }}>
 
-        {/* 코너 학교명 */}
-        <div className="absolute transition-all duration-700"
-          style={{ top: 'clamp(40px,6vh,80px)', left: 'clamp(50px,7vw,100px)', opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(-10px)' }}>
-          <span className="text-white tracking-widest"
-            style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)', whiteSpace: 'nowrap' }}>
-            GWANGJU SOFTWARE MEISTER
-          </span>
-        </div>
-
         {/* 분필 장식 - 핑크 (우상단) */}
         <div className="absolute pointer-events-none transition-opacity duration-1000"
           style={{ right: '4%', top: '12%', width: 'clamp(80px, 11vh, 160px)', opacity: show ? 0.9 : 0, transitionDelay: '500ms' }}>
@@ -253,15 +244,24 @@ export default function DesktopPage() {
         </div>
       </div>
 
+      {/* ── 상단 정보 ── */}
+      <div className="absolute flex justify-end z-20"
+        style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}>
+        <span className="text-white/60 tracking-widest"
+          style={{ fontSize: 'clamp(0.7rem, 1.8vh, 1.2rem)', whiteSpace: 'nowrap' }}>
+          Gwangju Software Meister High School
+        </span>
+      </div>
+
       {/* ── 푸터 ── */}
       <div className="absolute flex items-end justify-between z-20"
         style={{ bottom: 'clamp(24px, 4vh, 50px)', left: 'clamp(50px, 7vw, 100px)', right: 'clamp(50px, 7vw, 100px)' }}>
         <div className="flex flex-col gap-0.5">
-          <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2vh, 1.5rem)' }}>since</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(1.5rem, 4vh, 3.2rem)' }}>2017</span>
+          <span className="text-white/35 tracking-widest" style={{ fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)' }}>since</span>
+          <span className="text-white/60 tracking-widest" style={{ fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)' }}>2017</span>
         </div>
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(1rem, 2.5vh, 1.8rem)' }}>{time}</span>
+          <span className="text-white/65 tabular-nums" style={{ fontSize: 'clamp(1.2rem, 3vh, 2.2rem)' }}>{time}</span>
         </div>
       </div>
 
