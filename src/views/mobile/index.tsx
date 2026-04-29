@@ -7,10 +7,20 @@ import type { ThemeId } from '../../types/session';
 
 type Step = 'start' | 'listening' | 'confirm' | 'done';
 
-const TEMPLATES: { id: TemplateId; label: string; preview: (name: string) => string }[] = [
-  { id: 1, label: '간단 환영', preview: (n) => `${n}님, 환영합니다!` },
-  { id: 2, label: '학교 환영', preview: (n) => `${n}님, 광주SW마이스터고에 오신 것을 환영합니다!` },
-  { id: 3, label: 'AI 창의 생성', preview: () => 'TV 화면에서 AI가 특별한 문구를 생성합니다 ✨' },
+const TEMPLATES: {
+  id: TemplateId;
+  label: string;
+  description: string;
+  accent: string;
+  preview: (name: string) => string;
+}[] = [
+  { id: 1, label: '간단 환영', description: '가장 기본적인 인사', accent: 'bg-emerald-50 text-emerald-700', preview: (n) => `${n}님, 환영합니다!` },
+  { id: 2, label: '학교 환영', description: '학교 방문 인사', accent: 'bg-sky-50 text-sky-700', preview: (n) => `${n}님, 광주SW마이스터고에 오신 것을 환영합니다!` },
+  { id: 3, label: '밝은 안내', description: '가볍고 산뜻하게', accent: 'bg-amber-50 text-amber-700', preview: (n) => `${n}님, 오늘 이 공간에서 즐거운 시간 보내세요!` },
+  { id: 4, label: '차분한 인사', description: '정돈된 톤의 문구', accent: 'bg-slate-100 text-slate-700', preview: (n) => `${n}님, 반갑습니다. 편안하게 둘러보세요!` },
+  { id: 5, label: '센스 있는 한마디', description: '조금 더 눈에 띄게', accent: 'bg-pink-50 text-pink-700', preview: (n) => `${n}님, 오늘의 주인공처럼 빛나는 하루 보내세요!` },
+  { id: 6, label: '에너지 충전', description: '힘나는 느낌으로', accent: 'bg-violet-50 text-violet-700', preview: (n) => `${n}님, 좋은 에너지 가득 안고 다녀가세요!` },
+  { id: 7, label: 'AI 창의 생성', description: '명령에 맞춰 자유 생성', accent: 'bg-black text-white', preview: () => 'TV 화면에서 AI가 특별한 문구를 생성합니다 ✨' },
 ];
 
 const THEMES: { id: ThemeId; name: string; bg: string; accent: string }[] = [
@@ -156,7 +166,7 @@ export default function MobilePage() {
   function goToConfirm(commandText: string) {
     setPreviousStep(step);
     setName('');
-    setSelectedTemplate(3);
+    setSelectedTemplate(7);
     setMessage('');
     setAiPrompt(commandText);
     setStep('confirm');
@@ -177,21 +187,21 @@ export default function MobilePage() {
 
   function handleTemplateChange(id: TemplateId) {
     setSelectedTemplate(id);
-    if (id !== 3) {
+    if (id !== 7) {
       setMessage(applyTemplate(name, id) ?? '');
     }
   }
 
   function handleNameChange(nextName: string) {
     setName(nextName);
-    if (selectedTemplate !== 3) {
+    if (selectedTemplate !== 7) {
       setMessage(applyTemplate(nextName, selectedTemplate) ?? '');
     }
   }
 
   async function handleConfirm() {
     setIsSubmitting(true);
-    if (selectedTemplate === 3) {
+    if (selectedTemplate === 7) {
       // AI 생성: 데스크탑이 /api/generate 호출 후 displaying으로 전환
       await updateSession({
         status: 'generating',
@@ -382,31 +392,41 @@ export default function MobilePage() {
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            {TEMPLATES.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => handleTemplateChange(t.id)}
-                className={`w-full text-left px-4 py-3.5 rounded-xl border transition-all ${
-                  selectedTemplate === t.id ? 'border-black bg-gray-50' : 'border-gray-200 bg-white'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      selectedTemplate === t.id ? 'border-black' : 'border-gray-300'
-                    }`}
-                  >
-                    {selectedTemplate === t.id && <div className="w-2 h-2 bg-black rounded-full" />}
+          <div className="grid grid-cols-2 gap-3">
+            {TEMPLATES.map((t) => {
+              const selected = selectedTemplate === t.id;
+              const isAi = t.id === 7;
+
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => handleTemplateChange(t.id)}
+                  className={`${isAi ? 'col-span-2' : ''} rounded-2xl border text-left p-4 transition-all ${
+                    selected ? 'border-black bg-gray-50 shadow-sm scale-[1.01]' : 'border-gray-200 bg-white'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${t.accent}`}>
+                      {t.label}
+                    </div>
+                    <div
+                      className={`mt-0.5 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+                        selected ? 'border-black' : 'border-gray-300'
+                      }`}
+                    >
+                      {selected && <div className="w-2.5 h-2.5 rounded-full bg-black" />}
+                    </div>
                   </div>
-                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{t.label}</span>
-                </div>
-                <p className="mt-1.5 text-sm text-gray-700 pl-6">{t.preview(name)}</p>
-              </button>
-            ))}
+                  <p className="mt-3 text-sm font-semibold text-gray-900">{t.description}</p>
+                  <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                    {t.preview(name || '방문자')}
+                  </p>
+                </button>
+              );
+            })}
           </div>
 
-          {selectedTemplate !== 3 && (
+          {selectedTemplate !== 7 && (
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">최종 문구</label>
               <textarea
@@ -418,7 +438,7 @@ export default function MobilePage() {
             </div>
           )}
 
-          {selectedTemplate === 3 && (
+          {selectedTemplate === 7 && (
             <>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">AI 어체</label>
@@ -463,7 +483,7 @@ export default function MobilePage() {
             </button>
             <button
               onClick={handleConfirm}
-              disabled={isSubmitting || (selectedTemplate === 3 ? !aiPrompt.trim() : (!name.trim() || !message.trim()))}
+              disabled={isSubmitting || (selectedTemplate === 7 ? !aiPrompt.trim() : (!name.trim() || !message.trim()))}
               className="flex-1 py-3.5 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
             >
               {isSubmitting ? '전송 중...' : '화면에 표시하기'}
