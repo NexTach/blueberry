@@ -164,6 +164,17 @@ export default function DesktopPage() {
     return () => clearTimeout(t0);
   }, [session?.status, session?.welcomeMessage]);
 
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key.toLowerCase() !== 'q' || session?.status !== 'displaying') return;
+      event.preventDefault();
+      void resetSession();
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [session?.status]);
+
   const isGenerating = session?.status === 'generating';
   const isDisplaying = session?.status === 'displaying';
   const show = isDisplaying && visible;
