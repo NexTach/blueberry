@@ -4,6 +4,7 @@ interface ListeningScreenProps {
   isListening: boolean;
   transcript: string;
   error: string | null;
+  isInterpreting: boolean;
   onRetry: () => void;
   onUseTranscript: () => void;
   onCancel: () => void;
@@ -14,6 +15,7 @@ export default function ListeningScreen({
   isListening,
   transcript,
   error,
+  isInterpreting,
   onRetry,
   onUseTranscript,
   onCancel,
@@ -50,20 +52,24 @@ export default function ListeningScreen({
           </div>
         </div>
       ) : (
-        <div className="flex gap-3 w-full">
-          <button
-            onClick={onCancel}
-            className="flex-1 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-600"
-          >
-            취소
-          </button>
-          <button
-            onClick={onComplete}
-            disabled={!transcript}
-            className="flex-1 py-3 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
-          >
-            완료
-          </button>
+        <div className="flex flex-col gap-3 w-full">
+          {isInterpreting && <p className="text-sm text-gray-500 text-center">AI가 명령을 해석하고 있어요...</p>}
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={onCancel}
+              disabled={isInterpreting}
+              className="flex-1 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 disabled:opacity-40"
+            >
+              취소
+            </button>
+            <button
+              onClick={onComplete}
+              disabled={isInterpreting || !transcript}
+              className="flex-1 py-3 bg-black text-white rounded-xl text-sm font-semibold disabled:opacity-30 transition-opacity"
+            >
+              완료
+            </button>
+          </div>
         </div>
       )}
     </div>

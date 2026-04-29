@@ -5,6 +5,7 @@ interface StartScreenProps {
   showDirectInput: boolean;
   directInputText: string;
   error: string | null;
+  isInterpreting: boolean;
   onStartListening: () => void;
   onDirectInputChange: (text: string) => void;
   onShowDirectInput: () => void;
@@ -16,6 +17,7 @@ export default function StartScreen({
   showDirectInput,
   directInputText,
   error,
+  isInterpreting,
   onStartListening,
   onDirectInputChange,
   onShowDirectInput,
@@ -35,6 +37,7 @@ export default function StartScreen({
         <>
           <button
             onClick={onStartListening}
+            disabled={isInterpreting}
             className="w-28 h-28 rounded-full bg-black flex items-center justify-center shadow-lg active:scale-95 transition-transform"
             aria-label="음성 인식 시작"
           >
@@ -48,7 +51,8 @@ export default function StartScreen({
             <p className="text-xs text-gray-400">음성 입력이 어렵다면</p>
             <button
               onClick={onShowDirectInput}
-              className="text-sm font-medium text-gray-600 underline underline-offset-4"
+              disabled={isInterpreting}
+              className="text-sm font-medium text-gray-600 underline underline-offset-4 disabled:opacity-40"
             >
               직접 입력하기
             </button>
@@ -56,12 +60,14 @@ export default function StartScreen({
         </>
       ) : (
         <div className="w-full flex flex-col gap-3">
+          {isInterpreting && <p className="text-sm text-gray-500 text-center">AI가 명령을 해석하고 있어요...</p>}
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
           <DirectInput
             value={directInputText}
             onChange={onDirectInputChange}
             onSubmit={onDirectSubmit}
             onBack={onDirectBack}
+            disabled={isInterpreting}
           />
         </div>
       )}

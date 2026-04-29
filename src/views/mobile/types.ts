@@ -25,3 +25,10 @@ export interface AIToneOption {
   label: string;
   description: string;
 }
+
+export interface CommandInterpretation {
+  templateId: TemplateId;
+  tone: AiToneId;
+  name: string;
+  prompt: string;
+}

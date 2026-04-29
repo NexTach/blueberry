@@ -3,7 +3,7 @@ import { updateSession } from '../../lib/firebase';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
 import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME } from './constants';
-import type { AiToneId, Step } from './types';
+import type { AiToneId, CommandInterpretation, Step } from './types';
 
 export function useMobileFlow() {
   const [step, setStep] = useState<Step>('start');
@@ -14,6 +14,7 @@ export function useMobileFlow() {
   const [message, setMessage] = useState('');
   const [aiTone, setAiTone] = useState<AiToneId>(DEFAULT_AI_TONE);
   const [aiPrompt, setAiPrompt] = useState('');
+  const [isInterpreting, setIsInterpreting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -29,27 +30,65 @@ export function useMobileFlow() {
     }
   }, [errorCode, step]);
 
-  function openComposerFromCommand(commandText: string) {
+  async function interpretCommand(commandText: string): Promise<CommandInterpretation> {
+    try {
+      const response = await fetch('/api/interpret-command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: commandText }),
+      });
+
+      if (!response.ok) {
+        return { templateId: AI_TEMPLATE_ID, tone: DEFAULT_AI_TONE, name: '', prompt: commandText };
+      }
+
+      const data = (await response.json()) as Partial<CommandInterpretation>;
+      return {
+        templateId: data.templateId ?? AI_TEMPLATE_ID,
+        tone: data.tone ?? DEFAULT_AI_TONE,
+        name: data.name?.trim() ?? '',
+        prompt: data.prompt?.trim() || commandText,
+      };
+    } catch {
+      return { templateId: AI_TEMPLATE_ID, tone: DEFAULT_AI_TONE, name: '', prompt: commandText };
+    }
+  }
+
+  async function openComposerFromCommand(commandText: string) {
     setPreviousStep(step);
     setDirectInputText(commandText);
-    setName('');
-    setSelectedTemplate(AI_TEMPLATE_ID);
-    setMessage('');
-    setAiPrompt(commandText);
-    setStep('confirm');
+    setIsInterpreting(true);
+
+    try {
+      const interpretation = await interpretCommand(commandText);
+      const nextName = interpretation.name;
+      const nextTemplate = interpretation.templateId;
+
+      setName(nextName);
+      setSelectedTemplate(nextTemplate);
+      setAiTone(interpretation.tone);
+      setAiPrompt(interpretation.prompt);
+      setMessage(
+        nextTemplate === AI_TEMPLATE_ID ? '' : applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? '',
+      );
+      setStep('confirm');
+    } finally {
+      setIsInterpreting(false);
+    }
   }
 
   function handleStartListening() {
     reset();
+    setDirectInputText('');
     setShowDirectInput(false);
     setStep('listening');
     start();
   }
 
-  function handleStopListening() {
+  async function handleStopListening() {
     stop();
     const commandText = transcript.trim();
-    if (commandText) openComposerFromCommand(commandText);
+    if (commandText) await openComposerFromCommand(commandText);
   }
 
   function handleTemplateChange(id: TemplateId) {
@@ -94,6 +133,7 @@ export function useMobileFlow() {
     setMessage('');
     setAiPrompt('');
     setAiTone(DEFAULT_AI_TONE);
+    setIsInterpreting(false);
     setShowDirectInput(false);
     setSelectedTemplate(DEFAULT_TEMPLATE_ID);
     setPreviousStep(null);
@@ -122,6 +162,7 @@ export function useMobileFlow() {
     message,
     aiTone,
     aiPrompt,
+    isInterpreting,
     isSubmitting,
     showDirectInput,
     showSettings,

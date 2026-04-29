@@ -15,6 +15,7 @@ export default function MobilePage() {
     message,
     aiTone,
     aiPrompt,
+    isInterpreting,
     isSubmitting,
     showDirectInput,
     showSettings,
@@ -47,6 +48,7 @@ export default function MobilePage() {
           showDirectInput={showDirectInput}
           directInputText={directInputText}
           error={error}
+          isInterpreting={isInterpreting}
           onStartListening={handleStartListening}
           onDirectInputChange={setDirectInputText}
           onShowDirectInput={() => {
@@ -63,6 +65,7 @@ export default function MobilePage() {
           isListening={isListening}
           transcript={transcript}
           error={error}
+          isInterpreting={isInterpreting}
           onRetry={handleStartListening}
           onUseTranscript={() => {
             resetSpeech();
