@@ -4,7 +4,7 @@ import { subscribeSession, resetSession, updateSession } from '../../lib/firebas
 import type { Session } from '../../types/session';
 
 const CHALK_FONT = "'HakgyoansimBunpil', sans-serif";
-const RESET_DELAY = 30_000;
+const RESET_DELAY = 30 * 60 * 1000; // 30분
 
 const THEMES = [
   { id: 'green', name: '녹색 칠판', bg: '#344034', accent: '#6abeff' },
@@ -103,7 +103,7 @@ function WoodFrame() {
             boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)' }} />
       ))}
       {/* 프레임 내부 그림자 (칠판 깊이감) */}
-      <div className="absolute inset-0 pointer-events-none z-[9]"
+      <div className="absolute inset-0 pointer-events-none z-9"
         style={{ boxShadow: 'inset 0 0 40px rgba(0,0,0,0.3)' }} />
       {/* 외곽 선 */}
       <div className="absolute inset-0 pointer-events-none z-10"
@@ -233,13 +233,13 @@ export default function DesktopPage() {
 
         {/* 학교명 */}
         <div className="flex flex-col items-center gap-1" style={{ opacity: isGenerating ? 0.25 : 1 }}>
-          <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1.4rem, 5vh, 4.5rem)' }}>
+          <span className="text-white tracking-widest" style={{ fontSize: 'clamp(2rem, 6.5vh, 5.5rem)' }}>
             GWANGJU
           </span>
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7.5vh, 7rem)', lineHeight: 1 }}>
+          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1 }}>
             SOFTWARE
           </span>
-          <span className="text-white tracking-widest" style={{ fontSize: 'clamp(1.4rem, 5vh, 4.5rem)' }}>
+          <span className="text-white tracking-widest" style={{ fontSize: 'clamp(2rem, 6.5vh, 5.5rem)' }}>
             MEISTER
           </span>
         </div>
@@ -259,7 +259,7 @@ export default function DesktopPage() {
 
       {/* ── 환영 화면 ── */}
       <div
-        className="absolute inset-0 flex flex-col justify-center transition-opacity duration-700"
+        className="absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-700"
         style={{
           paddingLeft: 'clamp(60px, 8vw, 130px)',
           paddingRight: 'clamp(60px, 8vw, 130px)',
@@ -276,16 +276,16 @@ export default function DesktopPage() {
             transform: show ? 'translateY(0)' : 'translateY(-10px)',
           }}
         >
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>GWANGJU</span>
-          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(0.7rem, 1.8vh, 1.2rem)', fontWeight: 700 }}>SOFTWARE</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.6rem, 1.5vh, 1rem)' }}>MEISTER</span>
+          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)' }}>GWANGJU</span>
+          <span className="tracking-widest" style={{ color: theme.accent, fontSize: 'clamp(0.9rem, 2.4vh, 1.7rem)', fontWeight: 700 }}>SOFTWARE</span>
+          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.8rem, 2vh, 1.4rem)' }}>MEISTER</span>
         </div>
 
-        {/* 분필 장식 - 핑크 (왼쪽) */}
+        {/* 분필 장식 - 핑크 (우상단, 텍스트 영역 밖) */}
         <div
           className="absolute pointer-events-none transition-opacity duration-1000"
           style={{
-            left: '5%', top: '38%',
+            right: '4%', top: '12%',
             width: 'clamp(80px, 11vh, 160px)',
             opacity: show ? 0.9 : 0,
             transitionDelay: '500ms',
@@ -296,7 +296,7 @@ export default function DesktopPage() {
 
         {/* 환영 문구 */}
         <div
-          className="transition-all duration-700"
+          className="text-center transition-all duration-700"
           style={{
             transitionDelay: '200ms',
             opacity: show ? 1 : 0,
@@ -306,16 +306,16 @@ export default function DesktopPage() {
           <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1 }}>
             {session?.visitorName}
           </p>
-          <p className="text-white" style={{ fontSize: 'clamp(1.4rem, 4.5vh, 4rem)', lineHeight: 1.55, maxWidth: '75vw', marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}>
+          <p className="text-white" style={{ fontSize: 'clamp(1.4rem, 4.5vh, 4rem)', lineHeight: 1.55, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)' }}>
             {msgBody || '님, 환영합니다!'}
           </p>
         </div>
 
-        {/* 분필 장식 - 초록 (오른쪽 하단) */}
+        {/* 분필 장식 - 초록 (좌하단, 텍스트 영역 밖) */}
         <div
           className="absolute pointer-events-none transition-opacity duration-1000"
           style={{
-            right: '7%', bottom: '22%',
+            left: '4%', bottom: '14%',
             width: 'clamp(55px, 7.5vh, 110px)',
             opacity: show ? 0.9 : 0,
             transitionDelay: '700ms',
@@ -335,16 +335,16 @@ export default function DesktopPage() {
         }}
       >
         <div className="flex flex-col gap-0.5">
-          <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.55rem, 1.2vh, 0.85rem)' }}>since</span>
-          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2.8vh, 2.2rem)' }}>2017</span>
+          <span className="text-white/40 tracking-widest" style={{ fontSize: 'clamp(0.9rem, 2vh, 1.5rem)' }}>since</span>
+          <span className="text-white/65 tracking-widest" style={{ fontSize: 'clamp(1.5rem, 4vh, 3.2rem)' }}>2017</span>
         </div>
         <button
-          className="flex flex-col items-center gap-1.5"
+          className="flex flex-col items-center gap-2"
           onClick={() => setShowThemePicker(v => !v)}
           aria-label="테마 선택"
         >
-          <img src="/images/berry.png" alt="BERRY" style={{ height: 'clamp(20px, 3vh, 36px)', width: 'auto' }} />
-          <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(0.6rem, 1.4vh, 1rem)' }}>{time}</span>
+          <img src="/images/berry.png" alt="BERRY" style={{ height: 'clamp(30px, 5vh, 55px)', width: 'auto' }} />
+          <span className="text-white/55 tabular-nums" style={{ fontSize: 'clamp(1rem, 2.5vh, 1.8rem)' }}>{time}</span>
         </button>
       </div>
 
