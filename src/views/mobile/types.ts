@@ -1,4 +1,5 @@
 import type { TemplateId } from '../../lib/openai';
+import type { ThemeFamily } from '../../lib/themes';
 import type { ThemeId } from '../../types/session';
 
 export type Step = 'start' | 'listening' | 'confirm' | 'done';
@@ -15,9 +16,16 @@ export interface TemplateOption {
 
 export interface ThemeOption {
   id: ThemeId;
+  family: ThemeFamily;
   name: string;
+  description: string;
   bg: string;
+  surface: string;
+  text: string;
+  muted: string;
+  border: string;
   accent: string;
+  secondary: string;
 }
 
 export interface AIToneOption {

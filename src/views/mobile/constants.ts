@@ -1,4 +1,5 @@
 import { applyTemplate, type TemplateId } from '../../lib/openai';
+import { THEME_PRESETS } from '../../lib/themes';
 import type { TemplateOption, ThemeOption, AIToneOption, AiToneId } from './types';
 
 export const DEFAULT_TEMPLATE_ID: TemplateId = 1;
@@ -65,12 +66,7 @@ export const TEMPLATES: TemplateOption[] = [
   },
 ];
 
-export const THEMES: ThemeOption[] = [
-  { id: 'green', name: '녹색 칠판', bg: '#344034', accent: '#6abeff' },
-  { id: 'black', name: '흑판', bg: '#1e2820', accent: '#a8f0c6' },
-  { id: 'navy', name: '남색 보드', bg: '#1a2744', accent: '#ffb347' },
-  { id: 'warm', name: '먹판', bg: '#1f1a14', accent: '#ff9fd6' },
-];
+export const THEMES: ThemeOption[] = THEME_PRESETS;
 
 export const AI_TONES: AIToneOption[] = [
   { id: 'warm', label: '따뜻하게', description: '포근하고 다정한 환영' },
