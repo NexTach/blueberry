@@ -2,9 +2,11 @@ import type { ThemeId } from '../types/session';
 
 export type ThemeFamily = 'chalk' | 'whiteboard' | 'blackboard' | 'brutal';
 
-const CLEAN_KR_TITLE = "'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
-const CLEAN_KR_BODY = "'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif";
+const CLEAN_KR_TITLE = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const CLEAN_KR_BODY = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const CHALK_KR = "'HakgyoansimBunpil', sans-serif";
+const WHITEBOARD_KR = "var(--font-gowun-dodum), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_TITLE_KR = "var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 
 export interface ThemePreset {
   id: ThemeId;
@@ -101,8 +103,8 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'whiteboard',
     name: '기본 화이트보드',
     description: '깨끗하고 정돈된 화이트보드',
-    titleFont: CLEAN_KR_TITLE,
-    bodyFont: CLEAN_KR_BODY,
+    titleFont: WHITEBOARD_KR,
+    bodyFont: WHITEBOARD_KR,
     bg: '#eef7ff',
     surface: '#ffffff',
     text: '#0f1726',
@@ -116,7 +118,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'whiteboard',
     name: '메모 화이트보드',
     description: '메모가 붙은 친근한 화이트보드',
-    titleFont: CLEAN_KR_TITLE,
+    titleFont: WHITEBOARD_KR,
     bodyFont: CLEAN_KR_BODY,
     bg: '#fff9ed',
     surface: '#ffffff',
@@ -161,7 +163,7 @@ export const THEME_PRESETS: ThemePreset[] = [
     family: 'brutal',
     name: '팝 포스터',
     description: '톡톡 튀는 색감의 포스터 화면',
-    titleFont: CLEAN_KR_TITLE,
+    titleFont: BRUTAL_TITLE_KR,
     bodyFont: CLEAN_KR_BODY,
     bg: '#ffe45c',
     surface: '#ffffff',
