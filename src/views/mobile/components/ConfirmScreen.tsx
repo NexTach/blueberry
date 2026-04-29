@@ -20,6 +20,8 @@ interface ConfirmScreenProps {
   onAiToneChange: (tone: AiToneId) => void;
   onAiPromptChange: (prompt: string) => void;
   onThemeChange: (themeId: ThemeId) => void;
+  onReenterVoice: () => void;
+  onReenterDirect: () => void;
   onBack: () => void;
   onConfirm: () => void;
 }
@@ -38,6 +40,8 @@ export default function ConfirmScreen({
   onAiToneChange,
   onAiPromptChange,
   onThemeChange,
+  onReenterVoice,
+  onReenterDirect,
   onBack,
   onConfirm,
 }: ConfirmScreenProps) {
@@ -67,6 +71,24 @@ export default function ConfirmScreen({
         <div className="flex flex-col gap-2">
           <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">TV 테마</label>
           <ThemePicker selectedTheme={themeId} onSelect={onThemeChange} />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold text-gray-500 tracking-wide uppercase">내용 다시 입력</label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={onReenterVoice}
+              className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700"
+            >
+              마이크로 다시 입력
+            </button>
+            <button
+              onClick={onReenterDirect}
+              className="rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700"
+            >
+              직접 다시 입력
+            </button>
+          </div>
         </div>
 
         {isAiTemplate && (
