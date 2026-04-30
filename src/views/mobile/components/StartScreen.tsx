@@ -79,7 +79,11 @@ export default function StartScreen({
                 onClick={onStartListening}
                 disabled={isInterpreting}
                 className="flex items-center justify-center rounded-full active:scale-95 transition-transform disabled:opacity-40"
-                style={{ width: mobileControl.iconButtonSize, height: mobileControl.iconButtonSize, background: palette.accent }}
+                style={{
+                  width: mobileControl.iconButtonSize,
+                  height: mobileControl.iconButtonSize,
+                  background: palette.accent,
+                }}
                 aria-label="음성 인식 시작"
               >
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
@@ -93,8 +97,6 @@ export default function StartScreen({
               className="flex flex-col items-center"
               style={{
                 gap: mobileSpacing.item,
-                borderRadius: mobileRadius.section,
-                border: `1px solid ${palette.line}`,
                 background: palette.surface,
                 padding: mobileControl.sectionPadding,
               }}
