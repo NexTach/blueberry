@@ -3,20 +3,61 @@ import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypogr
 import MobileStage from './MobileStage';
 
 interface ListeningScreenProps {
-            {isInterpreting && (
-              <p
-                className="text-center"
-                style={{
-                  color: palette.subtext,
-                  fontSize: mobileTypography.bodySmall.fontSize,
-                  lineHeight: mobileTypography.bodySmall.lineHeight,
-                  letterSpacing: mobileTypography.bodySmall.letterSpacing,
-                  fontWeight: mobileTypography.bodySmall.fontWeight,
-                }}
-              >
-                AI가 명령을 해석하고 있어요...
-              </p>
-            )}
+  isListening: boolean;
+  transcript: string;
+  error: string | null;
+  isInterpreting: boolean;
+  onRetry: () => void;
+  onUseTranscript: () => void;
+  onCancel: () => void;
+  onComplete: () => void;
+}
+
+export default function ListeningScreen({
+  isListening,
+  transcript,
+  error,
+  isInterpreting,
+  onRetry,
+  onUseTranscript,
+  onCancel,
+  onComplete,
+}: ListeningScreenProps) {
+  const palette = mobilePalette;
+
+  const footer = error ? (
+    <div className="flex w-full" style={{ gap: mobileSpacing.item }}>
+      <button
+        onClick={onRetry}
+        className="flex-1"
+        style={{
+          minHeight: mobileControl.buttonHeight,
+          borderRadius: mobileRadius.button,
+          border: `1px solid ${palette.line}`,
+          background: palette.surface,
+          color: palette.subtext,
+          fontSize: mobileTypography.bodySmall.fontSize,
+          lineHeight: mobileTypography.bodySmall.lineHeight,
+          letterSpacing: mobileTypography.bodySmall.letterSpacing,
+          fontWeight: 600,
+        }}
+      >
+        다시 시도
+      </button>
+      <button
+        onClick={onUseTranscript}
+        disabled={!transcript.trim()}
+        className="flex-1 disabled:opacity-30"
+        style={{
+          minHeight: mobileControl.buttonHeight,
+          borderRadius: mobileRadius.button,
+          background: palette.accent,
+          color: '#ffffff',
+          fontSize: mobileTypography.bodySmall.fontSize,
+          lineHeight: mobileTypography.bodySmall.lineHeight,
+          letterSpacing: mobileTypography.bodySmall.letterSpacing,
+          fontWeight: 600,
+        }}
       >
         텍스트로 사용
       </button>
@@ -39,7 +80,7 @@ interface ListeningScreenProps {
           fontWeight: 600,
         }}
       >
-        취소
+        이전으로
       </button>
       <button
         onClick={onComplete}
