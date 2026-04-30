@@ -769,7 +769,7 @@ function DisplayMessage({
           style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
         >
           <p style={{ color: '#111', fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)', lineHeight: 1.02, textAlign: 'center', fontFamily: theme.titleFont }}>
-            {displayName ? `${displayName}님 환영합니다.` : '환영합니다.'}
+            {displayName ? `${displayName}님` : '환영합니다'}
           </p>
           <p
             style={{
