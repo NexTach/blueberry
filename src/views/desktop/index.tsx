@@ -158,13 +158,6 @@ function BrutalFrame({ theme }: { theme: ThemePreset }) {
     return (
       <>
         <div
-          className="absolute inset-[clamp(16px,2vw,30px)] pointer-events-none z-10 rounded-[34px]"
-          style={{
-            background: theme.surface,
-            boxShadow: '0 18px 40px rgba(0,0,0,0.05)',
-          }}
-        />
-        <div
           className="absolute pointer-events-none z-20"
           style={{
             top: 'clamp(44px, 5vh, 78px)',
@@ -225,7 +218,17 @@ function BrutalFrame({ theme }: { theme: ThemePreset }) {
 }
 
 function ThemeTexture({ theme }: { theme: ThemePreset }) {
-  if (theme.id === 'brutal-bauhaus') return null;
+  if (theme.id === 'brutal-bauhaus') {
+    return (
+      <div
+        className="absolute inset-[clamp(16px,2vw,30px)] pointer-events-none rounded-[34px]"
+        style={{
+          background: theme.surface,
+          boxShadow: '0 18px 40px rgba(0,0,0,0.05)',
+        }}
+      />
+    );
+  }
 
   if (theme.family === 'chalk') {
     return (
@@ -434,7 +437,119 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
 
 function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean }) {
   if (theme.id === 'brutal-bauhaus') {
-    return null;
+    return (
+      <>
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            top: '14%',
+            left: '31%',
+            width: 'clamp(16px, 1.5vw, 24px)',
+            height: 'clamp(210px, 23vh, 300px)',
+            background: '#111',
+            transform: 'rotate(-12deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            top: '12%',
+            left: '50%',
+            width: 'clamp(16px, 1.5vw, 24px)',
+            height: 'clamp(190px, 21vh, 280px)',
+            background: '#111',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            top: '14%',
+            right: '31%',
+            width: 'clamp(16px, 1.5vw, 24px)',
+            height: 'clamp(190px, 21vh, 280px)',
+            background: '#111',
+            transform: 'rotate(-4deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            top: '25%',
+            left: '31%',
+            width: 'clamp(300px, 31vw, 470px)',
+            height: 'clamp(240px, 28vh, 360px)',
+            background: theme.accent,
+            clipPath: 'polygon(8% 14%, 88% 0, 100% 78%, 46% 100%, 0 86%)',
+            transform: 'rotate(-10deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            bottom: '20%',
+            left: '10%',
+            width: 'clamp(260px, 34vw, 500px)',
+            height: 'clamp(170px, 21vh, 280px)',
+            background: '#3fb8d9',
+            clipPath: 'polygon(8% 8%, 84% 0, 100% 72%, 28% 100%, 0 66%)',
+            transform: 'rotate(-8deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            bottom: '19%',
+            right: '9%',
+            width: 'clamp(280px, 31vw, 460px)',
+            height: 'clamp(240px, 29vh, 390px)',
+            background: theme.secondary,
+            clipPath: 'polygon(18% 0, 100% 9%, 100% 100%, 0 90%, 7% 22%)',
+            transform: 'rotate(3deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none rounded-full transition-opacity duration-1000"
+          style={{
+            left: '17%',
+            bottom: '11%',
+            width: 'clamp(180px, 22vw, 330px)',
+            height: 'clamp(180px, 22vw, 330px)',
+            border: '10px solid #111',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            right: '27%',
+            bottom: '17%',
+            width: 'clamp(16px, 1.4vw, 22px)',
+            height: 'clamp(180px, 21vh, 280px)',
+            background: '#111',
+            opacity: show ? 1 : 0,
+          }}
+        />
+        <div
+          className="absolute pointer-events-none transition-opacity duration-1000"
+          style={{
+            left: '24%',
+            bottom: '4%',
+            width: 'clamp(420px, 50vw, 780px)',
+            height: 'clamp(150px, 18vh, 230px)',
+            background: '#09b53c',
+            clipPath: 'polygon(0 0, 78% 0, 100% 36%, 92% 100%, 8% 100%)',
+            transform: 'rotate(-1deg)',
+            opacity: show ? 1 : 0,
+          }}
+        />
+      </>
+    );
   }
 
   if (theme.family === 'whiteboard') {
@@ -650,136 +765,25 @@ function DisplayMessage({
     if (theme.id === 'brutal-bauhaus') {
       return (
         <div
-          className="relative w-full transition-all duration-700"
-          style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)', maxWidth: 'min(92vw, 1180px)', minHeight: '72vh' }}
+          className="relative z-10 flex w-full flex-col items-center transition-all duration-700"
+          style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
         >
-          <div
-            className="absolute"
+          <p style={{ color: '#111', fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)', lineHeight: 1.02, textAlign: 'center', fontFamily: theme.titleFont }}>
+            {displayName ? `${displayName}님 환영합니다.` : '환영합니다.'}
+          </p>
+          <p
             style={{
-              top: '4%',
-              left: '29%',
-              width: 'clamp(18px, 1.7vw, 30px)',
-              height: 'clamp(210px, 23vh, 320px)',
-              background: '#111',
-              transform: 'rotate(-12deg)',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              top: '2%',
-              left: '49%',
-              width: 'clamp(18px, 1.7vw, 30px)',
-              height: 'clamp(190px, 21vh, 300px)',
-              background: '#111',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              top: '4%',
-              right: '28%',
-              width: 'clamp(18px, 1.7vw, 30px)',
-              height: 'clamp(190px, 21vh, 300px)',
-              background: '#111',
-              transform: 'rotate(-4deg)',
-            }}
-          />
-
-          <div
-            className="absolute"
-            style={{
-              top: '11%',
-              left: '30%',
-              width: 'clamp(320px, 34vw, 520px)',
-              height: 'clamp(260px, 30vh, 420px)',
-              background: theme.accent,
-              clipPath: 'polygon(8% 14%, 88% 0, 100% 78%, 46% 100%, 0 86%)',
-              transform: 'rotate(-10deg)',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              top: '28%',
-              left: '18%',
-              width: 'clamp(250px, 32vw, 420px)',
-              height: 'clamp(180px, 22vh, 300px)',
-              background: '#3fb8d9',
-              clipPath: 'polygon(8% 8%, 84% 0, 100% 72%, 28% 100%, 0 66%)',
-              transform: 'rotate(-8deg)',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              top: '38%',
-              right: '13%',
-              width: 'clamp(280px, 30vw, 420px)',
-              height: 'clamp(240px, 28vh, 380px)',
-              background: theme.secondary,
-              clipPath: 'polygon(18% 0, 100% 9%, 100% 100%, 0 90%, 7% 22%)',
-              transform: 'rotate(3deg)',
-            }}
-          />
-          <div
-            className="absolute rounded-full"
-            style={{
-              left: '18%',
-              top: '49%',
-              width: 'clamp(180px, 21vw, 320px)',
-              height: 'clamp(180px, 21vw, 320px)',
-              border: '10px solid #111',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              right: '29%',
-              top: '54%',
-              width: 'clamp(18px, 1.5vw, 24px)',
-              height: 'clamp(180px, 21vh, 280px)',
-              background: '#111',
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              left: '26%',
-              bottom: '2%',
-              width: 'clamp(420px, 48vw, 760px)',
-              height: 'clamp(180px, 20vh, 260px)',
-              background: '#09b53c',
-              clipPath: 'polygon(0 0, 78% 0, 100% 36%, 92% 100%, 8% 100%)',
-              transform: 'rotate(-1deg)',
-            }}
-          />
-
-          <div
-            className="absolute flex flex-col items-center"
-            style={{
-              top: '28%',
-              left: '50%',
-              transform: 'translateX(-50%)',
+              color: '#111',
+              fontSize: 'clamp(1.1rem, 2.5vh, 2rem)',
+              lineHeight: 1.5,
+              maxWidth: '18ch',
+              textAlign: 'center',
+              marginTop: 'clamp(0.8rem, 1.8vh, 1.4rem)',
+              fontFamily: theme.bodyFont,
             }}
           >
-            <p style={{ color: '#111', fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)', lineHeight: 1.02, textAlign: 'center', fontFamily: theme.titleFont }}>
-              {displayName ? `${displayName}님 환영합니다.` : '환영합니다.'}
-            </p>
-            <p
-              style={{
-                color: '#111',
-                fontSize: 'clamp(1.1rem, 2.5vh, 2rem)',
-                lineHeight: 1.5,
-                maxWidth: '18ch',
-                textAlign: 'center',
-                marginTop: 'clamp(0.8rem, 1.8vh, 1.4rem)',
-                fontFamily: theme.bodyFont,
-              }}
-            >
-              {msgBody}
-            </p>
-          </div>
+            {msgBody}
+          </p>
         </div>
       );
     }
