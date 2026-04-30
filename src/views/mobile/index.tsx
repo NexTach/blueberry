@@ -108,14 +108,14 @@ export default function MobilePage() {
           />
         )}
 
-            {step === 'preview' && (
-              <PreviewScreen
-                previewText={previewText}
-                onBack={handleBackFromPreview}
-                onConfirm={handleConfirmFromPreview}
-                onCustomize={handleProceedFromPreview}
-              />
-            )}
+        {step === 'preview' && (
+          <PreviewScreen
+            previewText={previewText}
+            onBack={handleBackFromPreview}
+            onConfirm={handleConfirmFromPreview}
+            onCustomize={handleProceedFromPreview}
+          />
+        )}
 
         {step === 'confirm' && (
           <ConfirmScreen

@@ -164,7 +164,7 @@ export function useMobileFlow() {
       const recommendedText =
         nextTemplate === AI_TEMPLATE_ID
           ? interpretation.prompt || ''
-          : applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? '';
+          : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? '');
 
       setMessage(nextTemplate === AI_TEMPLATE_ID ? '' : recommendedText);
       setInitialConfirmSnapshot(null);
