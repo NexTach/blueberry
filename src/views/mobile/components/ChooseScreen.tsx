@@ -76,7 +76,42 @@ export default function ChooseScreen({
       }
       centerContent
     >
-      <div className="flex flex-col" style={{ gap: mobileSpacing.item }}>
+      <div className="mt-6 flex flex-col" style={{ gap: mobileSpacing.item }}>
+        <button
+          onClick={() => setSelected('create')}
+          className="w-full text-left transition-colors"
+          style={{
+            borderRadius: mobileRadius.option,
+            border: `1px solid ${selected === 'create' ? selectedBorder : palette.line}`,
+            background: selected === 'create' ? palette.accentSoft : palette.surface,
+            padding: mobileControl.sectionPadding,
+          }}
+        >
+          <p
+            style={{
+              color: palette.text,
+              fontSize: mobileTypography.body.fontSize,
+              lineHeight: mobileTypography.body.lineHeight,
+              letterSpacing: mobileTypography.body.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            새로 문구 만들기
+          </p>
+          <p
+            className="mt-1"
+            style={{
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: mobileTypography.bodySmall.fontWeight,
+            }}
+          >
+            음성이나 직접 입력으로 새 문구를 처음부터 만듭니다.
+          </p>
+        </button>
+
         <button
           onClick={() => canEditExisting && setSelected('edit')}
           disabled={!canEditExisting}
@@ -110,41 +145,6 @@ export default function ChooseScreen({
             }}
           >
             {canEditExisting ? existingPreview || '지금 표시 중인 내용을 바로 수정합니다.' : '현재 데스크탑에 표시 중인 내용이 없어요.'}
-          </p>
-        </button>
-
-        <button
-          onClick={() => setSelected('create')}
-          className="w-full text-left transition-colors"
-          style={{
-            borderRadius: mobileRadius.option,
-            border: `1px solid ${selected === 'create' ? selectedBorder : palette.line}`,
-            background: selected === 'create' ? palette.accentSoft : palette.surface,
-            padding: mobileControl.sectionPadding,
-          }}
-        >
-          <p
-            style={{
-              color: palette.text,
-              fontSize: mobileTypography.body.fontSize,
-              lineHeight: mobileTypography.body.lineHeight,
-              letterSpacing: mobileTypography.body.letterSpacing,
-              fontWeight: 600,
-            }}
-          >
-            새로 문구 만들기
-          </p>
-          <p
-            className="mt-1"
-            style={{
-              color: palette.subtext,
-              fontSize: mobileTypography.bodySmall.fontSize,
-              lineHeight: mobileTypography.bodySmall.lineHeight,
-              letterSpacing: mobileTypography.bodySmall.letterSpacing,
-              fontWeight: mobileTypography.bodySmall.fontWeight,
-            }}
-          >
-            음성이나 직접 입력으로 새 문구를 처음부터 만듭니다.
           </p>
         </button>
       </div>
