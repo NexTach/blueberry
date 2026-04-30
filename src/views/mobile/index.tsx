@@ -85,7 +85,6 @@ export default function MobilePage() {
             onBack={handleBackToPrevious}
           />
         )}
-
         {step === 'listening' && (
           <ListeningScreen
             isListening={isListening}
@@ -98,7 +97,7 @@ export default function MobilePage() {
               setShowDirectInput(true);
               openComposerFromCommand(transcript.trim());
             }}
-            onCancel={handleRestart}
+            onCancel={handleBackToPrevious}
             onComplete={handleStopListening}
           />
         )}
