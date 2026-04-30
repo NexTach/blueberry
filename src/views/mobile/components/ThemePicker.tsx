@@ -43,7 +43,7 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
                   minHeight: 38,
                   borderRadius: 999,
                   border: `1.5px solid ${selected ? selectedBorder : palette.line}`,
-                  background: selected ? palette.accentSoft : 'transparent',
+                  background: selected ? palette.accentSoft : palette.surface,
                   paddingInline: 14,
                   paddingBlock: 8,
                 }}
@@ -99,7 +99,7 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
                 style={{
                   borderRadius: 18,
                   border: `1.5px solid ${selected ? selectedBorder : palette.line}`,
-                  background: selected ? palette.surface : 'transparent',
+                  background: selected ? palette.accentSoft : palette.surface,
                   padding: 14,
                 }}
               >

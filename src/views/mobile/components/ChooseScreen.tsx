@@ -82,9 +82,9 @@ export default function ChooseScreen({
           disabled={!canEditExisting}
           className="w-full text-left transition-colors disabled:cursor-not-allowed"
           style={{
-            borderRadius: mobileRadius.section,
-            border: `2px solid ${!canEditExisting ? palette.line : selected === 'edit' ? selectedBorder : palette.line}`,
-            background: !canEditExisting ? palette.disabled : palette.surface,
+            borderRadius: mobileRadius.option,
+            border: `1px solid ${!canEditExisting ? palette.line : selected === 'edit' ? selectedBorder : palette.line}`,
+            background: !canEditExisting ? palette.disabled : selected === 'edit' ? palette.accentSoft : palette.surface,
             padding: mobileControl.sectionPadding,
           }}
         >
@@ -100,7 +100,7 @@ export default function ChooseScreen({
             현재 문구 수정하기
           </p>
           <p
-            className="mt-2"
+            className="mt-1"
             style={{
               color: !canEditExisting ? '#b0b8c1' : palette.subtext,
               fontSize: mobileTypography.bodySmall.fontSize,
@@ -117,9 +117,9 @@ export default function ChooseScreen({
           onClick={() => setSelected('create')}
           className="w-full text-left transition-colors"
           style={{
-            borderRadius: mobileRadius.section,
-            border: `2px solid ${selected === 'create' ? selectedBorder : palette.line}`,
-            background: palette.surface,
+            borderRadius: mobileRadius.option,
+            border: `1px solid ${selected === 'create' ? selectedBorder : palette.line}`,
+            background: selected === 'create' ? palette.accentSoft : palette.surface,
             padding: mobileControl.sectionPadding,
           }}
         >
@@ -135,7 +135,7 @@ export default function ChooseScreen({
             새로 문구 만들기
           </p>
           <p
-            className="mt-2"
+            className="mt-1"
             style={{
               color: palette.subtext,
               fontSize: mobileTypography.bodySmall.fontSize,

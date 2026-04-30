@@ -17,9 +17,9 @@ export default function DoneScreen({ onRestart }: DoneScreenProps) {
           style={{
             minHeight: mobileControl.buttonHeight,
             borderRadius: mobileRadius.button,
-            border: `1px solid ${palette.line}`,
-            background: palette.surface,
-            color: palette.subtext,
+            border: 'none',
+            background: palette.weak,
+            color: palette.subtextStrong,
             fontSize: mobileTypography.bodySmall.fontSize,
             lineHeight: mobileTypography.bodySmall.lineHeight,
             letterSpacing: mobileTypography.bodySmall.letterSpacing,

@@ -38,7 +38,7 @@ export default function StartScreen({
           <button
             onClick={showDirectInput ? onDirectBack : onBack}
             style={{
-              color: palette.subtext,
+              color: palette.subtextStrong,
               fontSize: mobileTypography.bodySmall.fontSize,
               lineHeight: mobileTypography.bodySmall.lineHeight,
               letterSpacing: mobileTypography.bodySmall.letterSpacing,
@@ -105,7 +105,7 @@ export default function StartScreen({
               gap: mobileSpacing.item,
               borderRadius: mobileRadius.section,
               border: `1px solid ${palette.line}`,
-              background: '#f8faff',
+              background: palette.field,
               padding: mobileControl.sectionPadding,
             }}
           >
@@ -127,8 +127,8 @@ export default function StartScreen({
               style={{
                 minHeight: mobileControl.buttonHeight,
                 borderRadius: mobileRadius.button,
-                background: palette.accentSoft,
-                color: palette.accent,
+                background: palette.weak,
+                color: palette.subtextStrong,
                 fontSize: mobileTypography.bodySmall.fontSize,
                 lineHeight: mobileTypography.bodySmall.lineHeight,
                 letterSpacing: mobileTypography.bodySmall.letterSpacing,

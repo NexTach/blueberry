@@ -56,11 +56,11 @@ export default function TemplatePicker({ name, selectedTemplate, onSelect }: Tem
                 </p>
               </div>
               <div
-                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${template.accent}`}
-                style={{ borderRadius: 999 }}
-              >
-                {template.mode === 'ai' ? 'AI' : '템플릿'}
-              </div>
+              className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${template.accent}`}
+              style={{ borderRadius: 999 }}
+            >
+              {template.mode === 'ai' ? 'AI' : '템플릿'}
+            </div>
             </div>
             <p
               className="mt-2"

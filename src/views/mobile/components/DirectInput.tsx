@@ -23,8 +23,8 @@ export default function DirectInput({ value, onChange, onSubmit, onBack, disable
         style={{
           minHeight: mobileControl.textAreaMinHeight,
           borderRadius: mobileRadius.field,
-          border: `1px solid ${palette.line}`,
-          background: palette.surface,
+          border: `1px solid transparent`,
+          background: palette.field,
           color: palette.text,
           fontSize: mobileTypography.body.fontSize,
           lineHeight: mobileTypography.body.lineHeight,
@@ -53,9 +53,9 @@ export default function DirectInput({ value, onChange, onSubmit, onBack, disable
           style={{
             minHeight: mobileControl.buttonHeight,
             borderRadius: mobileRadius.button,
-            border: `1px solid ${palette.line}`,
-            background: palette.surface,
-            color: palette.subtext,
+            border: 'none',
+            background: palette.weak,
+            color: palette.subtextStrong,
             fontSize: mobileTypography.bodySmall.fontSize,
             lineHeight: mobileTypography.bodySmall.lineHeight,
             letterSpacing: mobileTypography.bodySmall.letterSpacing,

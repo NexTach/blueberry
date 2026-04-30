@@ -51,7 +51,7 @@ export default function MobilePage() {
   const { isListening, transcript, error } = speech;
 
   return (
-    <div className="h-[100dvh] overflow-hidden bg-[#f7f8fa]">
+    <div className="h-[100dvh] overflow-hidden bg-white">
       <div
         className="mx-auto flex h-full w-full max-w-md flex-col px-4"
         style={{

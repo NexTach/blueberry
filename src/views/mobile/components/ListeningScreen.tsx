@@ -32,9 +32,9 @@ export default function ListeningScreen({
         style={{
           minHeight: mobileControl.buttonHeight,
           borderRadius: mobileRadius.button,
-          border: `1px solid ${palette.line}`,
-          background: palette.surface,
-          color: palette.subtext,
+          border: 'none',
+          background: palette.weak,
+          color: palette.subtextStrong,
           fontSize: mobileTypography.bodySmall.fontSize,
           lineHeight: mobileTypography.bodySmall.lineHeight,
           letterSpacing: mobileTypography.bodySmall.letterSpacing,
@@ -70,9 +70,9 @@ export default function ListeningScreen({
         style={{
           minHeight: mobileControl.buttonHeight,
           borderRadius: mobileRadius.button,
-          border: `1px solid ${palette.line}`,
-          background: palette.surface,
-          color: palette.subtext,
+          border: 'none',
+          background: palette.weak,
+          color: palette.subtextStrong,
           fontSize: mobileTypography.bodySmall.fontSize,
           lineHeight: mobileTypography.bodySmall.lineHeight,
           letterSpacing: mobileTypography.bodySmall.letterSpacing,
@@ -138,7 +138,7 @@ export default function ListeningScreen({
           style={{
             borderRadius: mobileRadius.section,
             padding: mobileControl.sectionPadding,
-            background: '#f8faff',
+            background: palette.field,
             border: `1px solid ${palette.line}`,
           }}
         >
@@ -151,8 +151,7 @@ export default function ListeningScreen({
             style={{
               borderRadius: mobileRadius.section,
               padding: mobileControl.sectionPadding,
-              background: palette.surface,
-              border: `1px solid ${palette.line}`,
+              background: palette.field,
             }}
           >
             <p
