@@ -56,6 +56,13 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Cafe24SurroundAir';
+  src: url('https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24SsurroundAir.woff') format('woff');
+  font-weight: normal;
+  font-display: swap;
+}
+
 @keyframes bounce {
   0%, 80%, 100% { transform: translateY(0); opacity: 0.6; }
   40% { transform: translateY(-10px); opacity: 1; }

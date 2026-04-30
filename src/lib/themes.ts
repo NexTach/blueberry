@@ -14,9 +14,9 @@ const BLACKBOARD_MARKER_BODY = "'Cafe24Ssuksuk', 'Cafe24SsuksukLight', 'Apple SD
 const BLACKBOARD_NEON_TITLE = "'Cafe24SuperMagic', 'Cafe24Gowoonbam', 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
 const BLACKBOARD_NEON_BODY = "'Cafe24SsuksukLight', 'Cafe24Ssuksuk', 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
 const BRUTAL_POP_TITLE = "'KccSign', 'Cafe24Surround', var(--font-black-han-sans), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const BRUTAL_POP_BODY = "'Cafe24Surround', var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_POP_BODY = "'Cafe24SurroundAir', 'Cafe24Surround', var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const BRUTAL_EDITORIAL_TITLE = "'Cafe24Surround', 'KccSign', var(--font-black-han-sans), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const BRUTAL_EDITORIAL_BODY = "'Cafe24Gowoonbam', var(--font-song-myung), 'Apple SD Gothic Neo', 'Malgun Gothic', serif";
+const BRUTAL_EDITORIAL_BODY = "'Cafe24SurroundAir', 'Cafe24Gowoonbam', var(--font-song-myung), 'Apple SD Gothic Neo', 'Malgun Gothic', serif";
 
 export interface ThemePreset {
   id: ThemeId;
