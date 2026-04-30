@@ -256,10 +256,8 @@ export default function ConfirmScreen({
               className="flex flex-col"
               style={{
                 gap: 8,
-                borderRadius: mobileRadius.section,
-                border: `1px solid ${palette.line}`,
-                background: '#f8faff',
-                padding: mobileControl.sectionPadding,
+                borderTop: `1px solid ${palette.line}`,
+                paddingTop: mobileControl.sectionPadding,
               }}
             >
               <label style={labelStyle}>
