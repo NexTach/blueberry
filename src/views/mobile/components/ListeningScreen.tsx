@@ -173,7 +173,7 @@ export default function ListeningScreen({
                   fontWeight: 600,
                 }}
               >
-                취소
+                이전으로
               </button>
               <button
                 onClick={onComplete}

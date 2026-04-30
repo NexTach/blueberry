@@ -92,7 +92,7 @@ export default function MobilePage() {
             setShowDirectInput(true);
             openComposerFromCommand(transcript.trim());
           }}
-          onCancel={handleRestart}
+          onCancel={handleBackToPrevious}
           onComplete={handleStopListening}
         />
       )}

@@ -172,6 +172,8 @@ export function useMobileFlow() {
     reset();
     setDirectInputText('');
     setShowDirectInput(false);
+    // remember that we came from the start screen so "이전으로" returns there
+    setPreviousStep('start');
     setStep('listening');
     start();
   }
@@ -344,6 +346,12 @@ export function useMobileFlow() {
       setShowDirectInput(false);
       setStep('confirm');
     }
+    // fallback: if previousStep was not set, go back to the choose screen
+    if (previousStep === null) {
+      setShowDirectInput(false);
+      setStep('choose');
+    }
+
     setPreviousStep(null);
   }
 
