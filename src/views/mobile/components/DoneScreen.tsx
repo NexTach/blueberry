@@ -1,4 +1,5 @@
 import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
+import MobileStage from './MobileStage';
 
 interface DoneScreenProps {
   onRestart: () => void;
@@ -8,7 +9,28 @@ export default function DoneScreen({ onRestart }: DoneScreenProps) {
   const palette = mobilePalette;
 
   return (
-    <div className="w-full max-w-sm px-1 py-2">
+    <MobileStage
+      footer={
+        <button
+          onClick={onRestart}
+          className="w-full"
+          style={{
+            minHeight: mobileControl.buttonHeight,
+            borderRadius: mobileRadius.button,
+            border: `1px solid ${palette.line}`,
+            background: palette.surface,
+            color: palette.subtext,
+            fontSize: mobileTypography.bodySmall.fontSize,
+            lineHeight: mobileTypography.bodySmall.lineHeight,
+            letterSpacing: mobileTypography.bodySmall.letterSpacing,
+            fontWeight: 600,
+          }}
+        >
+          처음으로
+        </button>
+      }
+      centerContent
+    >
       <div className="flex flex-col items-center text-center" style={{ gap: 32 }}>
         <div className="flex flex-col items-center" style={{ gap: mobileSpacing.item }}>
           <div
@@ -51,24 +73,7 @@ export default function DoneScreen({ onRestart }: DoneScreenProps) {
             TV 화면을 확인해주세요.
           </p>
         </div>
-        <button
-          onClick={onRestart}
-          className="w-full"
-          style={{
-            minHeight: mobileControl.buttonHeight,
-            borderRadius: mobileRadius.button,
-            border: `1px solid ${palette.line}`,
-            background: palette.surface,
-            color: palette.subtext,
-            fontSize: mobileTypography.bodySmall.fontSize,
-            lineHeight: mobileTypography.bodySmall.lineHeight,
-            letterSpacing: mobileTypography.bodySmall.letterSpacing,
-            fontWeight: 600,
-          }}
-        >
-          처음으로
-        </button>
       </div>
-    </div>
+    </MobileStage>
   );
 }
