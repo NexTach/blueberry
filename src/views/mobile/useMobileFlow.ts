@@ -40,6 +40,7 @@ export function useMobileFlow() {
   const [showDirectInput, setShowDirectInput] = useState(false);
   const [lastSession, setLastSession] = useState<Session | null>(null);
   const [initialConfirmSnapshot, setInitialConfirmSnapshot] = useState<ConfirmDraftSnapshot | null>(null);
+  const [previewText, setPreviewText] = useState('');
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
@@ -145,7 +146,7 @@ export function useMobileFlow() {
     }
   }
 
-  async function openComposerFromCommand(commandText: string) {
+  async function openComposerFromCommand(commandText: string, isVoice = false) {
     setPreviousStep(step);
     setDirectInputText(commandText);
     setIsInterpreting(true);
@@ -159,12 +160,31 @@ export function useMobileFlow() {
       setSelectedTemplate(nextTemplate);
       setAiTone(interpretation.tone);
       setAiPrompt(interpretation.prompt);
-      setMessage(
-        nextTemplate === AI_TEMPLATE_ID ? '' : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''),
-      );
+
+      const recommendedText =
+        nextTemplate === AI_TEMPLATE_ID
+          ? interpretation.prompt || ''
+          : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? '');
+
+      setMessage(nextTemplate === AI_TEMPLATE_ID ? '' : recommendedText);
       setInitialConfirmSnapshot(null);
       setConfirmStageIndex(0);
-      setStep('confirm');
+
+      if (isVoice) {
+        // Immediately show the recommendation on the desktop for quick preview
+        setPreviewText(recommendedText);
+        await updateSession({
+          status: 'displaying',
+          visitorName: nextName || FALLBACK_VISITOR_NAME,
+          welcomeMessage: recommendedText,
+          sourcePrompt: interpretation.prompt || recommendedText,
+          tone: interpretation.tone,
+          themeId,
+        });
+        setStep('preview');
+      } else {
+        setStep('confirm');
+      }
     } finally {
       setIsInterpreting(false);
     }
@@ -184,6 +204,12 @@ export function useMobileFlow() {
     stop();
     const commandText = transcript.trim();
     if (commandText) await openComposerFromCommand(commandText);
+  }
+
+  async function handleStopListeningWithPreview() {
+    stop();
+    const commandText = transcript.trim();
+    if (commandText) await openComposerFromCommand(commandText, true);
   }
 
   function handleTemplateChange(id: TemplateId) {
@@ -310,6 +336,35 @@ export function useMobileFlow() {
     start();
   }
 
+  function handleBackFromPreview() {
+    // go back to listening so user can re-record
+    reset();
+    setPreviousStep('start');
+    setStep('listening');
+    start();
+  }
+
+  function handleProceedFromPreview() {
+    // user wants to customize the displayed content
+    setInitialConfirmSnapshot({
+      templateId: selectedTemplate,
+      name,
+      message: previewText || message,
+      aiPrompt: aiPrompt || previewText || '',
+      aiTone,
+      themeId,
+      sourcePrompt: aiPrompt || previewText || '',
+    });
+    setConfirmStageIndex(0);
+    setPreviousStep('preview');
+    setStep('confirm');
+  }
+
+  function handleConfirmFromPreview() {
+    // preview was already pushed to desktop; finish flow
+    setStep('done');
+  }
+
   function handleRestart() {
     reset();
     setDirectInputText('');
@@ -393,6 +448,7 @@ export function useMobileFlow() {
     handleRestart,
     handleBackToPrevious,
     openComposerFromCommand,
+    handleStopListeningWithPreview,
     resetSpeech: reset,
     lastSession,
     canEditExisting,
@@ -400,5 +456,9 @@ export function useMobileFlow() {
     startEditExisting,
     handleReenterDirect,
     handleReenterVoice,
+    previewText,
+    handleBackFromPreview,
+    handleProceedFromPreview,
+    handleConfirmFromPreview,
   };
 }

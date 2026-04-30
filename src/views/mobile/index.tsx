@@ -4,6 +4,7 @@ import DoneScreen from './components/DoneScreen';
 import ListeningScreen from './components/ListeningScreen';
 import StartScreen from './components/StartScreen';
 import PWAInstallBanner from '../../components/PWAInstallBanner';
+import PreviewScreen from './components/PreviewScreen';
 import { useMobileFlow } from './useMobileFlow';
 
 export default function MobilePage() {
@@ -31,7 +32,7 @@ export default function MobilePage() {
     setDirectInputText,
     setShowDirectInput,
     handleStartListening,
-    handleStopListening,
+    handleStopListeningWithPreview,
     handleTemplateChange,
     handleNameChange,
     handleThemeChange,
@@ -47,12 +48,16 @@ export default function MobilePage() {
     startEditExisting,
     handleReenterDirect,
     handleReenterVoice,
+    previewText,
+    handleBackFromPreview,
+    handleProceedFromPreview,
+    handleConfirmFromPreview,
   } = useMobileFlow();
 
   const { isListening, transcript, error } = speech;
 
   return (
-    <div className="h-[100dvh] overflow-hidden bg-white">
+    <div className="h-dvh overflow-hidden bg-white">
       <div
         className="mx-auto flex h-full w-full max-w-md flex-col px-4"
         style={{
@@ -101,7 +106,16 @@ export default function MobilePage() {
               openComposerFromCommand(transcript.trim());
             }}
             onCancel={handleBackToPrevious}
-            onComplete={handleStopListening}
+            onComplete={handleStopListeningWithPreview}
+          />
+        )}
+
+        {step === 'preview' && (
+          <PreviewScreen
+            previewText={previewText}
+            onBack={handleBackFromPreview}
+            onConfirm={handleConfirmFromPreview}
+            onCustomize={handleProceedFromPreview}
           />
         )}
 
