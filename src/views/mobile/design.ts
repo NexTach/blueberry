@@ -11,12 +11,12 @@ export const mobilePalette = {
 };
 
 export const mobileTypography = {
-  hero: { fontSize: 28, lineHeight: '37px', letterSpacing: '-0.03em', fontWeight: 700 as const },
-  title: { fontSize: 22, lineHeight: '31px', letterSpacing: '-0.02em', fontWeight: 700 as const },
-  body: { fontSize: 17, lineHeight: '25.5px', letterSpacing: '-0.01em', fontWeight: 500 as const },
-  bodySmall: { fontSize: 16, lineHeight: '24px', letterSpacing: '-0.01em', fontWeight: 500 as const },
+  hero: { fontSize: 26, lineHeight: '34px', letterSpacing: '-0.03em', fontWeight: 700 as const },
+  title: { fontSize: 21, lineHeight: '29px', letterSpacing: '-0.02em', fontWeight: 700 as const },
+  body: { fontSize: 16, lineHeight: '23px', letterSpacing: '-0.01em', fontWeight: 500 as const },
+  bodySmall: { fontSize: 14, lineHeight: '21px', letterSpacing: '-0.01em', fontWeight: 500 as const },
   label: { fontSize: 14, lineHeight: '21px', letterSpacing: '-0.01em', fontWeight: 600 as const },
-  caption: { fontSize: 13, lineHeight: '19.5px', letterSpacing: '-0.005em', fontWeight: 500 as const },
+  caption: { fontSize: 12, lineHeight: '18px', letterSpacing: '-0.005em', fontWeight: 500 as const },
 };
 
 export const mobileRadius = {
@@ -27,15 +27,15 @@ export const mobileRadius = {
 };
 
 export const mobileSpacing = {
-  section: 24,
-  group: 16,
-  item: 12,
+  section: 18,
+  group: 12,
+  item: 8,
 };
 
 export const mobileControl = {
-  buttonHeight: 54,
-  inputMinHeight: 56,
-  textAreaMinHeight: 116,
-  iconButtonSize: 112,
-  sectionPadding: 20,
+  buttonHeight: 50,
+  inputMinHeight: 48,
+  textAreaMinHeight: 96,
+  iconButtonSize: 96,
+  sectionPadding: 16,
 };

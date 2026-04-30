@@ -1,5 +1,5 @@
 import { findTheme, THEME_FAMILIES } from '../../../lib/themes';
-import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
+import { mobilePalette, mobileSpacing, mobileTypography } from '../design';
 import { THEMES } from '../constants';
 import type { ThemeId } from '../../../types/session';
 
@@ -27,7 +27,7 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
         >
           디자인 종류
         </p>
-        <div className="grid grid-cols-2" style={{ gap: mobileSpacing.item }}>
+        <div className="flex flex-wrap" style={{ gap: mobileSpacing.item }}>
           {THEME_FAMILIES.map((family) => {
             const selected = family.id === selectedFamily;
 
@@ -38,42 +38,42 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
                   const nextTheme = THEMES.find((theme) => theme.family === family.id);
                   if (nextTheme) onSelect(nextTheme.id);
                 }}
-                className="text-left transition-colors"
+                className="transition-colors"
                 style={{
-                  minHeight: mobileControl.inputMinHeight,
-                  borderRadius: mobileRadius.field,
-                  border: `2px solid ${selected ? selectedBorder : palette.line}`,
-                  background: palette.surface,
-                  padding: 16,
+                  minHeight: 38,
+                  borderRadius: 999,
+                  border: `1.5px solid ${selected ? selectedBorder : palette.line}`,
+                  background: selected ? palette.accentSoft : 'transparent',
+                  paddingInline: 14,
+                  paddingBlock: 8,
                 }}
               >
                 <p
                   style={{
                     color: palette.text,
-                    fontSize: mobileTypography.bodySmall.fontSize,
-                    lineHeight: mobileTypography.bodySmall.lineHeight,
-                    letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                    fontSize: mobileTypography.label.fontSize,
+                    lineHeight: mobileTypography.label.lineHeight,
+                    letterSpacing: mobileTypography.label.letterSpacing,
                     fontWeight: 600,
                   }}
                 >
                   {family.label}
                 </p>
-                <p
-                  className="mt-1"
-                  style={{
-                    color: palette.subtext,
-                    fontSize: mobileTypography.caption.fontSize,
-                    lineHeight: mobileTypography.caption.lineHeight,
-                    letterSpacing: mobileTypography.caption.letterSpacing,
-                    fontWeight: mobileTypography.caption.fontWeight,
-                  }}
-                >
-                  {family.description}
-                </p>
               </button>
             );
           })}
         </div>
+        <p
+          style={{
+            color: palette.subtext,
+            fontSize: mobileTypography.caption.fontSize,
+            lineHeight: mobileTypography.caption.lineHeight,
+            letterSpacing: mobileTypography.caption.letterSpacing,
+            fontWeight: mobileTypography.caption.fontWeight,
+          }}
+        >
+          {THEME_FAMILIES.find((family) => family.id === selectedFamily)?.description}
+        </p>
       </div>
 
       <div className="flex flex-col" style={{ gap: 8 }}>
@@ -87,7 +87,7 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
         >
           세부 테마
         </p>
-        <div className="grid grid-cols-2" style={{ gap: mobileSpacing.item }}>
+        <div className="flex flex-col" style={{ gap: mobileSpacing.item }}>
           {familyThemes.map((theme) => {
             const selected = selectedTheme === theme.id;
 
@@ -97,42 +97,43 @@ export default function ThemePicker({ selectedTheme, onSelect }: ThemePickerProp
                 onClick={() => onSelect(theme.id)}
                 className="text-left transition-colors"
                 style={{
-                  borderRadius: mobileRadius.option,
-                  border: `2px solid ${selected ? selectedBorder : palette.line}`,
-                  background: palette.surface,
-                  padding: mobileControl.sectionPadding,
+                  borderRadius: 18,
+                  border: `1.5px solid ${selected ? selectedBorder : palette.line}`,
+                  background: selected ? palette.surface : 'transparent',
+                  padding: 14,
                 }}
               >
-                <div className="flex items-center gap-2">
-                  <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: theme.accent }} />
-                  <p
-                    style={{
-                      color: palette.text,
-                      fontSize: mobileTypography.bodySmall.fontSize,
-                      lineHeight: mobileTypography.bodySmall.lineHeight,
-                      letterSpacing: mobileTypography.bodySmall.letterSpacing,
-                      fontWeight: 600,
-                    }}
-                  >
-                    {theme.name}
-                  </p>
-                </div>
-                <p
-                  className="mt-2"
-                  style={{
-                    color: palette.subtext,
-                    fontSize: mobileTypography.caption.fontSize,
-                    lineHeight: mobileTypography.caption.lineHeight,
-                    letterSpacing: mobileTypography.caption.letterSpacing,
-                    fontWeight: mobileTypography.caption.fontWeight,
-                  }}
-                >
-                  {theme.description}
-                </p>
-                <div className="mt-3 flex gap-2">
-                  <span className="h-8 flex-1 rounded-md" style={{ background: theme.bg, border: `1px solid ${theme.border}` }} />
-                  <span className="h-8 w-8 rounded-md" style={{ background: theme.surface, border: `1px solid ${theme.border}` }} />
-                  <span className="h-8 w-8 rounded-md" style={{ background: theme.accent }} />
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p
+                      style={{
+                        color: palette.text,
+                        fontSize: mobileTypography.bodySmall.fontSize,
+                        lineHeight: mobileTypography.bodySmall.lineHeight,
+                        letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {theme.name}
+                    </p>
+                    <p
+                      className="mt-1"
+                      style={{
+                        color: palette.subtext,
+                        fontSize: mobileTypography.caption.fontSize,
+                        lineHeight: mobileTypography.caption.lineHeight,
+                        letterSpacing: mobileTypography.caption.letterSpacing,
+                        fontWeight: mobileTypography.caption.fontWeight,
+                      }}
+                    >
+                      {theme.description}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-1.5">
+                    <span className="h-6 w-6 rounded-full" style={{ background: theme.bg, border: `1px solid ${theme.border}` }} />
+                    <span className="h-6 w-6 rounded-full" style={{ background: theme.surface, border: `1px solid ${theme.border}` }} />
+                    <span className="h-6 w-6 rounded-full" style={{ background: theme.accent }} />
+                  </div>
                 </div>
               </button>
             );

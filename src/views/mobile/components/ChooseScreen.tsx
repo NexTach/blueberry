@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
+import MobileStage from './MobileStage';
 
 interface ChooseScreenProps {
   existingPreview?: string | null;
@@ -27,33 +28,55 @@ export default function ChooseScreen({
   }
 
   return (
-    <div className="w-full max-w-sm px-1 py-2">
+    <MobileStage
+      header={
+        <div className="flex flex-col" style={{ gap: mobileSpacing.item }}>
+          <p
+            style={{
+              color: palette.text,
+              fontSize: mobileTypography.hero.fontSize,
+              lineHeight: mobileTypography.hero.lineHeight,
+              letterSpacing: mobileTypography.hero.letterSpacing,
+              fontWeight: mobileTypography.hero.fontWeight,
+            }}
+          >
+            어떻게 시작할까요?
+          </p>
+          <p
+            style={{
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: mobileTypography.bodySmall.fontWeight,
+            }}
+          >
+            현재 화면의 문구를 다듬거나, 새 문구를 처음부터 만들 수 있어요.
+          </p>
+        </div>
+      }
+      footer={
+        <button
+          onClick={handleProceed}
+          disabled={selected === null}
+          className="w-full transition-opacity disabled:opacity-40"
+          style={{
+            minHeight: mobileControl.buttonHeight,
+            borderRadius: mobileRadius.button,
+            background: palette.accent,
+            color: '#ffffff',
+            fontSize: mobileTypography.body.fontSize,
+            lineHeight: mobileTypography.body.lineHeight,
+            letterSpacing: mobileTypography.body.letterSpacing,
+            fontWeight: 600,
+          }}
+        >
+          진행하기
+        </button>
+      }
+      centerContent
+    >
       <div className="flex flex-col" style={{ gap: mobileSpacing.item }}>
-        <p
-          style={{
-            color: palette.text,
-            fontSize: mobileTypography.hero.fontSize,
-            lineHeight: mobileTypography.hero.lineHeight,
-            letterSpacing: mobileTypography.hero.letterSpacing,
-            fontWeight: mobileTypography.hero.fontWeight,
-          }}
-        >
-          어떻게 시작할까요?
-        </p>
-        <p
-          style={{
-            color: palette.subtext,
-            fontSize: mobileTypography.bodySmall.fontSize,
-            lineHeight: mobileTypography.bodySmall.lineHeight,
-            letterSpacing: mobileTypography.bodySmall.letterSpacing,
-            fontWeight: mobileTypography.bodySmall.fontWeight,
-          }}
-        >
-          현재 화면의 문구를 다듬거나, 새 문구를 처음부터 만들 수 있어요.
-        </p>
-      </div>
-
-      <div className="mt-6 flex flex-col" style={{ gap: mobileSpacing.item }}>
         <button
           onClick={() => canEditExisting && setSelected('edit')}
           disabled={!canEditExisting}
@@ -125,26 +148,6 @@ export default function ChooseScreen({
           </p>
         </button>
       </div>
-
-      <div className="mt-6 w-full">
-        <button
-          onClick={handleProceed}
-          disabled={selected === null}
-          className="w-full transition-opacity disabled:opacity-40"
-          style={{
-            minHeight: mobileControl.buttonHeight,
-            borderRadius: mobileRadius.button,
-            background: palette.accent,
-            color: '#ffffff',
-            fontSize: mobileTypography.body.fontSize,
-            lineHeight: mobileTypography.body.lineHeight,
-            letterSpacing: mobileTypography.body.letterSpacing,
-            fontWeight: 600,
-          }}
-        >
-          진행하기
-        </button>
-      </div>
-    </div>
+    </MobileStage>
   );
 }

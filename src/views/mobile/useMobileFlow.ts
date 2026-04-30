@@ -84,7 +84,11 @@ export function useMobileFlow() {
 
     setName(nextName);
     setSelectedTemplate(nextTemplate);
-    setMessage(nextTemplate === AI_TEMPLATE_ID ? nextMessage : nextMessage || (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''));
+    setMessage(
+      nextTemplate === AI_TEMPLATE_ID
+        ? nextMessage
+        : nextMessage || (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? ''),
+    );
     setAiPrompt(nextTemplate === AI_TEMPLATE_ID ? nextPrompt : '');
     setAiTone(nextTone);
     setDirectInputText('');
@@ -211,10 +215,7 @@ export function useMobileFlow() {
     setIsSubmitting(true);
     const resolvedName = name.trim() || FALLBACK_VISITOR_NAME;
     const resolvedAiPrompt =
-      aiPrompt.trim() ||
-      directInputText.trim() ||
-      message.trim() ||
-      `${resolvedName}님을 위한 환영 문구를 만들어줘`;
+      aiPrompt.trim() || directInputText.trim() || message.trim() || `${resolvedName}님을 위한 환영 문구를 만들어줘`;
     if (selectedTemplate === AI_TEMPLATE_ID) {
       const shouldRegenerate =
         initialConfirmSnapshot?.templateId !== AI_TEMPLATE_ID ||
@@ -356,7 +357,8 @@ export function useMobileFlow() {
   }
 
   const canEditExisting = lastSession?.status === 'displaying' && Boolean(lastSession.welcomeMessage?.trim());
-  const canContinueConfirmStage = confirmStage !== 'content' || selectedTemplate === AI_TEMPLATE_ID || Boolean(message.trim());
+  const canContinueConfirmStage =
+    confirmStage !== 'content' || selectedTemplate === AI_TEMPLATE_ID || Boolean(message.trim());
   const isLastConfirmStage = normalizedConfirmStageIndex === confirmStages.length - 1;
 
   return {

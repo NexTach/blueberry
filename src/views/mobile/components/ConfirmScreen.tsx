@@ -4,6 +4,7 @@ import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypogr
 import type { AiToneId, ConfirmStage } from '../types';
 import type { ThemeId } from '../../../types/session';
 import AITonePicker from './AITonePicker';
+import MobileStage from './MobileStage';
 import TemplatePicker from './TemplatePicker';
 import ThemePicker from './ThemePicker';
 
@@ -102,8 +103,8 @@ export default function ConfirmScreen({
   const progressPercent = ((confirmStageIndex + 1) / confirmStageCount) * 100;
 
   return (
-    <div className="w-full max-w-sm px-1 py-2">
-      <div className="flex flex-col" style={{ gap: mobileSpacing.section }}>
+    <MobileStage
+      header={
         <div className="flex flex-col" style={{ gap: 10 }}>
           <p style={labelStyle}>
             표시 내용 설정 {stageProgress}
@@ -141,7 +142,47 @@ export default function ConfirmScreen({
           </p>
           <p style={helperTextStyle}>{stageMeta.description}</p>
         </div>
-
+      }
+      footer={
+        <div className="flex" style={{ gap: mobileSpacing.item }}>
+          <button
+            onClick={onBack}
+            className="flex-1"
+            style={{
+              minHeight: mobileControl.buttonHeight,
+              borderRadius: mobileRadius.button,
+              border: `1px solid ${palette.line}`,
+              background: palette.surface,
+              color: palette.subtext,
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            이전으로
+          </button>
+          <button
+            onClick={onContinue}
+            disabled={isSubmitting || !canContinue}
+            className="flex-1 disabled:opacity-30 transition-opacity"
+            style={{
+              minHeight: mobileControl.buttonHeight,
+              borderRadius: mobileRadius.button,
+              background: palette.accent,
+              color: '#ffffff',
+              fontSize: mobileTypography.bodySmall.fontSize,
+              lineHeight: mobileTypography.bodySmall.lineHeight,
+              letterSpacing: mobileTypography.bodySmall.letterSpacing,
+              fontWeight: 600,
+            }}
+          >
+            {isSubmitting ? '전송 중...' : isLastStage ? '화면에 표시하기' : '다음'}
+          </button>
+        </div>
+      }
+    >
+      <div className="flex flex-col" style={{ gap: mobileSpacing.group }}>
         {confirmStage === 'template' && (
           <TemplatePicker name={name} selectedTemplate={selectedTemplate} onSelect={onTemplateChange} />
         )}
@@ -215,10 +256,8 @@ export default function ConfirmScreen({
               className="flex flex-col"
               style={{
                 gap: 8,
-                borderRadius: mobileRadius.section,
-                border: `1px solid ${palette.line}`,
-                background: palette.surface,
-                padding: mobileControl.sectionPadding,
+                borderTop: `1px solid ${palette.line}`,
+                paddingTop: mobileControl.sectionPadding,
               }}
             >
               <label style={labelStyle}>
@@ -295,44 +334,7 @@ export default function ConfirmScreen({
             />
           </div>
         )}
-
-        <div className="flex" style={{ gap: mobileSpacing.item }}>
-          <button
-            onClick={onBack}
-            className="flex-1"
-            style={{
-              minHeight: mobileControl.buttonHeight,
-              borderRadius: mobileRadius.button,
-              border: `1px solid ${palette.line}`,
-              background: palette.surface,
-              color: palette.subtext,
-              fontSize: mobileTypography.bodySmall.fontSize,
-              lineHeight: mobileTypography.bodySmall.lineHeight,
-              letterSpacing: mobileTypography.bodySmall.letterSpacing,
-              fontWeight: 600,
-            }}
-          >
-            이전으로
-          </button>
-          <button
-            onClick={onContinue}
-            disabled={isSubmitting || !canContinue}
-            className="flex-1 disabled:opacity-30 transition-opacity"
-            style={{
-              minHeight: mobileControl.buttonHeight,
-              borderRadius: mobileRadius.button,
-              background: palette.accent,
-              color: '#ffffff',
-              fontSize: mobileTypography.bodySmall.fontSize,
-              lineHeight: mobileTypography.bodySmall.lineHeight,
-              letterSpacing: mobileTypography.bodySmall.letterSpacing,
-              fontWeight: 600,
-            }}
-          >
-            {isSubmitting ? '전송 중...' : isLastStage ? '화면에 표시하기' : '다음'}
-          </button>
-        </div>
       </div>
-    </div>
+    </MobileStage>
   );
 }
