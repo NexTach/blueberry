@@ -3,6 +3,7 @@ import ChooseScreen from './components/ChooseScreen';
 import DoneScreen from './components/DoneScreen';
 import ListeningScreen from './components/ListeningScreen';
 import StartScreen from './components/StartScreen';
+import PWAInstallBanner from '../../components/PWAInstallBanner';
 import { useMobileFlow } from './useMobileFlow';
 
 export default function MobilePage() {
@@ -59,6 +60,8 @@ export default function MobilePage() {
           paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)',
         }}
       >
+        <PWAInstallBanner />
+
         {step === 'choose' && (
           <ChooseScreen
             existingPreview={lastSession?.welcomeMessage ?? null}

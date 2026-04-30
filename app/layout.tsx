@@ -1,4 +1,5 @@
-import type { Metadata } from 'next';
+/* eslint-disable react-refresh/only-export-components */
+import type { Metadata, Viewport } from 'next';
 import {
   Black_Han_Sans,
   Do_Hyeon,
@@ -9,6 +10,7 @@ import {
   Song_Myung,
 } from 'next/font/google';
 import './globals.css';
+import PWARegistrar from '../src/components/PWARegistrar';
 
 const notoSansKr = Noto_Sans_KR({
   variable: '--font-noto-sans-kr',
@@ -60,7 +62,31 @@ const songMyung = Song_Myung({
 
 export const metadata: Metadata = {
   title: '블루베리 - 광주SW마이스터고 환영 시스템',
-  icons: { icon: '/favicon.svg' },
+  description: '광주SW마이스터고 환영 시스템',
+  applicationName: '블루베리',
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/icons/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: '블루베리',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#ffffff',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -69,7 +95,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="ko"
       className={`${notoSansKr.variable} ${gowunDodum.variable} ${doHyeon.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${blackHanSans.variable} ${songMyung.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <PWARegistrar />
+        {children}
+      </body>
     </html>
   );
 }
