@@ -2,7 +2,7 @@ import type { TemplateId } from '../../lib/openai';
 import type { ThemeFamily } from '../../lib/themes';
 import type { ThemeId } from '../../types/session';
 
-export type Step = 'choose' | 'start' | 'listening' | 'confirm' | 'done';
+export type Step = 'choose' | 'start' | 'listening' | 'preview' | 'confirm' | 'done';
 export type AiToneId = 'warm' | 'bright' | 'formal' | 'playful';
 export type ConfirmStage = 'template' | 'content' | 'tone' | 'theme' | 'name';
 
