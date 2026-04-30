@@ -104,7 +104,7 @@ export default function ListeningScreen({
   return (
     <MobileStage
       header={
-        <div className="flex flex-col items-center text-center" style={{ gap: mobileSpacing.item }}>
+        <div className="flex flex-col" style={{ gap: mobileSpacing.item }}>
           <p
             style={{
               color: palette.text,
@@ -130,9 +130,8 @@ export default function ListeningScreen({
         </div>
       }
       footer={footer}
-      centerContent
     >
-      <div className="flex flex-col items-center" style={{ gap: mobileSpacing.section }}>
+      <div className="flex flex-col" style={{ gap: mobileSpacing.section }}>
         <div
           className="w-full"
           style={{
@@ -169,7 +168,7 @@ export default function ListeningScreen({
         )}
 
         {error ? (
-          <div className="flex flex-col items-center text-center" style={{ gap: mobileSpacing.group }}>
+          <div className="flex flex-col text-center" style={{ gap: mobileSpacing.group }}>
             <p
               style={{
                 color: palette.danger,
@@ -197,6 +196,17 @@ export default function ListeningScreen({
           </div>
         ) : (
           <div className="flex w-full flex-col" style={{ gap: mobileSpacing.item }}>
+            <p
+              style={{
+                color: palette.subtext,
+                fontSize: mobileTypography.caption.fontSize,
+                lineHeight: mobileTypography.caption.lineHeight,
+                letterSpacing: mobileTypography.caption.letterSpacing,
+                fontWeight: mobileTypography.caption.fontWeight,
+              }}
+            >
+              말이 끝나면 완료를 눌러 다음 단계로 넘어가세요.
+            </p>
             {isInterpreting && (
               <p
                 className="text-center"
