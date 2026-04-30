@@ -11,7 +11,8 @@ export type ThemeId =
   | 'board-classic'
   | 'board-neon'
   | 'brutal-pop'
-  | 'brutal-editorial';
+  | 'brutal-editorial'
+  | 'brutal-bauhaus';
 
 export interface Session {
   status: SessionStatus;

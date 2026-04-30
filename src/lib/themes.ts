@@ -2,8 +2,6 @@ import type { ThemeId } from '../types/session';
 
 export type ThemeFamily = 'chalk' | 'whiteboard' | 'blackboard' | 'brutal';
 
-const CLEAN_KR_TITLE = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
-const CLEAN_KR_BODY = "var(--font-noto-sans-kr), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const CHALK_KR = "'HakgyoansimBunpil', sans-serif";
 const WHITEBOARD_MARKER_TITLE = "'Cafe24SsuksukLight', 'Cafe24Ssuksuk', 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
 const WHITEBOARD_MARKER_BODY = "'Cafe24SsuksukLight', 'Cafe24Gowoonbam', 'Apple SD Gothic Neo', 'Malgun Gothic', cursive";
@@ -17,6 +15,8 @@ const BRUTAL_POP_TITLE = "'KccSign', 'Cafe24Surround', var(--font-black-han-sans
 const BRUTAL_POP_BODY = "'Cafe24SurroundAir', 'Cafe24Surround', var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const BRUTAL_EDITORIAL_TITLE = "'Cafe24Surround', 'KccSign', var(--font-black-han-sans), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 const BRUTAL_EDITORIAL_BODY = "'Cafe24SurroundAir', 'Cafe24Gowoonbam', var(--font-song-myung), 'Apple SD Gothic Neo', 'Malgun Gothic', serif";
+const BRUTAL_BAUHAUS_TITLE = "'KccSign', 'Cafe24Surround', var(--font-black-han-sans), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const BRUTAL_BAUHAUS_BODY = "'Cafe24SurroundAir', 'Cafe24Surround', var(--font-do-hyeon), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 
 export interface ThemePreset {
   id: ThemeId;
@@ -182,6 +182,21 @@ export const THEME_PRESETS: ThemePreset[] = [
     border: '#111111',
     accent: '#ff5a36',
     secondary: '#4d6bff',
+  },
+  {
+    id: 'brutal-bauhaus',
+    family: 'brutal',
+    name: '바우하우스 포스터',
+    description: '도형과 굵은 타이포가 중심인 전시 포스터 화면',
+    titleFont: BRUTAL_BAUHAUS_TITLE,
+    bodyFont: BRUTAL_BAUHAUS_BODY,
+    bg: '#ece9e2',
+    surface: '#f4f2ed',
+    text: '#111111',
+    muted: 'rgba(17,17,17,0.68)',
+    border: '#111111',
+    accent: '#ff5a36',
+    secondary: '#ffd400',
   },
 ];
 

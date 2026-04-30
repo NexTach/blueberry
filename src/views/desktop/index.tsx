@@ -154,6 +154,46 @@ function BlackboardFrame({ theme }: { theme: ThemePreset }) {
 }
 
 function BrutalFrame({ theme }: { theme: ThemePreset }) {
+  if (theme.id === 'brutal-bauhaus') {
+    return (
+      <>
+        <div
+          className="absolute inset-[clamp(16px,2vw,30px)] pointer-events-none z-10 rounded-[34px]"
+          style={{
+            background: theme.surface,
+            boxShadow: '0 18px 40px rgba(0,0,0,0.05)',
+          }}
+        />
+        <div
+          className="absolute pointer-events-none z-20"
+          style={{
+            top: 'clamp(44px, 5vh, 78px)',
+            left: 'clamp(52px, 5vw, 90px)',
+            width: 'clamp(34px, 4vw, 54px)',
+            height: 'clamp(34px, 4vw, 54px)',
+            borderTop: '8px solid #111',
+            borderLeft: '8px solid #111',
+            borderRadius: '8px 0 0 0',
+            transform: 'rotate(-45deg)',
+          }}
+        />
+        <div
+          className="absolute pointer-events-none z-20"
+          style={{
+            right: 'clamp(52px, 5vw, 90px)',
+            bottom: 'clamp(44px, 5vh, 78px)',
+            width: 'clamp(34px, 4vw, 54px)',
+            height: 'clamp(34px, 4vw, 54px)',
+            borderTop: '8px solid #111',
+            borderLeft: '8px solid #111',
+            borderRadius: '8px 0 0 0',
+            transform: 'rotate(135deg)',
+          }}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <div className="absolute inset-0 pointer-events-none z-10" style={{ border: '8px solid #111' }} />
@@ -185,6 +225,8 @@ function BrutalFrame({ theme }: { theme: ThemePreset }) {
 }
 
 function ThemeTexture({ theme }: { theme: ThemePreset }) {
+  if (theme.id === 'brutal-bauhaus') return null;
+
   if (theme.family === 'chalk') {
     return (
       <>
@@ -281,6 +323,22 @@ function ThemeFrame({ theme }: { theme: ThemePreset }) {
 }
 
 function StandbyHeadline({ theme }: { theme: ThemePreset }) {
+  if (theme.id === 'brutal-bauhaus') {
+    return (
+      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.15rem, 0.4vh, 0.4rem)' }}>
+        <span style={{ color: '#111', fontSize: 'clamp(3.4rem, 8.6vh, 8.4rem)', lineHeight: 0.92, fontFamily: theme.titleFont }}>
+          GWANGJU
+        </span>
+        <span style={{ color: '#111', fontSize: 'clamp(4rem, 10vh, 9.6rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}>
+          SOFTWARE
+        </span>
+        <span style={{ color: '#111', fontSize: 'clamp(3.1rem, 7.8vh, 7.2rem)', lineHeight: 0.94, fontFamily: theme.titleFont }}>
+          MEISTER HIGH
+        </span>
+      </div>
+    );
+  }
+
   if (theme.family === 'whiteboard') {
     return (
       <div
@@ -375,6 +433,10 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
 }
 
 function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean }) {
+  if (theme.id === 'brutal-bauhaus') {
+    return null;
+  }
+
   if (theme.family === 'whiteboard') {
     return (
       <>
@@ -585,6 +647,143 @@ function DisplayMessage({
   }
 
   if (theme.family === 'brutal') {
+    if (theme.id === 'brutal-bauhaus') {
+      return (
+        <div
+          className="relative w-full transition-all duration-700"
+          style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)', maxWidth: 'min(92vw, 1180px)', minHeight: '72vh' }}
+        >
+          <div
+            className="absolute"
+            style={{
+              top: '4%',
+              left: '29%',
+              width: 'clamp(18px, 1.7vw, 30px)',
+              height: 'clamp(210px, 23vh, 320px)',
+              background: '#111',
+              transform: 'rotate(-12deg)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '2%',
+              left: '49%',
+              width: 'clamp(18px, 1.7vw, 30px)',
+              height: 'clamp(190px, 21vh, 300px)',
+              background: '#111',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '4%',
+              right: '28%',
+              width: 'clamp(18px, 1.7vw, 30px)',
+              height: 'clamp(190px, 21vh, 300px)',
+              background: '#111',
+              transform: 'rotate(-4deg)',
+            }}
+          />
+
+          <div
+            className="absolute"
+            style={{
+              top: '11%',
+              left: '30%',
+              width: 'clamp(320px, 34vw, 520px)',
+              height: 'clamp(260px, 30vh, 420px)',
+              background: theme.accent,
+              clipPath: 'polygon(8% 14%, 88% 0, 100% 78%, 46% 100%, 0 86%)',
+              transform: 'rotate(-10deg)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '28%',
+              left: '18%',
+              width: 'clamp(250px, 32vw, 420px)',
+              height: 'clamp(180px, 22vh, 300px)',
+              background: '#3fb8d9',
+              clipPath: 'polygon(8% 8%, 84% 0, 100% 72%, 28% 100%, 0 66%)',
+              transform: 'rotate(-8deg)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '38%',
+              right: '13%',
+              width: 'clamp(280px, 30vw, 420px)',
+              height: 'clamp(240px, 28vh, 380px)',
+              background: theme.secondary,
+              clipPath: 'polygon(18% 0, 100% 9%, 100% 100%, 0 90%, 7% 22%)',
+              transform: 'rotate(3deg)',
+            }}
+          />
+          <div
+            className="absolute rounded-full"
+            style={{
+              left: '18%',
+              top: '49%',
+              width: 'clamp(180px, 21vw, 320px)',
+              height: 'clamp(180px, 21vw, 320px)',
+              border: '10px solid #111',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              right: '29%',
+              top: '54%',
+              width: 'clamp(18px, 1.5vw, 24px)',
+              height: 'clamp(180px, 21vh, 280px)',
+              background: '#111',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              left: '26%',
+              bottom: '2%',
+              width: 'clamp(420px, 48vw, 760px)',
+              height: 'clamp(180px, 20vh, 260px)',
+              background: '#09b53c',
+              clipPath: 'polygon(0 0, 78% 0, 100% 36%, 92% 100%, 8% 100%)',
+              transform: 'rotate(-1deg)',
+            }}
+          />
+
+          <div
+            className="absolute flex flex-col items-center"
+            style={{
+              top: '28%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}
+          >
+            <p style={{ color: '#111', fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)', lineHeight: 1.02, textAlign: 'center', fontFamily: theme.titleFont }}>
+              {displayName ? `${displayName}님 환영합니다.` : '환영합니다.'}
+            </p>
+            <p
+              style={{
+                color: '#111',
+                fontSize: 'clamp(1.1rem, 2.5vh, 2rem)',
+                lineHeight: 1.5,
+                maxWidth: '18ch',
+                textAlign: 'center',
+                marginTop: 'clamp(0.8rem, 1.8vh, 1.4rem)',
+                fontFamily: theme.bodyFont,
+              }}
+            >
+              {msgBody}
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="relative flex flex-col items-center gap-6 transition-all duration-700" style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}>
         <div
@@ -665,6 +864,7 @@ function normalizeMessageBody(message: string | undefined, name: string | undefi
 }
 
 function rootBackground(theme: ThemePreset) {
+  if (theme.id === 'brutal-bauhaus') return theme.bg;
   if (theme.family === 'brutal') return `linear-gradient(135deg, ${theme.bg} 0%, ${theme.surface} 160%)`;
   return theme.bg;
 }
@@ -835,14 +1035,16 @@ export default function DesktopPage() {
         <DisplayMessage theme={theme} displayName={displayName} msgBody={msgBody} show={show} />
       </div>
 
-      <div
-        className="absolute flex justify-end z-20"
-        style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}
-      >
-        <span style={{ color: theme.muted, fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)', whiteSpace: 'nowrap', letterSpacing: '0.16em' }}>
-          Gwangju Software Meister High School
-        </span>
-      </div>
+      {theme.id !== 'brutal-bauhaus' && (
+        <div
+          className="absolute flex justify-end z-20"
+          style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}
+        >
+          <span style={{ color: theme.muted, fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)', whiteSpace: 'nowrap', letterSpacing: '0.16em' }}>
+            Gwangju Software Meister High School
+          </span>
+        </div>
+      )}
 
       <div
         className="absolute flex items-end justify-between z-20"
@@ -855,10 +1057,15 @@ export default function DesktopPage() {
         <div className="flex flex-col gap-0.5">
           <span style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)', letterSpacing: '0.16em' }}>since</span>
           <span style={{ color: theme.family === 'brutal' ? theme.text : theme.text, fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)', letterSpacing: '0.12em' }}>
-            2017
+            {theme.id === 'brutal-bauhaus' ? '2011' : '2017'}
           </span>
         </div>
         <div className="flex flex-col items-center gap-1.5">
+          {theme.id === 'brutal-bauhaus' && (
+            <span style={{ color: theme.text, fontSize: 'clamp(0.95rem, 1.9vh, 1.5rem)', letterSpacing: '0.08em' }}>
+              GSM SMART DID DISPLAY
+            </span>
+          )}
           <span style={{ color: theme.text, fontSize: 'clamp(1.2rem, 3vh, 2.2rem)' }}>{time}</span>
         </div>
       </div>
