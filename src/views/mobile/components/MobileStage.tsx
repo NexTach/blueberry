@@ -28,8 +28,7 @@ export default function MobileStage({
         )}
 
         <div
-          className={`min-h-0 flex-1 overflow-y-auto bg-white px-1 pb-4 ${centerContent ? 'flex flex-col justify-center' : ''}`}
-          style={{ WebkitOverflowScrolling: 'touch' }}
+          className={`smooth-scroll min-h-0 flex-1 overflow-y-auto bg-white px-1 pb-4 ${centerContent ? 'flex flex-col justify-center' : ''}`}
         >
           {children}
         </div>

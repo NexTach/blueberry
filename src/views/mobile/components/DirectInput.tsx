@@ -19,7 +19,7 @@ export default function DirectInput({ value, onChange, onSubmit, onBack, disable
         placeholder="띄울 내용을 입력하세요"
         disabled={disabled}
         rows={4}
-        className="w-full resize-none px-4 py-4 outline-none transition-colors disabled:opacity-50"
+        className="smooth-scroll w-full resize-none px-4 py-4 outline-none transition-colors disabled:opacity-50"
         style={{
           minHeight: mobileControl.textAreaMinHeight,
           borderRadius: mobileRadius.field,

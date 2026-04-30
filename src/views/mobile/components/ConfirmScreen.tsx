@@ -198,7 +198,7 @@ export default function ConfirmScreen({
                   value={message}
                   onChange={(e) => onMessageChange(e.target.value)}
                   rows={3}
-                  className="w-full resize-none px-4 py-4 outline-none transition-colors"
+                  className="smooth-scroll w-full resize-none px-4 py-4 outline-none transition-colors"
                   style={{
                     minHeight: mobileControl.textAreaMinHeight,
                     borderRadius: mobileRadius.field,
@@ -222,7 +222,7 @@ export default function ConfirmScreen({
                   onChange={(e) => onAiPromptChange(e.target.value)}
                   rows={4}
                   placeholder="예: 이모지를 넣고, 밝고 재치 있게 환영 문구를 만들어줘."
-                  className="w-full resize-none px-4 py-4 outline-none transition-colors"
+                  className="smooth-scroll w-full resize-none px-4 py-4 outline-none transition-colors"
                   style={{
                     minHeight: mobileControl.textAreaMinHeight,
                     borderRadius: mobileRadius.field,
