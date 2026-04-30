@@ -13,16 +13,15 @@ export default function DirectInput({ value, onChange, onSubmit, onBack, disable
 
   return (
     <div className="flex w-full flex-col" style={{ gap: mobileSpacing.item }}>
-      <input
-        type="text"
+      <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && value.trim() && onSubmit(value.trim())}
         placeholder="띄울 내용을 입력하세요"
         disabled={disabled}
-        className="w-full px-4 outline-none transition-colors disabled:opacity-50"
+        rows={4}
+        className="w-full resize-none px-4 py-4 outline-none transition-colors disabled:opacity-50"
         style={{
-          minHeight: mobileControl.inputMinHeight,
+          minHeight: mobileControl.textAreaMinHeight,
           borderRadius: mobileRadius.field,
           border: `1px solid ${palette.line}`,
           background: palette.surface,
@@ -34,6 +33,17 @@ export default function DirectInput({ value, onChange, onSubmit, onBack, disable
         }}
         autoFocus
       />
+      <p
+        style={{
+          color: palette.subtext,
+          fontSize: mobileTypography.caption.fontSize,
+          lineHeight: mobileTypography.caption.lineHeight,
+          letterSpacing: mobileTypography.caption.letterSpacing,
+          fontWeight: mobileTypography.caption.fontWeight,
+        }}
+      >
+        한두 문장으로 편하게 입력해도 됩니다.
+      </p>
 
       <div className="flex w-full" style={{ gap: mobileSpacing.item }}>
         <button

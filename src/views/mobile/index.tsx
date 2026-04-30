@@ -36,7 +36,6 @@ export default function MobilePage() {
     handleThemeChange,
     handleConfirmStageBack,
     handleConfirmStageContinue,
-    handleConfirm,
     handleRestart,
     handleBackToPrevious,
     openComposerFromCommand,
@@ -52,79 +51,87 @@ export default function MobilePage() {
   const { isListening, transcript, error } = speech;
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
-      {step === 'choose' && (
-        <ChooseScreen
-          existingPreview={lastSession?.welcomeMessage ?? null}
-          canEditExisting={canEditExisting}
-          onEditExisting={startEditExisting}
-          onCreateNew={startCreateNew}
-        />
-      )}
+    <div className="h-[100dvh] overflow-hidden bg-[linear-gradient(180deg,#f8fbff_0%,#eef4ff_100%)]">
+      <div
+        className="mx-auto flex h-full w-full max-w-md flex-col px-4"
+        style={{
+          paddingTop: 'calc(env(safe-area-inset-top) + 12px)',
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)',
+        }}
+      >
+        {step === 'choose' && (
+          <ChooseScreen
+            existingPreview={lastSession?.welcomeMessage ?? null}
+            canEditExisting={canEditExisting}
+            onEditExisting={startEditExisting}
+            onCreateNew={startCreateNew}
+          />
+        )}
 
-      {step === 'start' && (
-        <StartScreen
-          showDirectInput={showDirectInput}
-          directInputText={directInputText}
-          error={error}
-          isInterpreting={isInterpreting}
-          onStartListening={handleStartListening}
-          onDirectInputChange={setDirectInputText}
-          onShowDirectInput={() => {
-            resetSpeech();
-            setShowDirectInput(true);
-          }}
-          onDirectSubmit={openComposerFromCommand}
-          onDirectBack={handleBackToPrevious}
-          onBack={handleBackToPrevious}
-        />
-      )}
+        {step === 'start' && (
+          <StartScreen
+            showDirectInput={showDirectInput}
+            directInputText={directInputText}
+            error={error}
+            isInterpreting={isInterpreting}
+            onStartListening={handleStartListening}
+            onDirectInputChange={setDirectInputText}
+            onShowDirectInput={() => {
+              resetSpeech();
+              setShowDirectInput(true);
+            }}
+            onDirectSubmit={openComposerFromCommand}
+            onDirectBack={handleBackToPrevious}
+            onBack={handleBackToPrevious}
+          />
+        )}
 
-      {step === 'listening' && (
-        <ListeningScreen
-          isListening={isListening}
-          transcript={transcript}
-          error={error}
-          isInterpreting={isInterpreting}
-          onRetry={handleStartListening}
-          onUseTranscript={() => {
-            resetSpeech();
-            setShowDirectInput(true);
-            openComposerFromCommand(transcript.trim());
-          }}
-          onCancel={handleRestart}
-          onComplete={handleStopListening}
-        />
-      )}
+        {step === 'listening' && (
+          <ListeningScreen
+            isListening={isListening}
+            transcript={transcript}
+            error={error}
+            isInterpreting={isInterpreting}
+            onRetry={handleStartListening}
+            onUseTranscript={() => {
+              resetSpeech();
+              setShowDirectInput(true);
+              openComposerFromCommand(transcript.trim());
+            }}
+            onCancel={handleRestart}
+            onComplete={handleStopListening}
+          />
+        )}
 
-      {step === 'confirm' && (
-        <ConfirmScreen
-          confirmStage={confirmStage}
-          confirmStageIndex={confirmStageIndex}
-          confirmStageCount={confirmStageCount}
-          canContinue={canContinueConfirmStage}
-          isLastStage={isLastConfirmStage}
-          name={name}
-          selectedTemplate={selectedTemplate}
-          message={message}
-          aiTone={aiTone}
-          aiPrompt={aiPrompt}
-          themeId={themeId}
-          isSubmitting={isSubmitting}
-          onNameChange={handleNameChange}
-          onTemplateChange={handleTemplateChange}
-          onMessageChange={setMessage}
-          onAiToneChange={setAiTone}
-          onAiPromptChange={setAiPrompt}
-          onThemeChange={handleThemeChange}
-          onReenterVoice={handleReenterVoice}
-          onReenterDirect={handleReenterDirect}
-          onBack={handleConfirmStageBack}
-          onContinue={handleConfirmStageContinue}
-        />
-      )}
+        {step === 'confirm' && (
+          <ConfirmScreen
+            confirmStage={confirmStage}
+            confirmStageIndex={confirmStageIndex}
+            confirmStageCount={confirmStageCount}
+            canContinue={canContinueConfirmStage}
+            isLastStage={isLastConfirmStage}
+            name={name}
+            selectedTemplate={selectedTemplate}
+            message={message}
+            aiTone={aiTone}
+            aiPrompt={aiPrompt}
+            themeId={themeId}
+            isSubmitting={isSubmitting}
+            onNameChange={handleNameChange}
+            onTemplateChange={handleTemplateChange}
+            onMessageChange={setMessage}
+            onAiToneChange={setAiTone}
+            onAiPromptChange={setAiPrompt}
+            onThemeChange={handleThemeChange}
+            onReenterVoice={handleReenterVoice}
+            onReenterDirect={handleReenterDirect}
+            onBack={handleConfirmStageBack}
+            onContinue={handleConfirmStageContinue}
+          />
+        )}
 
-      {step === 'done' && <DoneScreen onRestart={handleRestart} />}
+        {step === 'done' && <DoneScreen onRestart={handleRestart} />}
+      </div>
     </div>
   );
 }
