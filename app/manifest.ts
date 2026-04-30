@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     id: '/mobile',
     name: '블루베리',
     short_name: '블루베리',
-    description: '광주SW마이스터고 환영 시스템',
+    description: '광주SW마이스터고 DID 시스템',
     start_url: '/mobile',
     scope: '/',
     display: 'standalone',

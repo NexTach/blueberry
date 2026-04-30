@@ -61,8 +61,8 @@ const songMyung = Song_Myung({
 });
 
 export const metadata: Metadata = {
-  title: '블루베리 - 광주SW마이스터고 환영 시스템',
-  description: '광주SW마이스터고 환영 시스템',
+  title: '블루베리 - 광주SW마이스터고 DID 시스템',
+  description: '광주SW마이스터고 DID 시스템',
   applicationName: '블루베리',
   manifest: '/manifest.webmanifest',
   icons: {
