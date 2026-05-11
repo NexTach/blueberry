@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { toast } from 'sonner';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
 import { findTheme, type ThemePreset } from '../../lib/themes';
 import type { Session, ThemeId } from '../../types/session';
@@ -906,8 +907,11 @@ export default function DesktopPage() {
       }),
     })
       .then((response) => response.json())
-      .then((data) => {
+      .then((data: { resolvedName?: string; message?: string; allFailed?: boolean }) => {
         if (cancelled) return;
+        if (data.allFailed) {
+          toast.error('AI 메시지 생성에 실패하여 기본 문구로 처리됩니다.');
+        }
         updateSession({
           status: 'displaying',
           visitorName: data.resolvedName ?? session.visitorName,

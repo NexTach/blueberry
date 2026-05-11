@@ -11,6 +11,7 @@ import {
 } from 'next/font/google';
 import './globals.css';
 import PWARegistrar from '../src/components/PWARegistrar';
+import { Toaster } from 'sonner';
 
 const notoSansKr = Noto_Sans_KR({
   variable: '--font-noto-sans-kr',
@@ -98,6 +99,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <PWARegistrar />
         {children}
+        <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );

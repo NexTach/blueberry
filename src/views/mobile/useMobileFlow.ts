@@ -1,4 +1,5 @@
 import { startTransition, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { subscribeSession, updateSession, updateTheme } from '../../lib/firebase';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
@@ -134,7 +135,10 @@ export function useMobileFlow() {
         return { templateId: AI_TEMPLATE_ID, tone: DEFAULT_AI_TONE, name: '', prompt: commandText };
       }
 
-      const data = (await response.json()) as Partial<CommandInterpretation>;
+      const data = (await response.json()) as Partial<CommandInterpretation> & { allFailed?: boolean };
+      if (data.allFailed) {
+        toast.error('명령 해석에 실패하여 기본 설정으로 처리됩니다.');
+      }
       return {
         templateId: data.templateId ?? AI_TEMPLATE_ID,
         tone: data.tone ?? DEFAULT_AI_TONE,
