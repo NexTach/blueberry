@@ -34,20 +34,22 @@ export default function StartScreen({
   return (
     <MobileStage
       topBar={
-        <div className="w-full flex justify-start">
-          <button
-            onClick={showDirectInput ? onDirectBack : onBack}
-            style={{
-              color: palette.subtextStrong,
-              fontSize: mobileTypography.bodySmall.fontSize,
-              lineHeight: mobileTypography.bodySmall.lineHeight,
-              letterSpacing: mobileTypography.bodySmall.letterSpacing,
-              fontWeight: 600,
-            }}
-          >
-            ← 이전으로
-          </button>
-        </div>
+        showDirectInput ? undefined : (
+          <div className="w-full flex justify-start">
+            <button
+              onClick={onBack}
+              style={{
+                color: palette.subtextStrong,
+                fontSize: mobileTypography.bodySmall.fontSize,
+                lineHeight: mobileTypography.bodySmall.lineHeight,
+                letterSpacing: mobileTypography.bodySmall.letterSpacing,
+                fontWeight: 600,
+              }}
+            >
+              ← 이전으로
+            </button>
+          </div>
+        )
       }
       header={
         <div className="flex flex-col text-center" style={{ gap: mobileSpacing.item }}>
@@ -75,7 +77,7 @@ export default function StartScreen({
           </p>
         </div>
       }
-      centerContent={showVoiceInput}
+      centerContent={showVoiceInput || showDirectInput}
     >
       {showVoiceInput ? (
         <div className="flex flex-col items-center" style={{ gap: mobileSpacing.section }}>
