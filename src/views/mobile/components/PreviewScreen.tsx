@@ -51,7 +51,7 @@ export default function PreviewScreen({ previewText, onBack, onConfirm, onCustom
               fontWeight: mobileTypography.bodySmall.fontWeight,
             }}
           >
-            AI 추천 문구를 TV에 바로 띄웠습니다.
+            문구를 TV에 바로 띄웠습니다.
           </p>
         </div>
       }

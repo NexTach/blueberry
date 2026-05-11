@@ -1,6 +1,6 @@
 import { startTransition, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { subscribeSession, updateSession, updateTheme } from '../../lib/firebase';
+import { subscribeSession, updateSession, updateTheme, resetSession } from '../../lib/firebase';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
 import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME, THEMES } from './constants';
@@ -187,6 +187,7 @@ export function useMobileFlow() {
           });
           setStep('preview');
         } else {
+          await resetSession();
           setStep('confirm');
         }
       } else {
