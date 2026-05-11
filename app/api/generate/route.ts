@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       openaiReasoningEffort: 'none',
       maxTokens: 80,
       systemPrompt:
-        '너는 광주소프트웨어마이스터고등학교의 행사 환영 메시지 작성 도우미야. ' +
+        '너는 광주소프트웨어마이스터고등학교의 행사 환영 메시지를 작성해. ' +
         '반드시 JSON만 출력해. 형식은 {"resolvedName":"...", "message":"..."} 이다. ' +
         'resolvedName에는 최종적으로 적용한 방문객 이름만 넣어. 사용자가 교육감, 교장, 교수, 대표, 원장, 선생님 같은 직함을 함께 알려줬다면 이름에서 그 직함을 유지해. ' +
         'resolvedName에는 보통 마지막 호칭 "님"은 넣지 말고, 직함만 보존해. 예: "강기정 교육감". ' +
