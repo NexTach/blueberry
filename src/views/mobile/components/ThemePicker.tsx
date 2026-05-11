@@ -1,7 +1,7 @@
-import { findTheme, THEME_FAMILIES } from '../../../lib/themes';
+import { findTheme, THEME_FAMILIES } from '@/src/lib/themes';
 import { mobilePalette, mobileSpacing, mobileTypography } from '../design';
 import { THEMES } from '../constants';
-import type { ThemeId } from '../../../types/session';
+import type { ThemeId } from '@/src/types/session';
 
 interface ThemePickerProps {
   selectedTheme: ThemeId;

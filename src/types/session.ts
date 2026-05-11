@@ -21,6 +21,7 @@ export interface Session {
   welcomeMessage: string;
   templateId?: TemplateId | null;
   sourcePrompt?: string;
+  generationId?: string;
   themeId?: ThemeId;
   tone?: string;
   updatedAt: Timestamp | null;

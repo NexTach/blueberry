@@ -69,7 +69,7 @@ export const TEMPLATES: TemplateOption[] = [
 export const THEMES: ThemeOption[] = THEME_PRESETS;
 
 export const AI_TONES: AIToneOption[] = [
-  { id: 'warm', label: '따뜻하게', description: '포근하고 다정한 환영' },
+  { id: 'warm', label: '따뜻하게', description: '포근하고 다정한 분위기' },
   { id: 'bright', label: '밝고 경쾌하게', description: '생기 있고 활발한 분위기' },
   { id: 'formal', label: '정중하게', description: '차분하고 단정한 표현' },
   { id: 'playful', label: '재치 있게', description: '센스 있고 기억에 남게' },

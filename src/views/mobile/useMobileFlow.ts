@@ -157,6 +157,33 @@ export function useMobileFlow() {
     }
   }
 
+  async function optimizePrompt(promptText: string, tone: AiToneId, visitorName: string) {
+    try {
+      const response = await fetch('/api/optimize-prompt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: promptText,
+          tone,
+          name: visitorName,
+        }),
+      });
+
+      if (!response.ok) {
+        return promptText;
+      }
+
+      const data = (await response.json()) as { prompt?: string; allFailed?: boolean };
+      if (data.allFailed) {
+        toast.error('프롬프트 최적화에 실패하여 원본 지시문으로 처리됩니다.');
+      }
+
+      return data.prompt?.trim() || promptText;
+    } catch {
+      return promptText;
+    }
+  }
+
   async function openComposerFromCommand(commandText: string, isVoice = false) {
     setPreviousStep(step);
     setDirectInputText(commandText);
@@ -166,15 +193,19 @@ export function useMobileFlow() {
       const interpretation = await interpretCommand(commandText);
       const nextName = interpretation.name;
       const nextTemplate = interpretation.templateId;
+      const optimizedPrompt =
+        nextTemplate === AI_TEMPLATE_ID
+          ? await optimizePrompt(interpretation.prompt || commandText, interpretation.tone, nextName)
+          : interpretation.prompt;
 
       setName(nextName);
       setSelectedTemplate(nextTemplate);
       setAiTone(interpretation.tone);
-      setAiPrompt(interpretation.prompt);
+      setAiPrompt(optimizedPrompt);
 
       const recommendedText =
         nextTemplate === AI_TEMPLATE_ID
-          ? interpretation.prompt || ''
+          ? optimizedPrompt || ''
           : (applyTemplate(nextName || FALLBACK_VISITOR_NAME, nextTemplate) ?? '');
 
       setMessage(nextTemplate === AI_TEMPLATE_ID ? '' : recommendedText);
@@ -191,19 +222,22 @@ export function useMobileFlow() {
             welcomeMessage: recommendedText,
             templateId: nextTemplate,
             sourcePrompt: '',
+            generationId: '',
             tone: '',
             themeId,
           });
           setStep('preview');
         } else {
+          const generationId = crypto.randomUUID();
           setPreviewMode('generating');
-          setPreviewText('AI가 요청을 바탕으로 환영 문구를 생성하고 있어요.');
+          setPreviewText('AI가 요청을 바탕으로 전광판 문구를 생성하고 있어요.');
           await updateSession({
             status: 'generating',
             visitorName: nextName || FALLBACK_VISITOR_NAME,
             templateId: AI_TEMPLATE_ID,
             welcomeMessage: '',
-            sourcePrompt: interpretation.prompt || commandText,
+            sourcePrompt: optimizedPrompt || commandText,
+            generationId,
             tone: interpretation.tone,
             themeId,
           });
@@ -268,48 +302,58 @@ export function useMobileFlow() {
   async function handleConfirm() {
     setIsSubmitting(true);
     const resolvedName = name.trim() || FALLBACK_VISITOR_NAME;
-    const resolvedAiPrompt =
-      aiPrompt.trim() || directInputText.trim() || message.trim() || `${resolvedName}님을 위한 환영 문구를 만들어줘`;
-    if (selectedTemplate === AI_TEMPLATE_ID) {
-      const shouldRegenerate =
-        initialConfirmSnapshot?.templateId !== AI_TEMPLATE_ID ||
-        initialConfirmSnapshot.aiPrompt.trim() !== resolvedAiPrompt ||
-        initialConfirmSnapshot.aiTone !== aiTone;
+    try {
+      const draftAiPrompt =
+        aiPrompt.trim() || directInputText.trim() || message.trim() || `${resolvedName} 관련 한 문장 전광판 문구를 만들어줘`;
+      if (selectedTemplate === AI_TEMPLATE_ID) {
+        const optimizedAiPrompt = await optimizePrompt(draftAiPrompt, aiTone, resolvedName);
+        setAiPrompt(optimizedAiPrompt);
 
-      if (!shouldRegenerate) {
+        const shouldRegenerate =
+          initialConfirmSnapshot?.templateId !== AI_TEMPLATE_ID ||
+          initialConfirmSnapshot.aiPrompt.trim() !== optimizedAiPrompt ||
+          initialConfirmSnapshot.aiTone !== aiTone;
+
+        if (!shouldRegenerate) {
+          await updateSession({
+            status: 'displaying',
+            visitorName: resolvedName,
+            templateId: AI_TEMPLATE_ID,
+            welcomeMessage: initialConfirmSnapshot?.message || message || '환영합니다!',
+            sourcePrompt: initialConfirmSnapshot?.sourcePrompt || optimizedAiPrompt,
+            generationId: '',
+            tone: aiTone,
+            themeId,
+          });
+        } else {
+          const generationId = crypto.randomUUID();
+          await updateSession({
+            status: 'generating',
+            visitorName: resolvedName,
+            templateId: AI_TEMPLATE_ID,
+            welcomeMessage: '',
+            sourcePrompt: optimizedAiPrompt,
+            generationId,
+            tone: aiTone,
+            themeId,
+          });
+        }
+      } else {
         await updateSession({
           status: 'displaying',
           visitorName: resolvedName,
-          templateId: AI_TEMPLATE_ID,
-          welcomeMessage: initialConfirmSnapshot?.message || message || '환영합니다!',
-          sourcePrompt: initialConfirmSnapshot?.sourcePrompt || resolvedAiPrompt,
-          tone: aiTone,
-          themeId,
-        });
-      } else {
-        await updateSession({
-          status: 'generating',
-          visitorName: resolvedName,
-          templateId: AI_TEMPLATE_ID,
-          welcomeMessage: '',
-          sourcePrompt: resolvedAiPrompt,
-          tone: aiTone,
+          templateId: selectedTemplate,
+          welcomeMessage: message,
+          sourcePrompt: '',
+          generationId: '',
+          tone: '',
           themeId,
         });
       }
-    } else {
-      await updateSession({
-        status: 'displaying',
-        visitorName: resolvedName,
-        templateId: selectedTemplate,
-        welcomeMessage: message,
-        sourcePrompt: '',
-        tone: '',
-        themeId,
-      });
+      setStep('done');
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
-    setStep('done');
   }
 
   function handleConfirmStageBack() {

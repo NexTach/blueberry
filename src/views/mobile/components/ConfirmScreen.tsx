@@ -221,7 +221,7 @@ export default function ConfirmScreen({
                   value={aiPrompt}
                   onChange={(e) => onAiPromptChange(e.target.value)}
                   rows={4}
-                  placeholder="예: 이모지를 넣고, 밝고 재치 있게 환영 문구를 만들어줘."
+                  placeholder="예: 밝고 자연스러운 톤으로 짧은 한 문장 메시지를 만들어줘."
                   className="smooth-scroll w-full resize-none px-4 py-4 outline-none transition-colors"
                   style={{
                     minHeight: mobileControl.textAreaMinHeight,

@@ -858,7 +858,7 @@ function normalizeDisplayName(name: string | undefined) {
 }
 
 function normalizeMessageBody(message: string | undefined, name: string | undefined) {
-  if (!message?.trim()) return '환영합니다!';
+  if (!message?.trim()) return '마음을 전하는 한마디를 준비했습니다!';
   const displayName = normalizeDisplayName(name);
   if (!displayName) return message.trim();
 
@@ -883,6 +883,7 @@ export default function DesktopPage() {
   const [visible, setVisible] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastGenerationIdRef = useRef('');
   const time = useClock();
   const mobileUrl = `${window.location.origin}/mobile`;
 
@@ -895,6 +896,11 @@ export default function DesktopPage() {
 
   useEffect(() => {
     if (session?.status !== 'generating' || !session.visitorName) return;
+    const prompt = session.sourcePrompt?.trim() || session.welcomeMessage?.trim() || '';
+    if (!prompt) return;
+    const generationId = session.generationId?.trim() || `${session.visitorName}:${prompt}:${session.tone || ''}`;
+    if (lastGenerationIdRef.current === generationId) return;
+    lastGenerationIdRef.current = generationId;
     let cancelled = false;
 
     fetch('/api/generate', {
@@ -902,7 +908,7 @@ export default function DesktopPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: session.visitorName,
-        prompt: session.sourcePrompt || session.welcomeMessage,
+        prompt,
         tone: session.tone,
       }),
     })
@@ -915,8 +921,9 @@ export default function DesktopPage() {
         updateSession({
           status: 'displaying',
           visitorName: data.resolvedName ?? session.visitorName,
-          welcomeMessage: data.message ?? '환영합니다!',
-          sourcePrompt: session.sourcePrompt ?? session.welcomeMessage,
+          welcomeMessage: data.message ?? '마음을 전하는 한마디를 준비했습니다!',
+          sourcePrompt: prompt,
+          generationId,
         });
       })
       .catch(() => {
@@ -924,15 +931,16 @@ export default function DesktopPage() {
         updateSession({
           status: 'displaying',
           visitorName: session.visitorName,
-          welcomeMessage: '환영합니다!',
-          sourcePrompt: session.sourcePrompt ?? session.welcomeMessage,
+          welcomeMessage: '마음을 전하는 한마디를 준비했습니다!',
+          sourcePrompt: prompt,
+          generationId,
         });
       });
 
     return () => {
       cancelled = true;
     };
-  }, [session?.status, session?.visitorName, session?.sourcePrompt, session?.tone]);
+  }, [session?.status, session?.visitorName, session?.sourcePrompt, session?.welcomeMessage, session?.tone, session?.generationId]);
 
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
@@ -1001,7 +1009,7 @@ export default function DesktopPage() {
               ))}
             </div>
             <p style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.2rem)', letterSpacing: '0.18em' }}>
-              {session?.visitorName}님의 환영 문구를 만들고 있어요...
+              {session?.visitorName}님의 메시지를 만들고 있어요...
             </p>
           </div>
         )}
