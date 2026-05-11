@@ -3,13 +3,15 @@ import MobileStage from './MobileStage';
 
 interface Props {
   previewText: string;
+  previewMode: 'displaying' | 'generating';
   onBack: () => void;
   onConfirm: () => void; // finish without further customization
   onCustomize: () => void; // go to confirm/customize
 }
 
-export default function PreviewScreen({ previewText, onBack, onConfirm, onCustomize }: Props) {
+export default function PreviewScreen({ previewText, previewMode, onBack, onConfirm, onCustomize }: Props) {
   const palette = mobilePalette;
+  const isGenerating = previewMode === 'generating';
 
   return (
     <MobileStage
@@ -51,7 +53,7 @@ export default function PreviewScreen({ previewText, onBack, onConfirm, onCustom
               fontWeight: mobileTypography.bodySmall.fontWeight,
             }}
           >
-            문구를 TV에 바로 띄웠습니다.
+            {isGenerating ? 'AI가 TV에 띄울 문구를 만들고 있습니다.' : '문구를 TV에 바로 띄웠습니다.'}
           </p>
         </div>
       }
@@ -72,7 +74,7 @@ export default function PreviewScreen({ previewText, onBack, onConfirm, onCustom
               fontWeight: 600,
             }}
           >
-            확인
+            {isGenerating ? '생성 맡기기' : '확인'}
           </button>
           <button
             onClick={onCustomize}
@@ -88,7 +90,7 @@ export default function PreviewScreen({ previewText, onBack, onConfirm, onCustom
               fontWeight: 600,
             }}
           >
-            표시내용 맞춤설정하기
+            맞춤설정하기
           </button>
         </div>
       }
@@ -111,7 +113,7 @@ export default function PreviewScreen({ previewText, onBack, onConfirm, onCustom
               fontWeight: mobileTypography.caption.fontWeight,
             }}
           >
-            TV에 추천 문구를 바로 띄웠어요
+            {isGenerating ? 'TV에서 현재 생성 중인 요청' : 'TV에 추천 문구를 바로 띄웠어요'}
           </p>
           <div
             className="whitespace-pre-wrap wrap-break-word mt-2"

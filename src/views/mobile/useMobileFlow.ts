@@ -25,6 +25,10 @@ function getConfirmStages(templateId: TemplateId): ConfirmStage[] {
   return ['template', 'content', 'theme', 'name'];
 }
 
+function isValidTemplateId(templateId: number | null | undefined): templateId is TemplateId {
+  return templateId === 1 || templateId === 2 || templateId === 3 || templateId === 4 || templateId === 5 || templateId === 6 || templateId === 7;
+}
+
 export function useMobileFlow() {
   const [step, setStep] = useState<Step>('choose');
   const [previousStep, setPreviousStep] = useState<Step | null>(null);
@@ -42,6 +46,7 @@ export function useMobileFlow() {
   const [lastSession, setLastSession] = useState<Session | null>(null);
   const [initialConfirmSnapshot, setInitialConfirmSnapshot] = useState<ConfirmDraftSnapshot | null>(null);
   const [previewText, setPreviewText] = useState('');
+  const [previewMode, setPreviewMode] = useState<'displaying' | 'generating'>('displaying');
 
   const speech = useSpeechRecognition();
   const { transcript, errorCode, start, stop, reset } = speech;
@@ -50,8 +55,6 @@ export function useMobileFlow() {
   const confirmStage = confirmStages[normalizedConfirmStageIndex];
 
   function inferTemplateId(visitorName: string, welcomeMessage: string, tone?: string): TemplateId {
-    if (tone) return AI_TEMPLATE_ID;
-
     const normalizedMessage = welcomeMessage.trim();
     const normalizedName = visitorName.trim() || FALLBACK_VISITOR_NAME;
     const templateIds: Exclude<TemplateId, 7>[] = [1, 2, 3, 4, 5, 6];
@@ -62,7 +65,9 @@ export function useMobileFlow() {
       }
     }
 
-    return AI_TEMPLATE_ID;
+    if (tone) return AI_TEMPLATE_ID;
+
+    return DEFAULT_TEMPLATE_ID;
   }
 
   function hydrateComposerFromSession(session: Session | null) {
@@ -73,8 +78,10 @@ export function useMobileFlow() {
 
     const nextName = session.visitorName?.trim() ?? '';
     const nextMessage = session.welcomeMessage?.trim() ?? '';
-    const nextTemplate = inferTemplateId(nextName, nextMessage, session.tone);
-    const nextPrompt = session.sourcePrompt?.trim() || nextMessage;
+    const nextTemplate = isValidTemplateId(session.templateId)
+      ? session.templateId
+      : inferTemplateId(nextName, nextMessage, session.tone);
+    const nextPrompt = nextTemplate === AI_TEMPLATE_ID ? session.sourcePrompt?.trim() || nextMessage : '';
     const nextTone: AiToneId =
       session.tone === 'bright' || session.tone === 'formal' || session.tone === 'playful' || session.tone === 'warm'
         ? session.tone
@@ -176,21 +183,36 @@ export function useMobileFlow() {
 
       if (isVoice) {
         if (nextTemplate !== AI_TEMPLATE_ID) {
+          setPreviewMode('displaying');
           setPreviewText(recommendedText);
           await updateSession({
             status: 'displaying',
             visitorName: nextName || FALLBACK_VISITOR_NAME,
             welcomeMessage: recommendedText,
-            sourcePrompt: interpretation.prompt || recommendedText,
-            tone: interpretation.tone,
+            templateId: nextTemplate,
+            sourcePrompt: '',
+            tone: '',
             themeId,
           });
           setStep('preview');
         } else {
-          await resetSession();
-          setStep('confirm');
+          setPreviewMode('generating');
+          setPreviewText('AI가 요청을 바탕으로 환영 문구를 생성하고 있어요.');
+          await updateSession({
+            status: 'generating',
+            visitorName: nextName || FALLBACK_VISITOR_NAME,
+            templateId: AI_TEMPLATE_ID,
+            welcomeMessage: '',
+            sourcePrompt: interpretation.prompt || commandText,
+            tone: interpretation.tone,
+            themeId,
+          });
+          setStep('preview');
         }
       } else {
+        if (nextTemplate === AI_TEMPLATE_ID) {
+          await resetSession();
+        }
         setStep('confirm');
       }
     } finally {
@@ -258,6 +280,7 @@ export function useMobileFlow() {
         await updateSession({
           status: 'displaying',
           visitorName: resolvedName,
+          templateId: AI_TEMPLATE_ID,
           welcomeMessage: initialConfirmSnapshot?.message || message || '환영합니다!',
           sourcePrompt: initialConfirmSnapshot?.sourcePrompt || resolvedAiPrompt,
           tone: aiTone,
@@ -267,6 +290,7 @@ export function useMobileFlow() {
         await updateSession({
           status: 'generating',
           visitorName: resolvedName,
+          templateId: AI_TEMPLATE_ID,
           welcomeMessage: '',
           sourcePrompt: resolvedAiPrompt,
           tone: aiTone,
@@ -277,6 +301,7 @@ export function useMobileFlow() {
       await updateSession({
         status: 'displaying',
         visitorName: resolvedName,
+        templateId: selectedTemplate,
         welcomeMessage: message,
         sourcePrompt: '',
         tone: '',
@@ -344,10 +369,13 @@ export function useMobileFlow() {
     start();
   }
 
-  function handleBackFromPreview() {
+  async function handleBackFromPreview() {
     // return to the UI the user came from:
     // - if they came from listening, restart listening
     // - otherwise go back to the start screen and show direct input
+    if (selectedTemplate === AI_TEMPLATE_ID) {
+      await resetSession();
+    }
     reset();
     if (previousStep === 'listening') {
       setStep('listening');
@@ -359,17 +387,22 @@ export function useMobileFlow() {
     setPreviousStep(null);
   }
 
-  function handleProceedFromPreview() {
+  async function handleProceedFromPreview() {
     // user wants to customize the displayed content
-    setInitialConfirmSnapshot({
-      templateId: selectedTemplate,
-      name,
-      message: previewText || message,
-      aiPrompt: aiPrompt || previewText || '',
-      aiTone,
-      themeId,
-      sourcePrompt: aiPrompt || previewText || '',
-    });
+    if (selectedTemplate === AI_TEMPLATE_ID) {
+      await resetSession();
+      setInitialConfirmSnapshot(null);
+    } else {
+      setInitialConfirmSnapshot({
+        templateId: selectedTemplate,
+        name,
+        message: previewText || message,
+        aiPrompt: aiPrompt || previewText || '',
+        aiTone,
+        themeId,
+        sourcePrompt: aiPrompt || previewText || '',
+      });
+    }
     setConfirmStageIndex(0);
     setPreviousStep('preview');
     setStep('confirm');
@@ -472,6 +505,7 @@ export function useMobileFlow() {
     handleReenterDirect,
     handleReenterVoice,
     previewText,
+    previewMode,
     handleBackFromPreview,
     handleProceedFromPreview,
     handleConfirmFromPreview,

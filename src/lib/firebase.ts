@@ -34,7 +34,7 @@ export function subscribeSession(callback: (session: Session | null) => void): U
 }
 
 export async function resetSession() {
-  await updateSession({ status: 'standby', visitorName: '', welcomeMessage: '' });
+  await updateSession({ status: 'standby', visitorName: '', welcomeMessage: '', templateId: null, sourcePrompt: '', tone: '' });
 }
 
 export async function updateTheme(themeId: import('../types/session').ThemeId) {

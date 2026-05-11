@@ -1,4 +1,5 @@
 import type { Timestamp } from 'firebase/firestore';
+import type { TemplateId } from '../lib/openai';
 
 export type SessionStatus = 'standby' | 'generating' | 'displaying';
 export type ThemeId =
@@ -18,6 +19,7 @@ export interface Session {
   status: SessionStatus;
   visitorName: string;
   welcomeMessage: string;
+  templateId?: TemplateId | null;
   sourcePrompt?: string;
   themeId?: ThemeId;
   tone?: string;

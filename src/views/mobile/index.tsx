@@ -49,6 +49,7 @@ export default function MobilePage() {
     handleReenterDirect,
     handleReenterVoice,
     previewText,
+    previewMode,
     handleBackFromPreview,
     handleProceedFromPreview,
     handleConfirmFromPreview,
@@ -113,6 +114,7 @@ export default function MobilePage() {
         {step === 'preview' && (
           <PreviewScreen
             previewText={previewText}
+            previewMode={previewMode}
             onBack={handleBackFromPreview}
             onConfirm={handleConfirmFromPreview}
             onCustomize={handleProceedFromPreview}
