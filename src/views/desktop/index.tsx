@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { layoutWithLines, prepareWithSegments } from '@chenglou/pretext';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
@@ -732,7 +733,9 @@ function DisplayMessage({
             className="rounded-full"
             style={{ width: 'clamp(120px, 18vw, 220px)', height: '6px', background: theme.secondary, marginTop: 'clamp(1rem, 2vh, 1.5rem)' }}
           />
-          <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(1rem, 2vh, 1.6rem)', fontFamily: theme.bodyFont }}>{msgBody}</p>
+          <PretextParagraph style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(1rem, 2vh, 1.6rem)', fontFamily: theme.bodyFont }}>
+            {msgBody}
+          </PretextParagraph>
         </div>
       </div>
     );
@@ -747,7 +750,8 @@ function DisplayMessage({
         <p style={{ color: theme.accent, fontSize: 'clamp(2.6rem, 7vh, 6.3rem)', lineHeight: 1.06, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
           {displayName ? `${displayName}님` : '환영합니다'}
         </p>
-        <p
+        <PretextParagraph
+          as="p"
           style={{
             ...bodyStyle,
             color: theme.text,
@@ -757,7 +761,7 @@ function DisplayMessage({
           }}
         >
           {msgBody}
-        </p>
+        </PretextParagraph>
       </div>
     );
   }
@@ -772,7 +776,8 @@ function DisplayMessage({
           <p style={{ color: '#111', fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)', lineHeight: 1.02, textAlign: 'center', fontFamily: theme.titleFont }}>
             {displayName ? `${displayName}님` : '환영합니다'}
           </p>
-          <p
+          <PretextParagraph
+            as="p"
             style={{
               color: '#111',
               fontSize: 'clamp(1.1rem, 2.5vh, 2rem)',
@@ -784,7 +789,7 @@ function DisplayMessage({
             }}
           >
             {msgBody}
-          </p>
+          </PretextParagraph>
         </div>
       );
     }
@@ -814,7 +819,9 @@ function DisplayMessage({
             maxWidth: 'min(82vw, 860px)',
           }}
         >
-          <p style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)', fontFamily: theme.bodyFont }}>{msgBody}</p>
+          <PretextParagraph style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)', fontFamily: theme.bodyFont }}>
+            {msgBody}
+          </PretextParagraph>
         </div>
       </div>
     );
@@ -825,7 +832,136 @@ function DisplayMessage({
       <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
         {displayName ? `${displayName}님` : ''}
       </p>
-      <p style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)', fontFamily: theme.bodyFont }}>{msgBody}</p>
+      <PretextParagraph style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)', fontFamily: theme.bodyFont }}>
+        {msgBody}
+      </PretextParagraph>
+    </div>
+  );
+}
+
+function buildCanvasFont(computed: CSSStyleDeclaration) {
+  return (
+    computed.font ||
+    `${computed.fontStyle} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`
+  );
+}
+
+function PretextParagraph({
+  as = 'div',
+  children,
+  style,
+}: {
+  as?: 'div' | 'p';
+  children: string;
+  style: React.CSSProperties;
+}) {
+  const containerRef = useRef<HTMLElement | null>(null);
+  const probeRef = useRef<HTMLSpanElement>(null);
+  const [lines, setLines] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const probe = probeRef.current;
+    if (!container || !probe || !children.trim()) {
+      setLines(null);
+      return;
+    }
+
+    let cancelled = false;
+    let frame = 0;
+    const fontSet = typeof document !== 'undefined' ? document.fonts : null;
+
+    const updateLines = async () => {
+      if (fontSet) {
+        await fontSet.ready.catch(() => undefined);
+      }
+
+      if (cancelled || !containerRef.current || !probeRef.current) return;
+      const maxWidth = containerRef.current.clientWidth;
+      if (!maxWidth) return;
+
+      const computed = window.getComputedStyle(probeRef.current);
+      const font = buildCanvasFont(computed);
+      const lineHeight = Number.parseFloat(computed.lineHeight);
+
+      if (!font || !Number.isFinite(lineHeight) || lineHeight <= 0) {
+        setLines(null);
+        return;
+      }
+
+      const prepared = prepareWithSegments(children, font, { wordBreak: 'keep-all' });
+      const result = layoutWithLines(prepared, maxWidth, lineHeight);
+
+      if (cancelled) return;
+      setLines(result.lines.map((line) => line.text));
+    };
+
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        void updateLines();
+      });
+    };
+
+    scheduleUpdate();
+
+    const resizeObserver = new ResizeObserver(() => {
+      scheduleUpdate();
+    });
+    resizeObserver.observe(container);
+
+    fontSet?.addEventListener?.('loadingdone', scheduleUpdate);
+    window.addEventListener('resize', scheduleUpdate);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      fontSet?.removeEventListener?.('loadingdone', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+    };
+  }, [children, style.fontFamily, style.fontSize, style.lineHeight, style.maxWidth, style.letterSpacing]);
+
+  const content = (
+    <>
+      <span
+        ref={probeRef}
+        aria-hidden="true"
+        style={{
+          ...style,
+          position: 'absolute',
+          visibility: 'hidden',
+          pointerEvents: 'none',
+          whiteSpace: 'pre',
+        }}
+      >
+        {children}
+      </span>
+      {lines ? (
+        <span aria-label={children} style={{ display: 'block' }}>
+          {lines.map((line, index) => (
+            <span key={`${index}-${line}`} style={{ display: 'block' }}>
+              {line}
+            </span>
+          ))}
+        </span>
+      ) : (
+        children
+      )}
+    </>
+  );
+
+  if (as === 'p') {
+    return (
+      <p ref={(node) => { containerRef.current = node; }} style={style}>
+        {content}
+      </p>
+    );
+  }
+
+  return (
+    <div ref={(node) => { containerRef.current = node; }} style={style}>
+      {content}
     </div>
   );
 }
