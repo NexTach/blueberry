@@ -341,11 +341,18 @@ export function useMobileFlow() {
   }
 
   function handleBackFromPreview() {
-    // go back to listening so user can re-record
+    // return to the UI the user came from:
+    // - if they came from listening, restart listening
+    // - otherwise go back to the start screen and show direct input
     reset();
-    setPreviousStep('start');
-    setStep('listening');
-    start();
+    if (previousStep === 'listening') {
+      setStep('listening');
+      start();
+    } else {
+      setShowDirectInput(true);
+      setStep('start');
+    }
+    setPreviousStep(null);
   }
 
   function handleProceedFromPreview() {

@@ -88,7 +88,7 @@ export default function MobilePage() {
               resetSpeech();
               setShowDirectInput(true);
             }}
-            onDirectSubmit={openComposerFromCommand}
+            onDirectSubmit={(cmd: string) => openComposerFromCommand(cmd, true)}
             onDirectBack={handleBackToPrevious}
             onBack={handleBackToPrevious}
           />
