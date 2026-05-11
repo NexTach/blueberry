@@ -902,7 +902,7 @@ export default function DesktopPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: session.visitorName,
-        prompt: session.welcomeMessage,
+        prompt: session.sourcePrompt || session.welcomeMessage,
         tone: session.tone,
       }),
     })
@@ -932,7 +932,7 @@ export default function DesktopPage() {
     return () => {
       cancelled = true;
     };
-  }, [session?.status, session?.visitorName, session?.welcomeMessage, session?.tone]);
+  }, [session?.status, session?.visitorName, session?.sourcePrompt, session?.tone]);
 
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);

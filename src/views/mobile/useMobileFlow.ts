@@ -263,7 +263,7 @@ export function useMobileFlow() {
         await updateSession({
           status: 'generating',
           visitorName: resolvedName,
-          welcomeMessage: resolvedAiPrompt,
+          welcomeMessage: '',
           sourcePrompt: resolvedAiPrompt,
           tone: aiTone,
           themeId,
