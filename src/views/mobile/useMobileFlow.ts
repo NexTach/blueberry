@@ -175,17 +175,20 @@ export function useMobileFlow() {
       setConfirmStageIndex(0);
 
       if (isVoice) {
-        // Immediately show the recommendation on the desktop for quick preview
-        setPreviewText(recommendedText);
-        await updateSession({
-          status: 'displaying',
-          visitorName: nextName || FALLBACK_VISITOR_NAME,
-          welcomeMessage: recommendedText,
-          sourcePrompt: interpretation.prompt || recommendedText,
-          tone: interpretation.tone,
-          themeId,
-        });
-        setStep('preview');
+        if (nextTemplate !== AI_TEMPLATE_ID) {
+          setPreviewText(recommendedText);
+          await updateSession({
+            status: 'displaying',
+            visitorName: nextName || FALLBACK_VISITOR_NAME,
+            welcomeMessage: recommendedText,
+            sourcePrompt: interpretation.prompt || recommendedText,
+            tone: interpretation.tone,
+            themeId,
+          });
+          setStep('preview');
+        } else {
+          setStep('confirm');
+        }
       } else {
         setStep('confirm');
       }
