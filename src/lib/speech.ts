@@ -39,7 +39,6 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
   const shouldKeepListeningRef = useRef(false);
   const manuallyStoppedRef = useRef(false);
   const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const finalTranscriptRef = useRef('');
 
   useEffect(() => {
     if (!isSpeechSupported) return;
@@ -49,27 +48,16 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     const recognition: SpeechRecognitionLike = new SR();
 
     recognition.lang = 'ko-KR';
-    recognition.continuous = true;
+    recognition.continuous = false;
     recognition.interimResults = true;
 
     recognition.onresult = (e: SpeechRecognitionEvent) => {
-      let interimTranscript = '';
-
-      // 최종 결과만 finalTranscriptRef에 누적
+      // 모든 결과를 합쳐서 표시 (최종 및 임시 모두)
+      let result = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        const transcript = e.results[i][0].transcript;
-        
-        if (e.results[i].isFinal) {
-          // 최종 결과: finalTranscriptRef에 누적
-          finalTranscriptRef.current += transcript;
-        } else {
-          // 임시 결과: UI에만 표시 (누적하지 않음)
-          interimTranscript += transcript;
-        }
+        result += e.results[i][0].transcript;
       }
-
-      // 상태 업데이트 (최종 결과 + 임시 결과)
-      setTranscript(finalTranscriptRef.current + interimTranscript);
+      setTranscript(result);
     };
 
     recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
@@ -126,7 +114,6 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     setError(null);
     setErrorCode(null);
     setTranscript('');
-    finalTranscriptRef.current = '';
     setIsListening(true);
     try {
       recognitionRef.current.start();
@@ -152,7 +139,6 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     recognitionRef.current?.abort();
     setIsListening(false);
     setTranscript('');
-    finalTranscriptRef.current = '';
     setError(null);
     setErrorCode(null);
   }, []);
