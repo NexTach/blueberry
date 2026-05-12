@@ -39,6 +39,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
   const shouldKeepListeningRef = useRef(false);
   const manuallyStoppedRef = useRef(false);
   const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const finalTranscriptRef = useRef('');
 
   useEffect(() => {
     if (!isSpeechSupported) return;
@@ -52,13 +53,23 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     recognition.interimResults = true;
 
     recognition.onresult = (e: SpeechRecognitionEvent) => {
-      // e.resultIndex부터 시작해서 새로 추가된 결과만 처리
-      let result = '';
+      let interimTranscript = '';
+
+      // 최종 결과만 finalTranscriptRef에 누적
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        result += e.results[i][0].transcript;
+        const transcript = e.results[i][0].transcript;
+        
+        if (e.results[i].isFinal) {
+          // 최종 결과: finalTranscriptRef에 누적
+          finalTranscriptRef.current += transcript;
+        } else {
+          // 임시 결과: UI에만 표시 (누적하지 않음)
+          interimTranscript += transcript;
+        }
       }
-      // 새 결과만 누적
-      setTranscript((prev) => prev + result);
+
+      // 상태 업데이트 (최종 결과 + 임시 결과)
+      setTranscript(finalTranscriptRef.current + interimTranscript);
     };
 
     recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
@@ -115,6 +126,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     setError(null);
     setErrorCode(null);
     setTranscript('');
+    finalTranscriptRef.current = '';
     setIsListening(true);
     try {
       recognitionRef.current.start();
@@ -140,6 +152,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     recognitionRef.current?.abort();
     setIsListening(false);
     setTranscript('');
+    finalTranscriptRef.current = '';
     setError(null);
     setErrorCode(null);
   }, []);
