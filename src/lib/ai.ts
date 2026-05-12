@@ -85,7 +85,6 @@ async function callGLM(params: CallAIParams): Promise<string> {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
-      max_tokens: maxTokens,
       response_format: { type: 'json_object' },
     });
     const text = response.choices[0]?.message?.content?.trim();
