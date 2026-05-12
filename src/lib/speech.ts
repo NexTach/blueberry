@@ -52,10 +52,13 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     recognition.interimResults = true;
 
     recognition.onresult = (e: SpeechRecognitionEvent) => {
-      const result = Array.from(e.results)
-        .map((r) => r[0].transcript)
-        .join('');
-      setTranscript(result);
+      // e.resultIndex부터 시작해서 새로 추가된 결과만 처리
+      let result = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        result += e.results[i][0].transcript;
+      }
+      // 새 결과만 누적
+      setTranscript((prev) => prev + result);
     };
 
     recognition.onerror = (e: SpeechRecognitionErrorEvent) => {

@@ -96,12 +96,30 @@ function WoodFrame() {
 
   return (
     <>
-      <div className="absolute top-0 left-0 right-0 pointer-events-none z-10" style={{ height: frame, background: wood }} />
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-10" style={{ height: frame, background: wood }} />
-      <div className="absolute top-0 left-0 bottom-0 pointer-events-none z-10" style={{ width: frame, background: wood }} />
-      <div className="absolute top-0 right-0 bottom-0 pointer-events-none z-10" style={{ width: frame, background: wood }} />
-      <div className="absolute inset-0 pointer-events-none z-9" style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.35)' }} />
-      <div className="absolute inset-0 pointer-events-none z-10" style={{ outline: '2px solid #3A2215', outlineOffset: '-1px' }} />
+      <div
+        className="absolute top-0 left-0 right-0 pointer-events-none z-10"
+        style={{ height: frame, background: wood }}
+      />
+      <div
+        className="absolute bottom-0 left-0 right-0 pointer-events-none z-10"
+        style={{ height: frame, background: wood }}
+      />
+      <div
+        className="absolute top-0 left-0 bottom-0 pointer-events-none z-10"
+        style={{ width: frame, background: wood }}
+      />
+      <div
+        className="absolute top-0 right-0 bottom-0 pointer-events-none z-10"
+        style={{ width: frame, background: wood }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none z-9"
+        style={{ boxShadow: 'inset 0 0 50px rgba(0,0,0,0.35)' }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{ outline: '2px solid #3A2215', outlineOffset: '-1px' }}
+      />
     </>
   );
 }
@@ -149,8 +167,14 @@ function BlackboardFrame({ theme }: { theme: ThemePreset }) {
           boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.08)',
         }}
       />
-      <div className="absolute inset-0 pointer-events-none z-9" style={{ boxShadow: 'inset 0 0 90px rgba(0,0,0,0.48)' }} />
-      <div className="absolute inset-0 pointer-events-none z-10" style={{ outline: `1px solid ${theme.border}`, outlineOffset: '-10px' }} />
+      <div
+        className="absolute inset-0 pointer-events-none z-9"
+        style={{ boxShadow: 'inset 0 0 90px rgba(0,0,0,0.48)' }}
+      />
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{ outline: `1px solid ${theme.border}`, outlineOffset: '-10px' }}
+      />
     </>
   );
 }
@@ -331,13 +355,29 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.id === 'brutal-bauhaus') {
     return (
       <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.15rem, 0.4vh, 0.4rem)' }}>
-        <span style={{ color: '#111', fontSize: 'clamp(3.4rem, 8.6vh, 8.4rem)', lineHeight: 0.92, fontFamily: theme.titleFont }}>
+        <span
+          style={{
+            color: '#111',
+            fontSize: 'clamp(3.4rem, 8.6vh, 8.4rem)',
+            lineHeight: 0.92,
+            fontFamily: theme.titleFont,
+          }}
+        >
           GWANGJU
         </span>
-        <span style={{ color: '#111', fontSize: 'clamp(4rem, 10vh, 9.6rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}>
+        <span
+          style={{ color: '#111', fontSize: 'clamp(4rem, 10vh, 9.6rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}
+        >
           SOFTWARE
         </span>
-        <span style={{ color: '#111', fontSize: 'clamp(3.1rem, 7.8vh, 7.2rem)', lineHeight: 0.94, fontFamily: theme.titleFont }}>
+        <span
+          style={{
+            color: '#111',
+            fontSize: 'clamp(3.1rem, 7.8vh, 7.2rem)',
+            lineHeight: 0.94,
+            fontFamily: theme.titleFont,
+          }}
+        >
           MEISTER HIGH
         </span>
       </div>
@@ -362,13 +402,37 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             <span className="text-xs font-bold text-gray-700">WELCOME</span>
           </div>
         )}
-        <span style={{ color: theme.accent, fontSize: 'clamp(0.95rem, 2.2vh, 1.45rem)', letterSpacing: '0.24em', fontWeight: 700, fontFamily: theme.bodyFont }}>
+        <span
+          style={{
+            color: theme.accent,
+            fontSize: 'clamp(0.95rem, 2.2vh, 1.45rem)',
+            letterSpacing: '0.24em',
+            fontWeight: 700,
+            fontFamily: theme.bodyFont,
+          }}
+        >
           WHITEBOARD MODE
         </span>
-        <span style={{ color: theme.text, fontSize: 'clamp(2.4rem, 7vh, 6rem)', lineHeight: 1.05, fontWeight: 700, fontFamily: theme.titleFont }}>
+        <span
+          style={{
+            color: theme.text,
+            fontSize: 'clamp(2.4rem, 7vh, 6rem)',
+            lineHeight: 1.05,
+            fontWeight: 700,
+            fontFamily: theme.titleFont,
+          }}
+        >
           GWANGJU SOFTWARE
         </span>
-        <span style={{ color: theme.text, fontSize: 'clamp(1.15rem, 3vh, 2.4rem)', letterSpacing: '0.18em', fontWeight: 700, fontFamily: theme.bodyFont }}>
+        <span
+          style={{
+            color: theme.text,
+            fontSize: 'clamp(1.15rem, 3vh, 2.4rem)',
+            letterSpacing: '0.18em',
+            fontWeight: 700,
+            fontFamily: theme.bodyFont,
+          }}
+        >
           MEISTER HIGH SCHOOL
         </span>
       </div>
@@ -381,10 +445,46 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         className="relative flex flex-col items-center gap-2 rounded-[32px] px-12 py-9"
         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        <span style={{ color: theme.secondary, fontSize: 'clamp(0.9rem, 2vh, 1.35rem)', letterSpacing: '0.26em', fontFamily: theme.bodyFont }}>BLACKBOARD MODE</span>
-        <span style={{ color: theme.text, fontSize: 'clamp(2.25rem, 6.8vh, 5.7rem)', lineHeight: 1.02, fontFamily: theme.titleFont }}>GWANGJU</span>
-        <span style={{ color: theme.accent, fontSize: 'clamp(3.1rem, 9vh, 8rem)', lineHeight: 1, fontFamily: theme.titleFont }}>SOFTWARE</span>
-        <span style={{ color: theme.text, fontSize: 'clamp(2rem, 5.8vh, 5rem)', lineHeight: 1.04, fontFamily: theme.titleFont }}>MEISTER</span>
+        <span
+          style={{
+            color: theme.secondary,
+            fontSize: 'clamp(0.9rem, 2vh, 1.35rem)',
+            letterSpacing: '0.26em',
+            fontFamily: theme.bodyFont,
+          }}
+        >
+          BLACKBOARD MODE
+        </span>
+        <span
+          style={{
+            color: theme.text,
+            fontSize: 'clamp(2.25rem, 6.8vh, 5.7rem)',
+            lineHeight: 1.02,
+            fontFamily: theme.titleFont,
+          }}
+        >
+          GWANGJU
+        </span>
+        <span
+          style={{
+            color: theme.accent,
+            fontSize: 'clamp(3.1rem, 9vh, 8rem)',
+            lineHeight: 1,
+            fontFamily: theme.titleFont,
+          }}
+        >
+          SOFTWARE
+        </span>
+        <span
+          style={{
+            color: theme.text,
+            fontSize: 'clamp(2rem, 5.8vh, 5rem)',
+            lineHeight: 1.04,
+            fontFamily: theme.titleFont,
+          }}
+        >
+          MEISTER
+        </span>
       </div>
     );
   }
@@ -401,7 +501,16 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             transform: 'rotate(-2deg)',
           }}
         >
-          <span style={{ color: '#111', fontSize: 'clamp(1.7rem, 5vh, 4.6rem)', letterSpacing: '0.08em', fontFamily: theme.titleFont }}>GWANGJU</span>
+          <span
+            style={{
+              color: '#111',
+              fontSize: 'clamp(1.7rem, 5vh, 4.6rem)',
+              letterSpacing: '0.08em',
+              fontFamily: theme.titleFont,
+            }}
+          >
+            GWANGJU
+          </span>
         </div>
         <div
           className="mt-3 px-10 py-4"
@@ -412,7 +521,16 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             transform: 'rotate(1.6deg)',
           }}
         >
-          <span style={{ color: '#111', fontSize: 'clamp(2.1rem, 6.2vh, 6rem)', lineHeight: 1, fontFamily: theme.titleFont }}>SOFTWARE TV</span>
+          <span
+            style={{
+              color: '#111',
+              fontSize: 'clamp(2.1rem, 6.2vh, 6rem)',
+              lineHeight: 1,
+              fontFamily: theme.titleFont,
+            }}
+          >
+            SOFTWARE TV
+          </span>
         </div>
         <div
           className="mt-3 px-8 py-3"
@@ -422,7 +540,16 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             transform: 'rotate(-1deg)',
           }}
         >
-          <span style={{ color: '#111', fontSize: 'clamp(1rem, 2.7vh, 2rem)', letterSpacing: '0.14em', fontFamily: theme.bodyFont }}>MEISTER WELCOME BOARD</span>
+          <span
+            style={{
+              color: '#111',
+              fontSize: 'clamp(1rem, 2.7vh, 2rem)',
+              letterSpacing: '0.14em',
+              fontFamily: theme.bodyFont,
+            }}
+          >
+            MEISTER WELCOME BOARD
+          </span>
         </div>
       </div>
     );
@@ -430,9 +557,37 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em', fontFamily: theme.titleFont }}>GWANGJU</span>
-      <span style={{ color: theme.accent, fontSize: 'clamp(3rem, 9.5vh, 8.5rem)', lineHeight: 1, letterSpacing: '0.2em', fontFamily: theme.titleFont }}>SOFTWARE</span>
-      <span style={{ color: theme.text, fontSize: 'clamp(2rem, 6.5vh, 5.5rem)', letterSpacing: '0.22em', fontFamily: theme.titleFont }}>MEISTER</span>
+      <span
+        style={{
+          color: theme.text,
+          fontSize: 'clamp(2rem, 6.5vh, 5.5rem)',
+          letterSpacing: '0.22em',
+          fontFamily: theme.titleFont,
+        }}
+      >
+        GWANGJU
+      </span>
+      <span
+        style={{
+          color: theme.accent,
+          fontSize: 'clamp(3rem, 9.5vh, 8.5rem)',
+          lineHeight: 1,
+          letterSpacing: '0.2em',
+          fontFamily: theme.titleFont,
+        }}
+      >
+        SOFTWARE
+      </span>
+      <span
+        style={{
+          color: theme.text,
+          fontSize: 'clamp(2rem, 6.5vh, 5.5rem)',
+          letterSpacing: '0.22em',
+          fontFamily: theme.titleFont,
+        }}
+      >
+        MEISTER
+      </span>
     </div>
   );
 }
@@ -726,14 +881,35 @@ function DisplayMessage({
             boxShadow: `18px 18px 0 ${theme.accent}22`,
           }}
         >
-          <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 6.8vh, 6rem)', lineHeight: 1.04, fontWeight: 700, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
+          <p
+            style={{
+              color: theme.accent,
+              fontSize: 'clamp(2.5rem, 6.8vh, 6rem)',
+              lineHeight: 1.04,
+              fontWeight: 700,
+              whiteSpace: 'nowrap',
+              fontFamily: theme.titleFont,
+            }}
+          >
             {displayName ? `${displayName}님` : '환영합니다'}
           </p>
           <div
             className="rounded-full"
-            style={{ width: 'clamp(120px, 18vw, 220px)', height: '6px', background: theme.secondary, marginTop: 'clamp(1rem, 2vh, 1.5rem)' }}
+            style={{
+              width: 'clamp(120px, 18vw, 220px)',
+              height: '6px',
+              background: theme.secondary,
+              marginTop: 'clamp(1rem, 2vh, 1.5rem)',
+            }}
           />
-          <PretextParagraph style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(1rem, 2vh, 1.6rem)', fontFamily: theme.bodyFont }}>
+          <PretextParagraph
+            style={{
+              ...bodyStyle,
+              color: theme.text,
+              marginTop: 'clamp(1rem, 2vh, 1.6rem)',
+              fontFamily: theme.bodyFont,
+            }}
+          >
             {msgBody}
           </PretextParagraph>
         </div>
@@ -747,7 +923,15 @@ function DisplayMessage({
         className="flex flex-col items-center transition-all duration-700"
         style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
       >
-        <p style={{ color: theme.accent, fontSize: 'clamp(2.6rem, 7vh, 6.3rem)', lineHeight: 1.06, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
+        <p
+          style={{
+            color: theme.accent,
+            fontSize: 'clamp(2.6rem, 7vh, 6.3rem)',
+            lineHeight: 1.06,
+            whiteSpace: 'nowrap',
+            fontFamily: theme.titleFont,
+          }}
+        >
           {displayName ? `${displayName}님` : '환영합니다'}
         </p>
         <PretextParagraph
@@ -773,7 +957,15 @@ function DisplayMessage({
           className="relative z-10 flex w-full flex-col items-center transition-all duration-700"
           style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
         >
-          <p style={{ color: '#111', fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)', lineHeight: 1.02, textAlign: 'center', fontFamily: theme.titleFont }}>
+          <p
+            style={{
+              color: '#111',
+              fontSize: 'clamp(2.9rem, 6.8vh, 6.6rem)',
+              lineHeight: 1.02,
+              textAlign: 'center',
+              fontFamily: theme.titleFont,
+            }}
+          >
             {displayName ? `${displayName}님` : '환영합니다'}
           </p>
           <PretextParagraph
@@ -795,7 +987,10 @@ function DisplayMessage({
     }
 
     return (
-      <div className="relative flex flex-col items-center gap-6 transition-all duration-700" style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}>
+      <div
+        className="relative flex flex-col items-center gap-6 transition-all duration-700"
+        style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
+      >
         <div
           className="px-8 py-5"
           style={{
@@ -805,7 +1000,15 @@ function DisplayMessage({
             transform: 'rotate(-1.6deg)',
           }}
         >
-          <p style={{ color: '#111', fontSize: 'clamp(2.3rem, 6.6vh, 5.6rem)', lineHeight: 1, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
+          <p
+            style={{
+              color: '#111',
+              fontSize: 'clamp(2.3rem, 6.6vh, 5.6rem)',
+              lineHeight: 1,
+              whiteSpace: 'nowrap',
+              fontFamily: theme.titleFont,
+            }}
+          >
             {displayName ? `${displayName}님` : 'WELCOME'}
           </p>
         </div>
@@ -819,7 +1022,9 @@ function DisplayMessage({
             maxWidth: 'min(82vw, 860px)',
           }}
         >
-          <PretextParagraph style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)', fontFamily: theme.bodyFont }}>
+          <PretextParagraph
+            style={{ ...bodyStyle, color: '#111', maxWidth: 'min(70vw, 18ch)', fontFamily: theme.bodyFont }}
+          >
             {msgBody}
           </PretextParagraph>
         </div>
@@ -828,11 +1033,29 @@ function DisplayMessage({
   }
 
   return (
-    <div className="text-center transition-all duration-700" style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}>
-      <p style={{ color: theme.accent, fontSize: 'clamp(2.5rem, 7vh, 6.5rem)', lineHeight: 1.1, whiteSpace: 'nowrap', fontFamily: theme.titleFont }}>
+    <div
+      className="text-center transition-all duration-700"
+      style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
+    >
+      <p
+        style={{
+          color: theme.accent,
+          fontSize: 'clamp(2.5rem, 7vh, 6.5rem)',
+          lineHeight: 1.1,
+          whiteSpace: 'nowrap',
+          fontFamily: theme.titleFont,
+        }}
+      >
         {displayName ? `${displayName}님` : ''}
       </p>
-      <PretextParagraph style={{ ...bodyStyle, color: theme.text, marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)', fontFamily: theme.bodyFont }}>
+      <PretextParagraph
+        style={{
+          ...bodyStyle,
+          color: theme.text,
+          marginTop: 'clamp(0.5rem, 1.5vh, 1.5rem)',
+          fontFamily: theme.bodyFont,
+        }}
+      >
         {msgBody}
       </PretextParagraph>
     </div>
@@ -840,10 +1063,7 @@ function DisplayMessage({
 }
 
 function buildCanvasFont(computed: CSSStyleDeclaration) {
-  return (
-    computed.font ||
-    `${computed.fontStyle} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`
-  );
+  return computed.font || `${computed.fontStyle} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`;
 }
 
 function PretextParagraph({
@@ -953,14 +1173,24 @@ function PretextParagraph({
 
   if (as === 'p') {
     return (
-      <p ref={(node) => { containerRef.current = node; }} style={style}>
+      <p
+        ref={(node) => {
+          containerRef.current = node;
+        }}
+        style={style}
+      >
         {content}
       </p>
     );
   }
 
   return (
-    <div ref={(node) => { containerRef.current = node; }} style={style}>
+    <div
+      ref={(node) => {
+        containerRef.current = node;
+      }}
+      style={style}
+    >
       {content}
     </div>
   );
@@ -1076,7 +1306,14 @@ export default function DesktopPage() {
     return () => {
       cancelled = true;
     };
-  }, [session?.status, session?.visitorName, session?.sourcePrompt, session?.welcomeMessage, session?.tone, session?.generationId]);
+  }, [
+    session?.status,
+    session?.visitorName,
+    session?.sourcePrompt,
+    session?.welcomeMessage,
+    session?.tone,
+    session?.generationId,
+  ]);
 
   useEffect(() => {
     if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
@@ -1192,7 +1429,14 @@ export default function DesktopPage() {
           className="absolute flex justify-end z-20"
           style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}
         >
-          <span style={{ color: theme.muted, fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)', whiteSpace: 'nowrap', letterSpacing: '0.16em' }}>
+          <span
+            style={{
+              color: theme.muted,
+              fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)',
+              whiteSpace: 'nowrap',
+              letterSpacing: '0.16em',
+            }}
+          >
             Gwangju Software Meister High School
           </span>
         </div>
@@ -1207,8 +1451,16 @@ export default function DesktopPage() {
         }}
       >
         <div className="flex flex-col gap-0.5">
-          <span style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)', letterSpacing: '0.16em' }}>since</span>
-          <span style={{ color: theme.family === 'brutal' ? theme.text : theme.text, fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)', letterSpacing: '0.12em' }}>
+          <span style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)', letterSpacing: '0.16em' }}>
+            since
+          </span>
+          <span
+            style={{
+              color: theme.family === 'brutal' ? theme.text : theme.text,
+              fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)',
+              letterSpacing: '0.12em',
+            }}
+          >
             {theme.id === 'brutal-bauhaus' ? '2011' : '2017'}
           </span>
         </div>
