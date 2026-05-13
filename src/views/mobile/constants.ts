@@ -2,20 +2,12 @@ import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { THEME_PRESETS } from '../../lib/themes';
 import type { TemplateOption, ThemeOption, AIToneOption, AiToneId } from './types';
 
-export const DEFAULT_TEMPLATE_ID: TemplateId = 1;
+export const DEFAULT_TEMPLATE_ID: TemplateId = 2;
 export const AI_TEMPLATE_ID: TemplateId = 7;
 export const FALLBACK_VISITOR_NAME = '방문자';
 export const DEFAULT_AI_TONE: AiToneId = 'warm';
 
 export const TEMPLATES: TemplateOption[] = [
-  {
-    id: 1,
-    label: '간단 환영',
-    description: '가장 기본적인 인사',
-    accent: 'bg-emerald-50 text-emerald-700',
-    mode: 'template',
-    preview: (name) => applyTemplate(name, 1) ?? '',
-  },
   {
     id: 2,
     label: '학교 환영',

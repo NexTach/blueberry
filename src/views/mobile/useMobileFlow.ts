@@ -26,7 +26,7 @@ function getConfirmStages(templateId: TemplateId): ConfirmStage[] {
 }
 
 function isValidTemplateId(templateId: number | null | undefined): templateId is TemplateId {
-  return templateId === 1 || templateId === 2 || templateId === 3 || templateId === 4 || templateId === 5 || templateId === 6 || templateId === 7;
+  return templateId === 2 || templateId === 3 || templateId === 4 || templateId === 5 || templateId === 6 || templateId === 7;
 }
 
 export function useMobileFlow() {
@@ -57,7 +57,7 @@ export function useMobileFlow() {
   function inferTemplateId(visitorName: string, welcomeMessage: string, tone?: string): TemplateId {
     const normalizedMessage = welcomeMessage.trim();
     const normalizedName = visitorName.trim() || FALLBACK_VISITOR_NAME;
-    const templateIds: Exclude<TemplateId, 7>[] = [1, 2, 3, 4, 5, 6];
+    const templateIds: Exclude<TemplateId, 7>[] = [2, 3, 4, 5, 6];
 
     for (const templateId of templateIds) {
       if (applyTemplate(normalizedName, templateId) === normalizedMessage) {
@@ -319,7 +319,8 @@ export function useMobileFlow() {
             status: 'displaying',
             visitorName: resolvedName,
             templateId: AI_TEMPLATE_ID,
-            welcomeMessage: initialConfirmSnapshot?.message || message || '환영합니다!',
+            welcomeMessage:
+              initialConfirmSnapshot?.message || message || '광주SW마이스터고에 오신 것을 환영합니다!',
             sourcePrompt: initialConfirmSnapshot?.sourcePrompt || optimizedAiPrompt,
             generationId: '',
             tone: aiTone,
