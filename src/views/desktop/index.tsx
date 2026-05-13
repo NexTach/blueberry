@@ -1443,7 +1443,7 @@ export default function DesktopPage() {
       )}
 
       <div
-        className="absolute flex items-end justify-between z-20"
+        className="absolute flex items-end justify-end z-20"
         style={{
           bottom: 'clamp(24px, 4vh, 50px)',
           left: 'clamp(50px, 7vw, 100px)',
