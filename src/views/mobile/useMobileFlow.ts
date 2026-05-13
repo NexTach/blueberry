@@ -1,11 +1,11 @@
 import { startTransition, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { subscribeSession, updateSession, updateTheme, resetSession } from '../../lib/firebase';
+import { subscribeSession, updateSession, updateTheme, updateDateFormat, resetSession } from '../../lib/firebase';
 import { applyTemplate, type TemplateId } from '../../lib/openai';
 import { useSpeechRecognition } from '../../lib/speech';
 import { AI_TEMPLATE_ID, DEFAULT_AI_TONE, DEFAULT_TEMPLATE_ID, FALLBACK_VISITOR_NAME, THEMES } from './constants';
 import type { AiToneId, CommandInterpretation, ConfirmStage, Step } from './types';
-import type { ThemeId, Session } from '../../types/session';
+import type { DateFormat, ThemeId, Session } from '../../types/session';
 
 interface ConfirmDraftSnapshot {
   templateId: TemplateId;
@@ -19,10 +19,10 @@ interface ConfirmDraftSnapshot {
 
 function getConfirmStages(templateId: TemplateId): ConfirmStage[] {
   if (templateId === AI_TEMPLATE_ID) {
-    return ['template', 'content', 'tone', 'theme', 'name'];
+    return ['template', 'content', 'tone', 'theme', 'dateformat', 'name'];
   }
 
-  return ['template', 'content', 'theme', 'name'];
+  return ['template', 'content', 'theme', 'dateformat', 'name'];
 }
 
 function isValidTemplateId(templateId: number | null | undefined): templateId is TemplateId {
@@ -299,6 +299,10 @@ export function useMobileFlow() {
     await updateTheme(nextThemeId);
   }
 
+  async function handleDateFormatChange(nextFormat: DateFormat) {
+    await updateDateFormat(nextFormat);
+  }
+
   async function handleConfirm() {
     setIsSubmitting(true);
     const resolvedName = name.trim() || FALLBACK_VISITOR_NAME;
@@ -502,6 +506,8 @@ export function useMobileFlow() {
     setPreviousStep(null);
   }
 
+  const dateFormat: DateFormat = lastSession?.dateFormat ?? 'korean';
+
   const canEditExisting = lastSession?.status === 'displaying' && Boolean(lastSession.welcomeMessage?.trim());
   const canContinueConfirmStage =
     confirmStage !== 'content' || selectedTemplate === AI_TEMPLATE_ID || Boolean(message.trim());
@@ -524,6 +530,7 @@ export function useMobileFlow() {
     isSubmitting,
     showDirectInput,
     themeId,
+    dateFormat,
     speech,
     setAiTone,
     setAiPrompt,
@@ -535,6 +542,7 @@ export function useMobileFlow() {
     handleTemplateChange,
     handleNameChange,
     handleThemeChange,
+    handleDateFormatChange,
     handleConfirmStageBack,
     handleConfirmStageContinue,
     handleConfirm,

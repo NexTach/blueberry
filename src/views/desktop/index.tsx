@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { layoutWithLines, prepareWithSegments } from '@chenglou/pretext';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
-import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
+import { subscribeSession, resetSession, updateSession, updateDateFormat } from '../../lib/firebase';
 import { findTheme, type ThemePreset } from '../../lib/themes';
-import type { Session, ThemeId } from '../../types/session';
+import type { DateFormat, Session, ThemeId } from '../../types/session';
 
 const RESET_DELAY = 30 * 60 * 1000;
 
@@ -1196,23 +1196,27 @@ function PretextParagraph({
   );
 }
 
-function useClock() {
-  const [time, setTime] = useState(() => formatDateTime(new Date()));
-
-  useEffect(() => {
-    const id = setInterval(() => setTime(formatDateTime(new Date())), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return time;
-}
-
-function formatDateTime(date: Date) {
+function formatDateTime(date: Date, format: DateFormat = 'korean') {
+  const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const hours = date.getHours();
   const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${month}월 ${day}일 ${hours < 12 ? '오전' : '오후'} ${hours % 12 || 12}:${minutes}`;
+  if (format === 'western') {
+    return `${year}.${month}.${day} ${hours < 12 ? 'AM' : 'PM'} ${hours % 12 || 12}:${minutes}`;
+  }
+  return `${year}년 ${month}월 ${day}일 ${hours < 12 ? '오전' : '오후'} ${hours % 12 || 12}:${minutes}분`;
+}
+
+function useClock(format: DateFormat) {
+  const [time, setTime] = useState(() => formatDateTime(new Date(), format));
+
+  useEffect(() => {
+    const id = setInterval(() => setTime(formatDateTime(new Date(), format)), 1000);
+    return () => clearInterval(id);
+  }, [format]);
+
+  return time;
 }
 
 function escapeRegex(value: string) {
@@ -1250,7 +1254,8 @@ export default function DesktopPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastGenerationIdRef = useRef('');
-  const time = useClock();
+  const dateFormat: DateFormat = session?.dateFormat ?? 'korean';
+  const time = useClock(dateFormat);
   const mobileUrl = `${window.location.origin}/mobile`;
 
   const themeId: ThemeId = session?.themeId ?? 'green';
@@ -1457,6 +1462,27 @@ export default function DesktopPage() {
             </span>
           )}
           <span style={{ color: theme.text, fontSize: 'clamp(1.2rem, 3vh, 2.2rem)' }}>{time}</span>
+          <div className="flex gap-2">
+            {(['korean', 'western'] as DateFormat[]).map((fmt) => (
+              <button
+                key={fmt}
+                onClick={() => void updateDateFormat(fmt)}
+                style={{
+                  fontSize: 'clamp(0.55rem, 1.2vh, 0.8rem)',
+                  letterSpacing: '0.06em',
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  border: `1px solid ${dateFormat === fmt ? theme.accent : theme.border}`,
+                  background: dateFormat === fmt ? theme.accent + '22' : 'transparent',
+                  color: dateFormat === fmt ? theme.accent : theme.muted,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {fmt === 'korean' ? '년월일' : 'YYYY.M.D'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
