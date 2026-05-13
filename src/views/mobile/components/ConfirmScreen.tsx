@@ -20,6 +20,7 @@ interface ConfirmScreenProps {
   aiTone: AiToneId;
   aiPrompt: string;
   themeId: ThemeId;
+  rotation?: 0 | 90 | 180 | 270;
   isSubmitting: boolean;
   onNameChange: (name: string) => void;
   onTemplateChange: (id: TemplateId) => void;
@@ -27,6 +28,7 @@ interface ConfirmScreenProps {
   onAiToneChange: (tone: AiToneId) => void;
   onAiPromptChange: (prompt: string) => void;
   onThemeChange: (themeId: ThemeId) => void;
+  onRotate?: () => void;
   onReenterVoice: () => void;
   onReenterDirect: () => void;
   onBack: () => void;
@@ -45,6 +47,7 @@ export default function ConfirmScreen({
   aiTone,
   aiPrompt,
   themeId,
+  rotation,
   isSubmitting,
   onNameChange,
   onTemplateChange,
@@ -52,6 +55,7 @@ export default function ConfirmScreen({
   onAiToneChange,
   onAiPromptChange,
   onThemeChange,
+  onRotate,
   onReenterVoice,
   onReenterDirect,
   onBack,
@@ -310,28 +314,58 @@ export default function ConfirmScreen({
         )}
 
         {confirmStage === 'name' && (
-          <div className="flex flex-col" style={{ gap: 6 }}>
-            <label style={labelStyle}>
-              이름 (선택)
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => onNameChange(e.target.value)}
-              placeholder="이름이 필요하면 입력하세요"
-              className="w-full px-4 outline-none transition-colors"
-              style={{
-                minHeight: mobileControl.inputMinHeight,
-                borderRadius: mobileRadius.field,
-                border: `1px solid transparent`,
-                background: palette.field,
-                color: palette.text,
-                fontSize: mobileTypography.body.fontSize,
-                lineHeight: mobileTypography.body.lineHeight,
-                letterSpacing: mobileTypography.body.letterSpacing,
-                fontWeight: mobileTypography.body.fontWeight,
-              }}
-            />
+          <div className="flex flex-col" style={{ gap: 12 }}>
+            <div className="flex flex-col" style={{ gap: 6 }}>
+              <label style={labelStyle}>
+                이름 (선택)
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => onNameChange(e.target.value)}
+                placeholder="이름이 필요하면 입력하세요"
+                className="w-full px-4 outline-none transition-colors"
+                style={{
+                  minHeight: mobileControl.inputMinHeight,
+                  borderRadius: mobileRadius.field,
+                  border: `1px solid transparent`,
+                  background: palette.field,
+                  color: palette.text,
+                  fontSize: mobileTypography.body.fontSize,
+                  lineHeight: mobileTypography.body.lineHeight,
+                  letterSpacing: mobileTypography.body.letterSpacing,
+                  fontWeight: mobileTypography.body.fontWeight,
+                }}
+              />
+            </div>
+            
+            {onRotate && (
+              <div className="flex flex-col" style={{ gap: 6, paddingTop: mobileControl.sectionPadding }}>
+                <label style={labelStyle}>
+                  화면 방향 조정
+                </label>
+                <div className="grid grid-cols-4" style={{ gap: 8 }}>
+                  {[0, 90, 180, 270].map((deg) => (
+                    <button
+                      key={deg}
+                      onClick={onRotate}
+                      style={{
+                        minHeight: 44,
+                        borderRadius: mobileRadius.button,
+                        border: rotation === deg ? `2px solid ${palette.accent}` : `1px solid ${palette.line}`,
+                        background: rotation === deg ? `${palette.accent}25` : palette.weak,
+                        color: rotation === deg ? palette.accent : palette.subtextStrong,
+                        fontSize: mobileTypography.caption.fontSize,
+                        fontWeight: 600,
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      {deg}°
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

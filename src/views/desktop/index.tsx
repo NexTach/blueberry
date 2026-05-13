@@ -1353,11 +1353,40 @@ export default function DesktopPage() {
     await resetSession();
   }
 
+  async function handleRotate() {
+    const currentRotation = session?.rotation ?? 0;
+    const nextRotation = ((currentRotation + 90) % 360) as 0 | 90 | 180 | 270;
+    await updateSession({ rotation: nextRotation });
+  }
+
+  const rotation = session?.rotation ?? 0;
+  const isRotated = rotation === 90 || rotation === 270;
+
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden select-none"
-      style={{ background: rootBackground(theme), fontFamily: rootFont(theme) }}
+      className="fixed inset-0 overflow-hidden select-none"
+      style={{ 
+        background: rootBackground(theme), 
+        fontFamily: rootFont(theme),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
     >
+      <div
+        style={{ 
+          position: 'relative',
+          transform: `rotate(${rotation}deg)`,
+          transformOrigin: 'center center',
+          transition: 'transform 0.3s ease-in-out',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: isRotated ? '100vh' : '100vw',
+          height: isRotated ? '100vw' : '100vh',
+        }}
+      >
       <ThemeTexture theme={theme} />
 
       <div
@@ -1508,6 +1537,18 @@ export default function DesktopPage() {
       )}
 
       <ThemeFrame theme={theme} />
+      </div>
+
+      {/* 회전 제어 버튼 - 회전되지 않음 */}
+      <button
+        onClick={() => void handleRotate()}
+        className="fixed bottom-6 right-6 z-50 rounded-lg bg-black/60 hover:bg-black/80 p-2.5 text-white transition-all duration-200"
+        title={`화면 회전 (현재: ${session?.rotation ?? 0}°)`}
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      </button>
     </div>
   );
 }

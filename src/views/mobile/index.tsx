@@ -53,6 +53,7 @@ export default function MobilePage() {
     handleBackFromPreview,
     handleProceedFromPreview,
     handleConfirmFromPreview,
+    handleRotate,
   } = useMobileFlow();
 
   const { isListening, transcript, error } = speech;
@@ -134,6 +135,7 @@ export default function MobilePage() {
             aiTone={aiTone}
             aiPrompt={aiPrompt}
             themeId={themeId}
+            rotation={lastSession?.rotation ?? 0}
             isSubmitting={isSubmitting}
             onNameChange={handleNameChange}
             onTemplateChange={handleTemplateChange}
@@ -141,6 +143,7 @@ export default function MobilePage() {
             onAiToneChange={setAiTone}
             onAiPromptChange={setAiPrompt}
             onThemeChange={handleThemeChange}
+            onRotate={handleRotate}
             onReenterVoice={handleReenterVoice}
             onReenterDirect={handleReenterDirect}
             onBack={handleConfirmStageBack}

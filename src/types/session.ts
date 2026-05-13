@@ -24,5 +24,6 @@ export interface Session {
   generationId?: string;
   themeId?: ThemeId;
   tone?: string;
+  rotation?: 0 | 90 | 180 | 270;
   updatedAt: Timestamp | null;
 }

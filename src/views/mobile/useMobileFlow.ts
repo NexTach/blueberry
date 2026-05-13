@@ -473,6 +473,12 @@ export function useMobileFlow() {
     setStep('choose');
   }
 
+  async function handleRotate() {
+    const currentRotation = lastSession?.rotation ?? 0;
+    const nextRotation = ((currentRotation + 90) % 360) as 0 | 90 | 180 | 270;
+    await updateSession({ rotation: nextRotation });
+  }
+
   function handleBackToPrevious() {
     reset();
     if (previousStep === 'listening') {
@@ -553,5 +559,6 @@ export function useMobileFlow() {
     handleBackFromPreview,
     handleProceedFromPreview,
     handleConfirmFromPreview,
+    handleRotate,
   };
 }
