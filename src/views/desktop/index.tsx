@@ -1450,20 +1450,6 @@ export default function DesktopPage() {
           right: 'clamp(50px, 7vw, 100px)',
         }}
       >
-        <div className="flex flex-col gap-0.5">
-          <span style={{ color: theme.muted, fontSize: 'clamp(0.75rem, 1.8vh, 1.3rem)', letterSpacing: '0.16em' }}>
-            since
-          </span>
-          <span
-            style={{
-              color: theme.family === 'brutal' ? theme.text : theme.text,
-              fontSize: 'clamp(1.2rem, 3.5vh, 2.8rem)',
-              letterSpacing: '0.12em',
-            }}
-          >
-            {theme.id === 'brutal-bauhaus' ? '2011' : '2017'}
-          </span>
-        </div>
         <div className="flex flex-col items-center gap-1.5">
           {theme.id === 'brutal-bauhaus' && (
             <span style={{ color: theme.text, fontSize: 'clamp(0.95rem, 1.9vh, 1.5rem)', letterSpacing: '0.08em' }}>
