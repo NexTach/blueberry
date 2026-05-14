@@ -354,7 +354,7 @@ function ThemeFrame({ theme }: { theme: ThemePreset }) {
 function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.id === 'brutal-bauhaus') {
     return (
-      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.15rem, 0.4vh, 0.8rem)' }}>
+      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.4rem, 1vh, 2rem)' }}>
         <span
           style={{
             color: '#111',
@@ -387,12 +387,13 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.family === 'whiteboard') {
     return (
       <div
-        className="relative flex flex-col items-center rounded-[32px]"
+        className="relative flex flex-col items-center"
         style={{
-          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(2rem, 3.5vw, 6rem)',
-          gap: 'clamp(0.25rem, 0.8vh, 1rem)',
+          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(3rem, 4vw, 7rem)',
+          gap: 'clamp(0.4rem, 1vh, 1.5rem)',
           background: theme.surface,
           border: `4px solid ${theme.border}`,
+          borderRadius: 'clamp(20px, 2.5vw, 40px)',
           boxShadow: `14px 14px 0 ${theme.accent}22`,
         }}
       >
@@ -444,12 +445,13 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.family === 'blackboard') {
     return (
       <div
-        className="relative flex flex-col items-center rounded-[32px]"
+        className="relative flex flex-col items-center"
         style={{
-          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(2rem, 3.5vw, 6rem)',
-          gap: 'clamp(0.25rem, 0.8vh, 1rem)',
+          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(3rem, 4vw, 7rem)',
+          gap: 'clamp(0.4rem, 1vh, 1.5rem)',
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 'clamp(20px, 2.5vw, 40px)',
         }}
       >
         <span
@@ -553,7 +555,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center" style={{ gap: 'clamp(0.4rem, 1.2vh, 2rem)' }}>
       <span
         style={{
           color: theme.text,
@@ -599,7 +601,7 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
             top: '14%',
             left: '31%',
             width: 'clamp(16px, 1.5vw, 24px)',
-            height: 'clamp(210px, 23vh, 300px)',
+            height: 'min(23vh, 300px)',
             background: '#111',
             transform: 'rotate(-12deg)',
             opacity: show ? 1 : 0,
@@ -611,7 +613,7 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
             top: '12%',
             left: '50%',
             width: 'clamp(16px, 1.5vw, 24px)',
-            height: 'clamp(190px, 21vh, 280px)',
+            height: 'min(21vh, 280px)',
             background: '#111',
             opacity: show ? 1 : 0,
           }}
@@ -622,7 +624,7 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
             top: '14%',
             right: '31%',
             width: 'clamp(16px, 1.5vw, 24px)',
-            height: 'clamp(190px, 21vh, 280px)',
+            height: 'min(21vh, 280px)',
             background: '#111',
             transform: 'rotate(-4deg)',
             opacity: show ? 1 : 0,
@@ -633,8 +635,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             top: '25%',
             left: '31%',
-            width: 'clamp(300px, 31vw, 470px)',
-            height: 'clamp(240px, 28vh, 360px)',
+            width: 'min(31vw, 470px)',
+            height: 'min(28vh, 360px)',
             background: theme.accent,
             clipPath: 'polygon(8% 14%, 88% 0, 100% 78%, 46% 100%, 0 86%)',
             transform: 'rotate(-10deg)',
@@ -646,8 +648,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             bottom: '20%',
             left: '10%',
-            width: 'clamp(260px, 34vw, 500px)',
-            height: 'clamp(170px, 21vh, 280px)',
+            width: 'min(34vw, 500px)',
+            height: 'min(21vh, 280px)',
             background: '#3fb8d9',
             clipPath: 'polygon(8% 8%, 84% 0, 100% 72%, 28% 100%, 0 66%)',
             transform: 'rotate(-8deg)',
@@ -659,8 +661,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             bottom: '19%',
             right: '9%',
-            width: 'clamp(280px, 31vw, 460px)',
-            height: 'clamp(240px, 29vh, 390px)',
+            width: 'min(31vw, 460px)',
+            height: 'min(29vh, 390px)',
             background: theme.secondary,
             clipPath: 'polygon(18% 0, 100% 9%, 100% 100%, 0 90%, 7% 22%)',
             transform: 'rotate(3deg)',
@@ -672,8 +674,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             left: '17%',
             bottom: '11%',
-            width: 'clamp(180px, 22vw, 330px)',
-            height: 'clamp(180px, 22vw, 330px)',
+            width: 'min(22vw, 330px)',
+            height: 'min(22vw, 330px)',
             border: '10px solid #111',
             opacity: show ? 1 : 0,
           }}
@@ -684,7 +686,7 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
             right: '27%',
             bottom: '17%',
             width: 'clamp(16px, 1.4vw, 22px)',
-            height: 'clamp(180px, 21vh, 280px)',
+            height: 'min(21vh, 280px)',
             background: '#111',
             opacity: show ? 1 : 0,
           }}
@@ -694,8 +696,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             left: '24%',
             bottom: '4%',
-            width: 'clamp(420px, 50vw, 780px)',
-            height: 'clamp(150px, 18vh, 230px)',
+            width: 'min(50vw, 780px)',
+            height: 'min(18vh, 230px)',
             background: '#09b53c',
             clipPath: 'polygon(0 0, 78% 0, 100% 36%, 92% 100%, 8% 100%)',
             transform: 'rotate(-1deg)',
@@ -1394,7 +1396,7 @@ export default function DesktopPage() {
         </div>
 
         {!isGenerating && (
-          <div className="flex flex-col items-center gap-3" style={{ marginTop: 'clamp(2rem, 5vh, 4rem)' }}>
+          <div className="flex flex-col items-center gap-3" style={{ marginTop: 'clamp(2rem, 5vh, 8rem)' }}>
             <div
               className="rounded-2xl"
               style={{
