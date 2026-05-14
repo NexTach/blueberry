@@ -378,7 +378,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             fontFamily: theme.titleFont,
           }}
         >
-          MEISTER HIGH
+          MEISTER
         </span>
       </div>
     );
@@ -404,17 +404,6 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         )}
         <span
           style={{
-            color: theme.accent,
-            fontSize: 'clamp(0.95rem, 2.2vh, 1.45rem)',
-            letterSpacing: '0.24em',
-            fontWeight: 700,
-            fontFamily: theme.bodyFont,
-          }}
-        >
-          WHITEBOARD MODE
-        </span>
-        <span
-          style={{
             color: theme.text,
             fontSize: 'clamp(2.4rem, 7vh, 6rem)',
             lineHeight: 1.05,
@@ -422,7 +411,18 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             fontFamily: theme.titleFont,
           }}
         >
-          GWANGJU SOFTWARE
+          GWANGJU
+        </span>
+        <span
+          style={{
+            color: theme.accent,
+            fontSize: 'clamp(2.4rem, 7vh, 6rem)',
+            lineHeight: 1.05,
+            fontWeight: 700,
+            fontFamily: theme.titleFont,
+          }}
+        >
+          SOFTWARE
         </span>
         <span
           style={{
@@ -433,7 +433,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             fontFamily: theme.bodyFont,
           }}
         >
-          MEISTER HIGH SCHOOL
+          MEISTER
         </span>
       </div>
     );
@@ -445,16 +445,6 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         className="relative flex flex-col items-center gap-2 rounded-[32px] px-12 py-9"
         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
       >
-        <span
-          style={{
-            color: theme.secondary,
-            fontSize: 'clamp(0.9rem, 2vh, 1.35rem)',
-            letterSpacing: '0.26em',
-            fontFamily: theme.bodyFont,
-          }}
-        >
-          BLACKBOARD MODE
-        </span>
         <span
           style={{
             color: theme.text,
@@ -529,7 +519,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
               fontFamily: theme.titleFont,
             }}
           >
-            SOFTWARE TV
+            SOFTWARE
           </span>
         </div>
         <div
@@ -548,7 +538,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
               fontFamily: theme.bodyFont,
             }}
           >
-            MEISTER WELCOME BOARD
+            MEISTER
           </span>
         </div>
       </div>
