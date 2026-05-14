@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { layoutWithLines, prepareWithSegments } from '@chenglou/pretext';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
-import { subscribeSession, resetSession, updateSession, updateDateFormat } from '../../lib/firebase';
+import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
 import { findTheme, type ThemePreset } from '../../lib/themes';
 import type { DateFormat, Session, ThemeId } from '../../types/session';
 
