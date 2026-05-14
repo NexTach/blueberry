@@ -36,6 +36,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const finalTranscriptRef = useRef('');
   const shouldKeepListeningRef = useRef(false);
   const manuallyStoppedRef = useRef(false);
   const restartTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -52,12 +53,23 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     recognition.interimResults = true;
 
     recognition.onresult = (e: SpeechRecognitionEvent) => {
-      // 모든 결과를 합쳐서 표시 (최종 및 임시 모두)
-      let result = '';
+      let finalized = '';
+      let interim = '';
+
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        result += e.results[i][0].transcript;
+        const text = e.results[i][0].transcript;
+        if (e.results[i].isFinal) {
+          finalized += text;
+        } else {
+          interim += text;
+        }
       }
-      setTranscript(result);
+
+      if (finalized.trim()) {
+        finalTranscriptRef.current = `${finalTranscriptRef.current} ${finalized}`.trim();
+      }
+
+      setTranscript(`${finalTranscriptRef.current} ${interim}`.trim());
     };
 
     recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
@@ -113,6 +125,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
     setError(null);
     setErrorCode(null);
+    finalTranscriptRef.current = '';
     setTranscript('');
     setIsListening(true);
     try {
@@ -138,6 +151,7 @@ export function useSpeechRecognition(): SpeechState & SpeechControls {
     if (restartTimeoutRef.current) clearTimeout(restartTimeoutRef.current);
     recognitionRef.current?.abort();
     setIsListening(false);
+    finalTranscriptRef.current = '';
     setTranscript('');
     setError(null);
     setErrorCode(null);
