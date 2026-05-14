@@ -354,11 +354,11 @@ function ThemeFrame({ theme }: { theme: ThemePreset }) {
 function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.id === 'brutal-bauhaus') {
     return (
-      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.15rem, 0.4vh, 0.4rem)' }}>
+      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.15rem, 0.4vh, 0.8rem)' }}>
         <span
           style={{
             color: '#111',
-            fontSize: 'clamp(3.4rem, 8.6vh, 8.4rem)',
+            fontSize: 'clamp(3.4rem, 8.6vh, 11rem)',
             lineHeight: 0.92,
             fontFamily: theme.titleFont,
           }}
@@ -366,14 +366,14 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
           GWANGJU
         </span>
         <span
-          style={{ color: '#111', fontSize: 'clamp(4rem, 10vh, 9.6rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}
+          style={{ color: '#111', fontSize: 'clamp(4rem, 10vh, 13rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}
         >
           SOFTWARE
         </span>
         <span
           style={{
             color: '#111',
-            fontSize: 'clamp(3.1rem, 7.8vh, 7.2rem)',
+            fontSize: 'clamp(3.1rem, 7.8vh, 10rem)',
             lineHeight: 0.94,
             fontFamily: theme.titleFont,
           }}
@@ -387,8 +387,10 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.family === 'whiteboard') {
     return (
       <div
-        className="relative flex flex-col items-center gap-2 rounded-[32px] px-10 py-8"
+        className="relative flex flex-col items-center rounded-[32px]"
         style={{
+          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(2rem, 3.5vw, 6rem)',
+          gap: 'clamp(0.25rem, 0.8vh, 1rem)',
           background: theme.surface,
           border: `4px solid ${theme.border}`,
           boxShadow: `14px 14px 0 ${theme.accent}22`,
@@ -405,7 +407,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2.4rem, 7vh, 6rem)',
+            fontSize: 'clamp(2.4rem, 7vh, 9rem)',
             lineHeight: 1.05,
             fontWeight: 700,
             fontFamily: theme.titleFont,
@@ -416,7 +418,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.accent,
-            fontSize: 'clamp(2.4rem, 7vh, 6rem)',
+            fontSize: 'clamp(2.4rem, 7vh, 9rem)',
             lineHeight: 1.05,
             fontWeight: 700,
             fontFamily: theme.titleFont,
@@ -427,7 +429,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(1.15rem, 3vh, 2.4rem)',
+            fontSize: 'clamp(1.15rem, 3vh, 4rem)',
             letterSpacing: '0.18em',
             fontWeight: 700,
             fontFamily: theme.bodyFont,
@@ -442,13 +444,18 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.family === 'blackboard') {
     return (
       <div
-        className="relative flex flex-col items-center gap-2 rounded-[32px] px-12 py-9"
-        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+        className="relative flex flex-col items-center rounded-[32px]"
+        style={{
+          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(2rem, 3.5vw, 6rem)',
+          gap: 'clamp(0.25rem, 0.8vh, 1rem)',
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}
       >
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2.25rem, 6.8vh, 5.7rem)',
+            fontSize: 'clamp(2.25rem, 6.8vh, 9rem)',
             lineHeight: 1.02,
             fontFamily: theme.titleFont,
           }}
@@ -458,7 +465,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.accent,
-            fontSize: 'clamp(3.1rem, 9vh, 8rem)',
+            fontSize: 'clamp(3.1rem, 9vh, 12rem)',
             lineHeight: 1,
             fontFamily: theme.titleFont,
           }}
@@ -468,7 +475,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2rem, 5.8vh, 5rem)',
+            fontSize: 'clamp(2rem, 5.8vh, 8rem)',
             lineHeight: 1.04,
             fontFamily: theme.titleFont,
           }}
@@ -481,20 +488,20 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
 
   if (theme.family === 'brutal') {
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center" style={{ gap: 'clamp(0.5rem, 1.2vh, 1.5rem)' }}>
         <div
-          className="px-8 py-4"
           style={{
+            padding: 'clamp(0.8rem, 1.5vh, 2rem) clamp(1.5rem, 2.5vw, 4rem)',
             background: theme.surface,
             border: '4px solid #111',
-            boxShadow: `12px 12px 0 ${theme.secondary}`,
+            boxShadow: `clamp(8px, 1.2vh, 16px) clamp(8px, 1.2vh, 16px) 0 ${theme.secondary}`,
             transform: 'rotate(-2deg)',
           }}
         >
           <span
             style={{
               color: '#111',
-              fontSize: 'clamp(1.7rem, 5vh, 4.6rem)',
+              fontSize: 'clamp(1.7rem, 5vh, 7rem)',
               letterSpacing: '0.08em',
               fontFamily: theme.titleFont,
             }}
@@ -503,18 +510,18 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
           </span>
         </div>
         <div
-          className="mt-3 px-10 py-4"
           style={{
+            padding: 'clamp(0.8rem, 1.5vh, 2rem) clamp(2rem, 3vw, 5rem)',
             background: theme.accent,
             border: '4px solid #111',
-            boxShadow: '10px 10px 0 #111',
+            boxShadow: `clamp(8px, 1.2vh, 14px) clamp(8px, 1.2vh, 14px) 0 #111`,
             transform: 'rotate(1.6deg)',
           }}
         >
           <span
             style={{
               color: '#111',
-              fontSize: 'clamp(2.1rem, 6.2vh, 6rem)',
+              fontSize: 'clamp(2.1rem, 6.2vh, 9rem)',
               lineHeight: 1,
               fontFamily: theme.titleFont,
             }}
@@ -523,8 +530,8 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
           </span>
         </div>
         <div
-          className="mt-3 px-8 py-3"
           style={{
+            padding: 'clamp(0.6rem, 1.2vh, 1.5rem) clamp(1.5rem, 2.5vw, 4rem)',
             background: theme.surface,
             border: '4px solid #111',
             transform: 'rotate(-1deg)',
@@ -533,7 +540,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
           <span
             style={{
               color: '#111',
-              fontSize: 'clamp(1rem, 2.7vh, 2rem)',
+              fontSize: 'clamp(1rem, 2.7vh, 3.5rem)',
               letterSpacing: '0.14em',
               fontFamily: theme.bodyFont,
             }}
@@ -550,7 +557,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.text,
-          fontSize: 'clamp(2rem, 6.5vh, 5.5rem)',
+          fontSize: 'clamp(2rem, 6.5vh, 8rem)',
           letterSpacing: '0.22em',
           fontFamily: theme.titleFont,
         }}
@@ -560,7 +567,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.accent,
-          fontSize: 'clamp(3rem, 9.5vh, 8.5rem)',
+          fontSize: 'clamp(3rem, 9.5vh, 13rem)',
           lineHeight: 1,
           letterSpacing: '0.2em',
           fontFamily: theme.titleFont,
@@ -571,7 +578,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.text,
-          fontSize: 'clamp(2rem, 6.5vh, 5.5rem)',
+          fontSize: 'clamp(2rem, 6.5vh, 8rem)',
           letterSpacing: '0.22em',
           fontFamily: theme.titleFont,
         }}
