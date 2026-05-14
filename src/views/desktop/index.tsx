@@ -1462,27 +1462,6 @@ export default function DesktopPage() {
             </span>
           )}
           <span style={{ color: theme.text, fontSize: 'clamp(1.2rem, 3vh, 2.2rem)' }}>{time}</span>
-          <div className="flex gap-2">
-            {(['korean', 'western'] as DateFormat[]).map((fmt) => (
-              <button
-                key={fmt}
-                onClick={() => void updateDateFormat(fmt)}
-                style={{
-                  fontSize: 'clamp(0.55rem, 1.2vh, 0.8rem)',
-                  letterSpacing: '0.06em',
-                  padding: '2px 8px',
-                  borderRadius: '999px',
-                  border: `1px solid ${dateFormat === fmt ? theme.accent : theme.border}`,
-                  background: dateFormat === fmt ? theme.accent + '22' : 'transparent',
-                  color: dateFormat === fmt ? theme.accent : theme.muted,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                {fmt === 'korean' ? '년월일' : 'YYYY.M.D'}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
