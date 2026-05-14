@@ -1253,6 +1253,8 @@ export default function DesktopPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastGenerationIdRef = useRef('');
+  const [showAlternate, setShowAlternate] = useState(false);
+  const alternateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dateFormat: DateFormat = session?.dateFormat ?? 'korean';
   const time = useClock(dateFormat);
   const mobileUrl = `${window.location.origin}/mobile`;
@@ -1261,6 +1263,11 @@ export default function DesktopPage() {
   const theme = findTheme(themeId);
   const displayName = normalizeDisplayName(session?.visitorName);
   const msgBody = normalizeMessageBody(session?.welcomeMessage, session?.visitorName);
+
+  const alternateMessage =
+    '광주소프트웨어마이스터고등학교 5·18 민주화운동 기념행사에 오신 것을 환영합니다.';
+  const displayedMsg = showAlternate ? alternateMessage : msgBody;
+  const displayedName = showAlternate ? '' : displayName;
 
   useEffect(() => subscribeSession(setSession), []);
 
@@ -1335,6 +1342,31 @@ export default function DesktopPage() {
     }
 
     return () => clearTimeout(startVisible);
+  }, [session?.status, session?.welcomeMessage]);
+  
+  useEffect(() => {
+    // when a new message starts displaying, schedule the alternate message after 5s
+    if (alternateTimerRef.current) {
+      clearTimeout(alternateTimerRef.current);
+      alternateTimerRef.current = null;
+    }
+
+    if (session?.status === 'displaying') {
+      // defer clearing to next tick to avoid synchronous state update inside effect
+      void Promise.resolve().then(() => setShowAlternate(false));
+      alternateTimerRef.current = setTimeout(() => {
+        setShowAlternate(true);
+      }, 5000);
+    } else {
+      void Promise.resolve().then(() => setShowAlternate(false));
+    }
+
+    return () => {
+      if (alternateTimerRef.current) {
+        clearTimeout(alternateTimerRef.current);
+        alternateTimerRef.current = null;
+      }
+    };
   }, [session?.status, session?.welcomeMessage]);
 
   useEffect(() => {
@@ -1425,7 +1457,7 @@ export default function DesktopPage() {
         }}
       >
         <DisplayDecorations theme={theme} show={show} />
-        <DisplayMessage theme={theme} displayName={displayName} msgBody={msgBody} show={show} />
+        <DisplayMessage theme={theme} displayName={displayedName} msgBody={displayedMsg} show={show} />
       </div>
 
       {theme.id !== 'brutal-bauhaus' && (
