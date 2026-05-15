@@ -354,11 +354,11 @@ function ThemeFrame({ theme }: { theme: ThemePreset }) {
 function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   if (theme.id === 'brutal-bauhaus') {
     return (
-      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.4rem, 1vh, 2rem)' }}>
+      <div className="flex flex-col items-center text-center" style={{ gap: 'clamp(0.6rem, 2vmin, 2.5rem)' }}>
         <span
           style={{
             color: '#111',
-            fontSize: 'clamp(3.4rem, 8.6vh, 11rem)',
+            fontSize: 'clamp(3.4rem, 9vmin, 11rem)',
             lineHeight: 0.92,
             fontFamily: theme.titleFont,
           }}
@@ -366,14 +366,14 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
           GWANGJU
         </span>
         <span
-          style={{ color: '#111', fontSize: 'clamp(4rem, 10vh, 13rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}
+          style={{ color: '#111', fontSize: 'clamp(4rem, 10.5vmin, 13rem)', lineHeight: 0.9, fontFamily: theme.titleFont }}
         >
           SOFTWARE
         </span>
         <span
           style={{
             color: '#111',
-            fontSize: 'clamp(3.1rem, 7.8vh, 10rem)',
+            fontSize: 'clamp(3.1rem, 8vmin, 10rem)',
             lineHeight: 0.94,
             fontFamily: theme.titleFont,
           }}
@@ -389,12 +389,13 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <div
         className="relative flex flex-col items-center"
         style={{
-          padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(3rem, 4vw, 7rem)',
-          gap: 'clamp(0.4rem, 1vh, 1.5rem)',
+          padding: 'clamp(1.2rem, 2vh, 3rem) clamp(2.5rem, 3.5vw, 6rem)',
+          gap: 'clamp(0.5rem, 1.2vmin, 2rem)',
           background: theme.surface,
           border: `4px solid ${theme.border}`,
           borderRadius: 'clamp(20px, 2.5vw, 40px)',
-          boxShadow: `14px 14px 0 ${theme.accent}22`,
+          boxShadow: `10px 10px 0 ${theme.accent}22`,
+          maxWidth: 'min(80vw, 960px)',
         }}
       >
         {theme.id === 'white-note' && (
@@ -408,7 +409,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2.4rem, 7vh, 9rem)',
+            fontSize: 'clamp(2.4rem, min(7vh, 8vw), 9rem)',
             lineHeight: 1.05,
             fontWeight: 700,
             fontFamily: theme.titleFont,
@@ -419,7 +420,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.accent,
-            fontSize: 'clamp(2.4rem, 7vh, 9rem)',
+            fontSize: 'clamp(2.4rem, min(7vh, 8vw), 9rem)',
             lineHeight: 1.05,
             fontWeight: 700,
             fontFamily: theme.titleFont,
@@ -430,7 +431,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(1.15rem, 3vh, 4rem)',
+            fontSize: 'clamp(1.15rem, min(3vh, 3.5vw), 4rem)',
             letterSpacing: '0.18em',
             fontWeight: 700,
             fontFamily: theme.bodyFont,
@@ -448,7 +449,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         className="relative flex flex-col items-center"
         style={{
           padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(3rem, 4vw, 7rem)',
-          gap: 'clamp(0.4rem, 1vh, 1.5rem)',
+          gap: 'clamp(0.5rem, 1.2vmin, 2rem)',
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 'clamp(20px, 2.5vw, 40px)',
@@ -457,7 +458,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2.25rem, 6.8vh, 9rem)',
+            fontSize: 'clamp(2.25rem, min(6.8vh, 8vw), 9rem)',
             lineHeight: 1.02,
             fontFamily: theme.titleFont,
           }}
@@ -467,7 +468,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.accent,
-            fontSize: 'clamp(3.1rem, 9vh, 12rem)',
+            fontSize: 'clamp(3.1rem, min(9vh, 10vw), 12rem)',
             lineHeight: 1,
             fontFamily: theme.titleFont,
           }}
@@ -477,7 +478,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2rem, 5.8vh, 8rem)',
+            fontSize: 'clamp(2rem, min(5.8vh, 7vw), 8rem)',
             lineHeight: 1.04,
             fontFamily: theme.titleFont,
           }}
@@ -490,20 +491,20 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
 
   if (theme.family === 'brutal') {
     return (
-      <div className="flex flex-col items-center" style={{ gap: 'clamp(0.5rem, 1.2vh, 1.5rem)' }}>
+      <div className="flex flex-col items-center" style={{ gap: 'clamp(0.7rem, 1.6vmin, 2rem)' }}>
         <div
           style={{
             padding: 'clamp(0.8rem, 1.5vh, 2rem) clamp(1.5rem, 2.5vw, 4rem)',
             background: theme.surface,
             border: '4px solid #111',
-            boxShadow: `clamp(8px, 1.2vh, 16px) clamp(8px, 1.2vh, 16px) 0 ${theme.secondary}`,
+            boxShadow: `clamp(8px, 1.2vmin, 16px) clamp(8px, 1.2vmin, 16px) 0 ${theme.secondary}`,
             transform: 'rotate(-2deg)',
           }}
         >
           <span
             style={{
               color: '#111',
-              fontSize: 'clamp(1.7rem, 5vh, 7rem)',
+              fontSize: 'clamp(1.7rem, min(5vh, 5.5vw), 7rem)',
               letterSpacing: '0.08em',
               fontFamily: theme.titleFont,
             }}
@@ -516,14 +517,14 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
             padding: 'clamp(0.8rem, 1.5vh, 2rem) clamp(2rem, 3vw, 5rem)',
             background: theme.accent,
             border: '4px solid #111',
-            boxShadow: `clamp(8px, 1.2vh, 14px) clamp(8px, 1.2vh, 14px) 0 #111`,
+            boxShadow: `clamp(8px, 1.2vmin, 14px) clamp(8px, 1.2vmin, 14px) 0 #111`,
             transform: 'rotate(1.6deg)',
           }}
         >
           <span
             style={{
               color: '#111',
-              fontSize: 'clamp(2.1rem, 6.2vh, 9rem)',
+              fontSize: 'clamp(2.1rem, min(6.2vh, 7vw), 9rem)',
               lineHeight: 1,
               fontFamily: theme.titleFont,
             }}
@@ -542,7 +543,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
           <span
             style={{
               color: '#111',
-              fontSize: 'clamp(1rem, 2.7vh, 3.5rem)',
+              fontSize: 'clamp(1rem, min(2.7vh, 3vw), 3.5rem)',
               letterSpacing: '0.14em',
               fontFamily: theme.bodyFont,
             }}
@@ -555,11 +556,11 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   }
 
   return (
-    <div className="flex flex-col items-center" style={{ gap: 'clamp(0.4rem, 1.2vh, 2rem)' }}>
+    <div className="flex flex-col items-center" style={{ gap: 'clamp(0.7rem, 1.8vmin, 2.8rem)' }}>
       <span
         style={{
           color: theme.text,
-          fontSize: 'clamp(2rem, 6.5vh, 8rem)',
+          fontSize: 'clamp(2rem, min(6.5vh, 7.5vw), 8rem)',
           letterSpacing: '0.22em',
           fontFamily: theme.titleFont,
         }}
@@ -569,8 +570,8 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.accent,
-          fontSize: 'clamp(3rem, 9.5vh, 13rem)',
-          lineHeight: 1,
+          fontSize: 'clamp(3rem, min(9.5vh, 11vw), 13rem)',
+          lineHeight: 1.1,
           letterSpacing: '0.2em',
           fontFamily: theme.titleFont,
         }}
@@ -580,7 +581,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.text,
-          fontSize: 'clamp(2rem, 6.5vh, 8rem)',
+          fontSize: 'clamp(2rem, min(6.5vh, 7.5vw), 8rem)',
           letterSpacing: '0.22em',
           fontFamily: theme.titleFont,
         }}
@@ -635,8 +636,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             top: '25%',
             left: '31%',
-            width: 'min(31vw, 470px)',
-            height: 'min(28vh, 360px)',
+            width: 'min(25vmin, 380px)',
+            height: 'min(22vmin, 300px)',
             background: theme.accent,
             clipPath: 'polygon(8% 14%, 88% 0, 100% 78%, 46% 100%, 0 86%)',
             transform: 'rotate(-10deg)',
@@ -648,8 +649,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             bottom: '20%',
             left: '10%',
-            width: 'min(34vw, 500px)',
-            height: 'min(21vh, 280px)',
+            width: 'min(27vmin, 400px)',
+            height: 'min(17vmin, 230px)',
             background: '#3fb8d9',
             clipPath: 'polygon(8% 8%, 84% 0, 100% 72%, 28% 100%, 0 66%)',
             transform: 'rotate(-8deg)',
@@ -661,8 +662,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             bottom: '19%',
             right: '9%',
-            width: 'min(31vw, 460px)',
-            height: 'min(29vh, 390px)',
+            width: 'min(25vmin, 380px)',
+            height: 'min(23vmin, 320px)',
             background: theme.secondary,
             clipPath: 'polygon(18% 0, 100% 9%, 100% 100%, 0 90%, 7% 22%)',
             transform: 'rotate(3deg)',
@@ -674,8 +675,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             left: '17%',
             bottom: '11%',
-            width: 'min(22vw, 330px)',
-            height: 'min(22vw, 330px)',
+            width: 'min(18vmin, 270px)',
+            height: 'min(18vmin, 270px)',
             border: '10px solid #111',
             opacity: show ? 1 : 0,
           }}
@@ -685,8 +686,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             right: '27%',
             bottom: '17%',
-            width: 'clamp(16px, 1.4vw, 22px)',
-            height: 'min(21vh, 280px)',
+            width: 'clamp(14px, 1.4vmin, 20px)',
+            height: 'min(18vmin, 240px)',
             background: '#111',
             opacity: show ? 1 : 0,
           }}
@@ -696,8 +697,8 @@ function DisplayDecorations({ theme, show }: { theme: ThemePreset; show: boolean
           style={{
             left: '24%',
             bottom: '4%',
-            width: 'min(50vw, 780px)',
-            height: 'min(18vh, 230px)',
+            width: 'min(42vmin, 620px)',
+            height: 'min(14vmin, 190px)',
             background: '#09b53c',
             clipPath: 'polygon(0 0, 78% 0, 100% 36%, 92% 100%, 8% 100%)',
             transform: 'rotate(-1deg)',
@@ -861,7 +862,7 @@ function DisplayMessage({
   if (theme.family === 'whiteboard') {
     return (
       <div
-        className="relative w-full max-w-[min(78vw,980px)] transition-all duration-700"
+        className="relative w-full max-w-[min(72vw,920px)] transition-all duration-700"
         style={{ opacity: show ? 1 : 0, transform: show ? 'translateY(0)' : 'translateY(30px)' }}
       >
         {theme.id === 'white-note' && (
@@ -873,11 +874,11 @@ function DisplayMessage({
           </div>
         )}
         <div
-          className="relative rounded-[38px] px-10 py-12"
+          className="relative rounded-[38px] px-8 py-10"
           style={{
             background: theme.surface,
             border: `4px solid ${theme.border}`,
-            boxShadow: `18px 18px 0 ${theme.accent}22`,
+            boxShadow: `12px 12px 0 ${theme.accent}22`,
           }}
         >
           <p
@@ -1438,7 +1439,7 @@ export default function DesktopPage() {
                 boxShadow: theme.family === 'brutal' ? `10px 10px 0 ${theme.accent}` : '0 18px 44px rgba(0,0,0,0.18)',
               }}
             >
-              <QRCodeSVG value={mobileUrl} size={Math.round(window.innerHeight * 0.14)} />
+              <QRCodeSVG value={mobileUrl} size={Math.round(Math.min(window.innerHeight, window.innerWidth) * 0.14)} />
             </div>
             <p style={{ color: theme.muted, fontSize: 'clamp(0.7rem, 1.6vh, 1.05rem)', letterSpacing: '0.16em' }}>
               스캔하여 메시지 남기기
@@ -1462,13 +1463,13 @@ export default function DesktopPage() {
 
       {theme.id !== 'brutal-bauhaus' && (
         <div
-          className="absolute flex justify-end z-20"
-          style={{ top: 'clamp(35px, 5vh, 70px)', right: 'clamp(50px, 7vw, 100px)' }}
+          className="absolute flex justify-end z-20 overflow-hidden"
+          style={{ top: 'clamp(35px, 5vh, 70px)', left: 'clamp(50px, 7vw, 100px)', right: 'clamp(50px, 7vw, 100px)' }}
         >
           <span
             style={{
               color: theme.muted,
-              fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)',
+              fontSize: 'clamp(0.75rem, min(2.1vh, 2.4vw), 1.45rem)',
               whiteSpace: 'nowrap',
               letterSpacing: '0.16em',
             }}
