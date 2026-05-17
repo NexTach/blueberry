@@ -7,7 +7,6 @@ import {
   Nanum_Gothic,
   Nanum_Myeongjo,
   Noto_Sans_KR,
-  Song_Myung,
 } from 'next/font/google';
 import './globals.css';
 import PWARegistrar from '../src/components/PWARegistrar';
@@ -55,12 +54,6 @@ const blackHanSans = Black_Han_Sans({
   preload: false,
 });
 
-const songMyung = Song_Myung({
-  variable: '--font-song-myung',
-  weight: '400',
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
   title: '블루베리 - 광주SW마이스터고 DID 시스템',
   description: '광주SW마이스터고 DID 시스템',
@@ -94,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="ko"
-      className={`${notoSansKr.variable} ${gowunDodum.variable} ${doHyeon.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${blackHanSans.variable} ${songMyung.variable}`}
+      className={`${notoSansKr.variable} ${gowunDodum.variable} ${doHyeon.variable} ${nanumGothic.variable} ${nanumMyeongjo.variable} ${blackHanSans.variable}`}
     >
       <body>
         <PWARegistrar />
