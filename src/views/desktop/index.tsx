@@ -1063,7 +1063,7 @@ function DisplayMessage({
 function AlternateDisplayMessage({ theme, show }: { theme: ThemePreset; show: boolean }) {
   const style: React.CSSProperties = {
     color: theme.text,
-    fontSize: 'clamp(1.2rem, 3.5vh, 3rem)',
+    fontSize: 'clamp(1.5rem, 4.8vh, 4.2rem)',
     lineHeight: 1.3,
     maxWidth: 'min(92vw, 110ch)',
     marginInline: 'auto',
@@ -1092,9 +1092,13 @@ function AlternateDisplayMessage({ theme, show }: { theme: ThemePreset; show: bo
         {/* no name for alternate message */}
       </p>
       <div style={style} aria-hidden={!show}>
-        광주소프트웨어마이스터고등학교
+        광주소프트웨어
         <br />
-        5·18 민주화운동 기념행사에 오신 것을 환영합니다.
+        마이스터고등학교
+        <br />
+        5·18 민주화운동 기념행사에
+        <br />
+        오신 것을 환영합니다.
       </div>
     </div>
   );
@@ -1352,7 +1356,7 @@ export default function DesktopPage() {
 
     return () => clearTimeout(startVisible);
   }, [session?.status, session?.welcomeMessage]);
-  
+
   useEffect(() => {
     // toggle between welcome and alternate message every 7 seconds
     if (alternateTimerRef.current) {
@@ -1362,10 +1366,10 @@ export default function DesktopPage() {
 
     if (session?.status === 'displaying') {
       void Promise.resolve().then(() => setShowAlternate(false));
-      
+
       // toggle every 7 seconds
       alternateTimerRef.current = setInterval(() => {
-        setShowAlternate(prev => !prev);
+        setShowAlternate((prev) => !prev);
       }, 7000);
     } else {
       void Promise.resolve().then(() => setShowAlternate(false));
