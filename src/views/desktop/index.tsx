@@ -1059,6 +1059,46 @@ function DisplayMessage({
   );
 }
 
+function AlternateDisplayMessage({ theme, show }: { theme: ThemePreset; show: boolean }) {
+  const style: React.CSSProperties = {
+    color: theme.text,
+    fontSize: 'clamp(1.2rem, 3.5vh, 3rem)',
+    lineHeight: 1.3,
+    maxWidth: 'min(92vw, 110ch)',
+    marginInline: 'auto',
+    textAlign: 'center',
+    whiteSpace: 'normal',
+    wordBreak: 'break-word',
+    transition: 'opacity 600ms ease, transform 600ms ease',
+    opacity: show ? 1 : 0,
+    transform: show ? 'translateY(0)' : 'translateY(8px)',
+  };
+
+  return (
+    <div className="text-center" style={{ pointerEvents: 'none' }}>
+      <p
+        style={{
+          color: theme.accent,
+          fontSize: 'clamp(2rem, 5vh, 4rem)',
+          lineHeight: 1.05,
+          margin: 0,
+          opacity: show ? 1 : 0,
+          transition: 'opacity 600ms ease, transform 600ms ease',
+          transform: show ? 'translateY(0)' : 'translateY(6px)',
+          fontFamily: theme.titleFont,
+        }}
+      >
+        {/* no name for alternate message */}
+      </p>
+      <div style={style} aria-hidden={!show}>
+        광주소프트웨어마이스터고등학교
+        <br />
+        5·18 민주화운동 기념행사에 오신 것을 환영합니다.
+      </div>
+    </div>
+  );
+}
+
 function buildCanvasFont(computed: CSSStyleDeclaration) {
   return computed.font || `${computed.fontStyle} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`;
 }
@@ -1261,12 +1301,6 @@ export default function DesktopPage() {
   const theme = findTheme(themeId);
   const displayName = normalizeDisplayName(session?.visitorName);
   const msgBody = normalizeMessageBody(session?.welcomeMessage, session?.visitorName);
-
-  const alternateMessage =
-    '광주소프트웨어마이스터고등학교 5·18 민주화운동 기념행사에 오신 것을 환영합니다.';
-  const displayedMsg = showAlternate ? alternateMessage : msgBody;
-  const displayedName = showAlternate ? '' : displayName;
-
   useEffect(() => subscribeSession(setSession), []);
 
   useEffect(() => {
@@ -1455,7 +1489,32 @@ export default function DesktopPage() {
         }}
       >
         <DisplayDecorations theme={theme} show={show} />
-        <DisplayMessage theme={theme} displayName={displayedName} msgBody={displayedMsg} show={show} />
+        <div style={{ position: 'relative', width: '100%' }}>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <DisplayMessage theme={theme} displayName={displayName} msgBody={msgBody} show={show && !showAlternate} />
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <AlternateDisplayMessage theme={theme} show={show && showAlternate} />
+          </div>
+        </div>
       </div>
 
       {theme.id !== 'brutal-bauhaus' && (
