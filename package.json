@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chenglou/pretext": "^0.0.7",
     "@google/genai": "^2.0.1",
     "@tailwindcss/postcss": "^4.2.4",
     "firebase": "^12.12.1",

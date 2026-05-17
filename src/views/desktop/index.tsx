@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { layoutWithLines, prepareWithSegments } from '@chenglou/pretext';
 import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
@@ -1104,10 +1103,6 @@ function AlternateDisplayMessage({ theme, show }: { theme: ThemePreset; show: bo
   );
 }
 
-function buildCanvasFont(computed: CSSStyleDeclaration) {
-  return computed.font || `${computed.fontStyle} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`;
-}
-
 function PretextParagraph({
   as = 'div',
   children,
@@ -1117,125 +1112,8 @@ function PretextParagraph({
   children: string;
   style: React.CSSProperties;
 }) {
-  const containerRef = useRef<HTMLElement | null>(null);
-  const probeRef = useRef<HTMLSpanElement>(null);
-  const [lines, setLines] = useState<string[] | null>(null);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const probe = probeRef.current;
-    if (!container || !probe || !children.trim()) {
-      setLines(null);
-      return;
-    }
-
-    let cancelled = false;
-    let frame = 0;
-    const fontSet = typeof document !== 'undefined' ? document.fonts : null;
-
-    const updateLines = async () => {
-      if (fontSet) {
-        await fontSet.ready.catch(() => undefined);
-      }
-
-      if (cancelled || !containerRef.current || !probeRef.current) return;
-      const maxWidth = containerRef.current.clientWidth;
-      if (!maxWidth) return;
-
-      const computed = window.getComputedStyle(probeRef.current);
-      const font = buildCanvasFont(computed);
-      const lineHeight = Number.parseFloat(computed.lineHeight);
-
-      if (!font || !Number.isFinite(lineHeight) || lineHeight <= 0) {
-        setLines(null);
-        return;
-      }
-
-      const prepared = prepareWithSegments(children, font, { wordBreak: 'keep-all' });
-      const result = layoutWithLines(prepared, maxWidth, lineHeight);
-
-      if (cancelled) return;
-      setLines(result.lines.map((line) => line.text));
-    };
-
-    const scheduleUpdate = () => {
-      cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        void updateLines();
-      });
-    };
-
-    scheduleUpdate();
-
-    const resizeObserver = new ResizeObserver(() => {
-      scheduleUpdate();
-    });
-    resizeObserver.observe(container);
-
-    fontSet?.addEventListener?.('loadingdone', scheduleUpdate);
-    window.addEventListener('resize', scheduleUpdate);
-
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      fontSet?.removeEventListener?.('loadingdone', scheduleUpdate);
-      window.removeEventListener('resize', scheduleUpdate);
-    };
-  }, [children, style.fontFamily, style.fontSize, style.lineHeight, style.maxWidth, style.letterSpacing]);
-
-  const content = (
-    <>
-      <span
-        ref={probeRef}
-        aria-hidden="true"
-        style={{
-          ...style,
-          position: 'absolute',
-          visibility: 'hidden',
-          pointerEvents: 'none',
-          whiteSpace: 'pre',
-        }}
-      >
-        {children}
-      </span>
-      {lines ? (
-        <span aria-label={children} style={{ display: 'block' }}>
-          {lines.map((line, index) => (
-            <span key={`${index}-${line}`} style={{ display: 'block' }}>
-              {line}
-            </span>
-          ))}
-        </span>
-      ) : (
-        children
-      )}
-    </>
-  );
-
-  if (as === 'p') {
-    return (
-      <p
-        ref={(node) => {
-          containerRef.current = node;
-        }}
-        style={style}
-      >
-        {content}
-      </p>
-    );
-  }
-
-  return (
-    <div
-      ref={(node) => {
-        containerRef.current = node;
-      }}
-      style={style}
-    >
-      {content}
-    </div>
-  );
+  if (as === 'p') return <p style={style}>{children}</p>;
+  return <div style={style}>{children}</div>;
 }
 
 function escapeRegex(value: string) {
