@@ -2,9 +2,8 @@ import type { TemplateId } from '../../../lib/openai';
 import { AI_TEMPLATE_ID } from '../constants';
 import { mobileControl, mobilePalette, mobileRadius, mobileSpacing, mobileTypography } from '../design';
 import type { AiToneId, ConfirmStage } from '../types';
-import type { DateFormat, ThemeId } from '../../../types/session';
+import type { ThemeId } from '../../../types/session';
 import AITonePicker from './AITonePicker';
-import DateFormatPicker from './DateFormatPicker';
 import MobileStage from './MobileStage';
 import TemplatePicker from './TemplatePicker';
 import ThemePicker from './ThemePicker';
@@ -21,7 +20,6 @@ interface ConfirmScreenProps {
   aiTone: AiToneId;
   aiPrompt: string;
   themeId: ThemeId;
-  dateFormat: DateFormat;
   isSubmitting: boolean;
   onNameChange: (name: string) => void;
   onTemplateChange: (id: TemplateId) => void;
@@ -29,7 +27,6 @@ interface ConfirmScreenProps {
   onAiToneChange: (tone: AiToneId) => void;
   onAiPromptChange: (prompt: string) => void;
   onThemeChange: (themeId: ThemeId) => void;
-  onDateFormatChange: (format: DateFormat) => void;
   onReenterVoice: () => void;
   onReenterDirect: () => void;
   onBack: () => void;
@@ -48,7 +45,6 @@ export default function ConfirmScreen({
   aiTone,
   aiPrompt,
   themeId,
-  dateFormat,
   isSubmitting,
   onNameChange,
   onTemplateChange,
@@ -56,7 +52,6 @@ export default function ConfirmScreen({
   onAiToneChange,
   onAiPromptChange,
   onThemeChange,
-  onDateFormatChange,
   onReenterVoice,
   onReenterDirect,
   onBack,
@@ -97,10 +92,6 @@ export default function ConfirmScreen({
     theme: {
       title: 'TV 테마를 골라주세요',
       description: '디자인 종류를 먼저 고르고, 세부 테마를 선택하세요.',
-    },
-    dateformat: {
-      title: '날짜 포맷을 골라주세요',
-      description: 'TV 화면 하단에 표시되는 시간의 형식을 선택하세요.',
     },
     name: {
       title: '이름을 확인해주세요',
@@ -316,10 +307,6 @@ export default function ConfirmScreen({
 
         {confirmStage === 'theme' && (
           <ThemePicker selectedTheme={themeId} onSelect={onThemeChange} />
-        )}
-
-        {confirmStage === 'dateformat' && (
-          <DateFormatPicker selectedFormat={dateFormat} onSelect={onDateFormatChange} />
         )}
 
         {confirmStage === 'name' && (

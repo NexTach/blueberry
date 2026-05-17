@@ -1,26 +1,22 @@
 import { useEffect, useState } from 'react';
 import type { ThemePreset } from '../../lib/themes';
-import type { DateFormat } from '../../types/session';
 
-export function formatDateTime(date: Date, format: DateFormat = 'korean') {
+export function formatDateTime(date: Date) {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const hours = date.getHours();
   const minutes = date.getMinutes().toString().padStart(2, '0');
-  if (format === 'western') {
-    return `${year}.${month}.${day} ${hours < 12 ? 'AM' : 'PM'} ${hours % 12 || 12}:${minutes}`;
-  }
-  return `${year}년 ${month}월 ${day}일 ${hours < 12 ? '오전' : '오후'} ${hours % 12 || 12}:${minutes}분`;
+  return `${year}.${month}.${day} ${hours < 12 ? 'AM' : 'PM'} ${hours % 12 || 12}:${minutes}`;
 }
 
-export function useClock(format: DateFormat) {
-  const [time, setTime] = useState(() => formatDateTime(new Date(), format));
+export function useClock() {
+  const [time, setTime] = useState(() => formatDateTime(new Date()));
 
   useEffect(() => {
-    const id = setInterval(() => setTime(formatDateTime(new Date(), format)), 1000);
+    const id = setInterval(() => setTime(formatDateTime(new Date())), 1000);
     return () => clearInterval(id);
-  }, [format]);
+  }, []);
 
   return time;
 }

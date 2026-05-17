@@ -4,7 +4,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import { toast } from 'sonner';
 import { subscribeSession, resetSession, updateSession } from '../../lib/firebase';
 import { findTheme, type ThemePreset } from '../../lib/themes';
-import type { DateFormat, Session, ThemeId } from '../../types/session';
+import { useClock } from './utils';
+import type { Session, ThemeId } from '../../types/session';
 
 const RESET_DELAY = 30 * 60 * 1000;
 
@@ -1233,29 +1234,6 @@ function PretextParagraph({
   );
 }
 
-function formatDateTime(date: Date, format: DateFormat = 'korean') {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  if (format === 'western') {
-    return `${year}.${month}.${day} ${hours < 12 ? 'AM' : 'PM'} ${hours % 12 || 12}:${minutes}`;
-  }
-  return `${year}년 ${month}월 ${day}일 ${hours < 12 ? '오전' : '오후'} ${hours % 12 || 12}:${minutes}분`;
-}
-
-function useClock(format: DateFormat) {
-  const [time, setTime] = useState(() => formatDateTime(new Date(), format));
-
-  useEffect(() => {
-    const id = setInterval(() => setTime(formatDateTime(new Date(), format)), 1000);
-    return () => clearInterval(id);
-  }, [format]);
-
-  return time;
-}
-
 function escapeRegex(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -1293,8 +1271,7 @@ export default function DesktopPage() {
   const lastGenerationIdRef = useRef('');
   const [showAlternate, setShowAlternate] = useState(false);
   const alternateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const dateFormat: DateFormat = session?.dateFormat ?? 'korean';
-  const time = useClock(dateFormat);
+  const time = useClock();
   const mobileUrl = `${window.location.origin}/mobile`;
 
   const themeId: ThemeId = session?.themeId ?? 'green';

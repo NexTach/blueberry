@@ -2,7 +2,6 @@ import type { Timestamp } from 'firebase/firestore';
 import type { TemplateId } from '../lib/openai';
 
 export type SessionStatus = 'standby' | 'generating' | 'displaying';
-export type DateFormat = 'korean' | 'western';
 export type ThemeId =
   | 'green'
   | 'black'
@@ -24,7 +23,6 @@ export interface Session {
   sourcePrompt?: string;
   generationId?: string;
   themeId?: ThemeId;
-  dateFormat?: DateFormat;
   tone?: string;
   updatedAt: Timestamp | null;
 }

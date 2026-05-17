@@ -4,7 +4,7 @@ import type { ThemeId } from '../../types/session';
 
 export type Step = 'choose' | 'start' | 'listening' | 'preview' | 'confirm' | 'done';
 export type AiToneId = 'warm' | 'bright' | 'formal' | 'playful';
-export type ConfirmStage = 'template' | 'content' | 'tone' | 'theme' | 'dateformat' | 'name';
+export type ConfirmStage = 'template' | 'content' | 'tone' | 'theme' | 'name';
 
 export interface TemplateOption {
   id: TemplateId;

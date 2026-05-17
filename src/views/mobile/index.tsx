@@ -22,7 +22,6 @@ export default function MobilePage() {
     aiTone,
     aiPrompt,
     themeId,
-    dateFormat,
     isInterpreting,
     isSubmitting,
     showDirectInput,
@@ -37,7 +36,6 @@ export default function MobilePage() {
     handleTemplateChange,
     handleNameChange,
     handleThemeChange,
-    handleDateFormatChange,
     handleConfirmStageBack,
     handleConfirmStageContinue,
     handleRestart,
@@ -136,7 +134,6 @@ export default function MobilePage() {
             aiTone={aiTone}
             aiPrompt={aiPrompt}
             themeId={themeId}
-            dateFormat={dateFormat}
             isSubmitting={isSubmitting}
             onNameChange={handleNameChange}
             onTemplateChange={handleTemplateChange}
@@ -144,7 +141,6 @@ export default function MobilePage() {
             onAiToneChange={setAiTone}
             onAiPromptChange={setAiPrompt}
             onThemeChange={handleThemeChange}
-            onDateFormatChange={handleDateFormatChange}
             onReenterVoice={handleReenterVoice}
             onReenterDirect={handleReenterDirect}
             onBack={handleConfirmStageBack}

@@ -48,7 +48,3 @@ export async function resetSession() {
 export async function updateTheme(themeId: import('../types/session').ThemeId) {
   await setDoc(SESSION_REF, { themeId, updatedAt: serverTimestamp() }, { merge: true });
 }
-
-export async function updateDateFormat(dateFormat: import('../types/session').DateFormat) {
-  await setDoc(SESSION_REF, { dateFormat, updatedAt: serverTimestamp() }, { merge: true });
-}
