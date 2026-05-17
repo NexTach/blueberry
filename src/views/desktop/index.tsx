@@ -1060,45 +1060,26 @@ function DisplayMessage({
 }
 
 function AlternateDisplayMessage({ theme, show }: { theme: ThemePreset; show: boolean }) {
-  const style: React.CSSProperties = {
-    color: theme.text,
-    fontSize: 'clamp(1.5rem, 4.8vh, 4.2rem)',
-    lineHeight: 1.3,
-    maxWidth: 'min(92vw, 110ch)',
-    marginInline: 'auto',
-    textAlign: 'center',
-    whiteSpace: 'normal',
-    wordBreak: 'break-word',
-    transition: 'opacity 600ms ease, transform 600ms ease',
-    opacity: show ? 1 : 0,
-    transform: show ? 'translateY(0)' : 'translateY(8px)',
-  };
-
   return (
-    <div className="text-center" style={{ pointerEvents: 'none' }}>
-      <p
-        style={{
-          color: theme.accent,
-          fontSize: 'clamp(2rem, 5vh, 4rem)',
-          lineHeight: 1.05,
-          margin: 0,
-          opacity: show ? 1 : 0,
-          transition: 'opacity 600ms ease, transform 600ms ease',
-          transform: show ? 'translateY(0)' : 'translateY(6px)',
-          fontFamily: theme.titleFont,
-        }}
-      >
-        {/* no name for alternate message */}
-      </p>
-      <div style={style} aria-hidden={!show}>
-        광주소프트웨어
-        <br />
-        마이스터고등학교
-        <br />
-        5·18 민주화운동 기념행사에
-        <br />
-        오신 것을 환영합니다.
-      </div>
+    <div
+      className="flex flex-col items-center text-center"
+      style={{
+        pointerEvents: 'none',
+        gap: 'clamp(0.1rem, 0.4vh, 0.35rem)',
+        color: theme.text,
+        fontSize: 'clamp(1.4rem, 4.4vh, 3.8rem)',
+        lineHeight: 1.25,
+        maxWidth: 'min(90vw, 100ch)',
+        opacity: show ? 1 : 0,
+        transform: show ? 'translateY(0)' : 'translateY(8px)',
+        transition: 'opacity 600ms ease, transform 600ms ease',
+      }}
+      aria-hidden={!show}
+    >
+      <span>광주소프트웨어</span>
+      <span>마이스터고등학교</span>
+      <span>5·18민주화운동 기념행사에</span>
+      <span>오신 것을 환영합니다.</span>
     </div>
   );
 }
@@ -1385,12 +1366,14 @@ export default function DesktopPage() {
           <span
             style={{
               color: theme.muted,
-              fontSize: 'clamp(0.85rem, 2.1vh, 1.45rem)',
-              whiteSpace: 'nowrap',
-              letterSpacing: '0.16em',
+              fontSize: 'clamp(0.65rem, 1.5vh, 1.05rem)',
+              lineHeight: 1.5,
+              letterSpacing: '0.12em',
+              textAlign: 'right',
+              display: 'block',
             }}
           >
-            Gwangju Software Meister High School
+            Gwangju Software<br />Meister High School
           </span>
         </div>
       )}
