@@ -1377,25 +1377,26 @@ export default function DesktopPage() {
   }, [session?.status, session?.welcomeMessage]);
   
   useEffect(() => {
-    // when a new message starts displaying, schedule the alternate message after 5s
+    // toggle between welcome and alternate message every 7 seconds
     if (alternateTimerRef.current) {
-      clearTimeout(alternateTimerRef.current);
+      clearInterval(alternateTimerRef.current);
       alternateTimerRef.current = null;
     }
 
     if (session?.status === 'displaying') {
-      // defer clearing to next tick to avoid synchronous state update inside effect
       void Promise.resolve().then(() => setShowAlternate(false));
-      alternateTimerRef.current = setTimeout(() => {
-        setShowAlternate(true);
-      }, 5000);
+      
+      // toggle every 7 seconds
+      alternateTimerRef.current = setInterval(() => {
+        setShowAlternate(prev => !prev);
+      }, 7000);
     } else {
       void Promise.resolve().then(() => setShowAlternate(false));
     }
 
     return () => {
       if (alternateTimerRef.current) {
-        clearTimeout(alternateTimerRef.current);
+        clearInterval(alternateTimerRef.current);
         alternateTimerRef.current = null;
       }
     };
