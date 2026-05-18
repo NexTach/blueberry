@@ -555,7 +555,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex w-full max-w-[min(100%,58rem)] flex-col items-center gap-1 px-[clamp(0.75rem,2vw,2rem)]">
       <span
         style={{
           color: theme.text,
@@ -569,9 +569,9 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.accent,
-          fontSize: 'clamp(3rem, 9.5vh, 13rem)',
+          fontSize: 'clamp(2.5rem, 8.6vh, 11rem)',
           lineHeight: 1,
-          letterSpacing: '0.2em',
+          letterSpacing: '0.12em',
           fontFamily: theme.titleFont,
         }}
       >
