@@ -555,18 +555,13 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
   }
 
   return (
-    <div
-      className="flex flex-col items-center"
-      style={{ gap: 'clamp(0.3rem, 1vh, 1.5rem)', maxWidth: 'min(88vw, 52rem)', boxSizing: 'border-box' }}
-    >
+    <div className="flex w-full max-w-[min(100%,58rem)] flex-col items-center gap-1 px-[clamp(0.75rem,2vw,2rem)]">
       <span
         style={{
           color: theme.text,
-          fontSize: 'clamp(1.8rem, min(6.5vh, 9vw), 8rem)',
+          fontSize: 'clamp(2rem, 6.5vh, 8rem)',
           letterSpacing: '0.22em',
-          lineHeight: 1.1,
           fontFamily: theme.titleFont,
-          textAlign: 'center',
         }}
       >
         GWANGJU
@@ -574,11 +569,10 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.accent,
-          fontSize: 'clamp(2rem, min(8.6vh, 10vw), 11rem)',
+          fontSize: 'clamp(2.5rem, 8.6vh, 11rem)',
           lineHeight: 1,
           letterSpacing: '0.12em',
           fontFamily: theme.titleFont,
-          textAlign: 'center',
         }}
       >
         SOFTWARE
@@ -586,11 +580,9 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
       <span
         style={{
           color: theme.text,
-          fontSize: 'clamp(1.8rem, min(6.5vh, 9vw), 8rem)',
+          fontSize: 'clamp(2rem, 6.5vh, 8rem)',
           letterSpacing: '0.22em',
-          lineHeight: 1.1,
           fontFamily: theme.titleFont,
-          textAlign: 'center',
         }}
       >
         MEISTER
