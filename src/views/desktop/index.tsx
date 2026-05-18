@@ -447,15 +447,17 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         className="relative flex flex-col items-center rounded-4xl"
         style={{
           padding: 'clamp(1.5rem, 2.5vh, 3.5rem) clamp(2rem, 3.5vw, 6rem)',
-          gap: 'clamp(0.25rem, 0.8vh, 1rem)',
+          gap: 'clamp(0.3rem, 1vh, 1.5rem)',
           background: 'rgba(255,255,255,0.04)',
           border: '1px solid rgba(255,255,255,0.08)',
+          maxWidth: 'min(90vw, 55rem)',
+          boxSizing: 'border-box',
         }}
       >
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2.25rem, 6.8vh, 9rem)',
+            fontSize: 'clamp(1.8rem, min(6.8vh, 7.5vw), 9rem)',
             lineHeight: 1.02,
             fontFamily: theme.titleFont,
           }}
@@ -465,7 +467,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.accent,
-            fontSize: 'clamp(3.1rem, 9vh, 12rem)',
+            fontSize: 'clamp(2rem, min(9vh, 10vw), 12rem)',
             lineHeight: 1,
             fontFamily: theme.titleFont,
           }}
@@ -475,7 +477,7 @@ function StandbyHeadline({ theme }: { theme: ThemePreset }) {
         <span
           style={{
             color: theme.text,
-            fontSize: 'clamp(2rem, 5.8vh, 8rem)',
+            fontSize: 'clamp(1.6rem, min(5.8vh, 6.4vw), 8rem)',
             lineHeight: 1.04,
             fontFamily: theme.titleFont,
           }}
